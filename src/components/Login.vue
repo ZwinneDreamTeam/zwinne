@@ -3,6 +3,14 @@
 </template>
 
 <script>
+  import Vue from 'vue'
+  import firebase from 'firebase'
+
+  var provider = new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({
+    prompt: 'select_account'
+  });
+
   export default {
     name: "login",
     data() {
@@ -12,7 +20,11 @@
     },
     methods: {
       doLogin: function (event) {
-        window.location = '/#/home'
+        firebase.auth().signInWithPopup(provider).then(function(result) {
+          window.location = '/#/home'
+        }).catch(function(error) {
+          alert(error.message);
+        });
       }
     }
   }
