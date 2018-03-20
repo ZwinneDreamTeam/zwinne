@@ -3,13 +3,14 @@ import * as admin from "firebase-admin";
 
 admin.initializeApp(functions.config().firebase);
 
-
-exports.createUserAccount = functions.auth.user().onCreate((event) => {
+export const OnCreateFunction = functions.auth.user().onCreate((event) => {
   var userId = event.data.uid;
 
-  return admin.database().ref('users/' + userId).set({
+  admin.database().ref('users/' + userId).set({
     username: event.data.displayName,
     email: event.data.email,
-    type: 'Candidate'
+    isCandidate: true,
+    isRedactor: false,
+    isModerator: false,
   });
 });
