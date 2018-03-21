@@ -4,10 +4,10 @@
 
 <script>
   export default {
-    name: 'Admin',
+    name: 'Redactor',
     data() {
       return {
-        msg: 'Admin'
+        msg: 'Redactor'
       }
     }
   }
