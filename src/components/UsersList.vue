@@ -1,6 +1,9 @@
 <template>
   <div>
     <h1>UZERS :DDD</h1>
+    <button v-on:click="filterRedactors">FILTER</button>
+    <input type="checkbox" id="redactorsCheckbox" value="Yes">
+    <label for="redactorsCheckbox">Redactors only</label>
     <ul id="user-list" class="twocolumns">
       <li v-for="item in items">
         {{ item.message }} <button v-on:click="showUserDetails">see details</button>
@@ -25,6 +28,9 @@
     },
     methods: {
       showUserDetails () {
+        window.alert('Not implemented yet')
+      },
+      filterRedactors() {
         window.alert('Not implemented yet')
       }
     }
