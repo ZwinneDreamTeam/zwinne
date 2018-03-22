@@ -11,6 +11,9 @@ npm install
 # sciagniecie material designowych elementow
 npm install vue-material@beta --save
 
+# install vuefire to fetch data from firebase
+npm install --save vuefire
+
 # serve with hot reload at localhost:8080
 npm run dev
 
