@@ -5,6 +5,7 @@ import Candidate from '@/components/Candidate'
 import Moderator from '@/components/Moderator'
 import Home from '@/components/Home'
 import Login from '@/components/Login'
+import UsersList from '@/components/UsersList'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.css'
 import firebase from 'firebase'
@@ -56,7 +57,13 @@ let router = new VueRouter({
       meta: {
         requiresAuth: true,
         requiresModerator: true
-      }
+      },
+      children: [
+        {
+          path: 'users',
+          component: UsersList
+        }
+      ]
     }
   ]
 });
