@@ -25,4 +25,16 @@ npm run build --report
 firebase deploy --project zwinnexd
 ```
 
+## Deploying Firebase Functions
+```
+
+# Go to functions folder
+cd functions
+# Install dependencies in that folder
+npm install
+# deploy functions to firebase
+firebase deploy --project zwinnexd
+
+```
+
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
