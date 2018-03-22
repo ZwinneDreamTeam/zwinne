@@ -5,16 +5,25 @@
     <input type="checkbox" id="redactorsCheckbox" value="Yes">
     <label for="redactorsCheckbox">Redactors only</label>
     <ul id="user-list" class="twocolumns">
-      <li v-for="item in items">
-        {{ item.message }} <button v-on:click="showUserDetails">see details</button>
+      <li v-for="user of users">
+      <!--<li v-for="item in items">-->
+        {{ user.username }} <button v-on:click="showUserDetails">see details</button>
+        <!--{{ item.message }} <button v-on:click="showUserDetails">see details</button>-->
       </li>
     </ul>
   </div>
 </template>
 
 <script>
-  export default {
+import { db } from "../App"
+
+  let usersRef = db.ref('users');
+
+export default {
     name: "users-list",
+    firebase: {
+      users: usersRef
+    },
     data () {
       return {
         items: [
@@ -34,6 +43,9 @@
         window.alert('Not implemented yet')
       }
     }
+    // firebase: {
+    //   users: usersRef
+    // }
   }
 </script>
 

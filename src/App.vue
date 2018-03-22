@@ -46,6 +46,20 @@
   </div>
 </template>
 <script>
+  import Firebase from 'Firebase'
+
+  let config = {
+    apiKey: "AIzaSyAduGsOpgqCLn79cI4fzBvMsC0LFfnQhWA",
+    authDomain: "zwinnexd.firebaseapp.com",
+    databaseURL: "https://zwinnexd.firebaseio.com",
+    projectId: "zwinnexd",
+    storageBucket: "zwinnexd.appspot.com",
+    messagingSenderId: "427115139234"
+  };
+
+  let app = Firebase.initializeApp(config);
+  export const db = app.database();
+
   export default {
     name: 'app'
   }
