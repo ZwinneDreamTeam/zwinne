@@ -10,12 +10,12 @@ Vue.use(VueFire);
 
 Vue.config.productionTip = false;
 
-let auth;
+let app;
 
 firebase.auth().onAuthStateChanged(function (user) {
-  if (!auth) {
+  if (!app) {
     /* eslint-disable no-new */
-    auth = new Vue({
+    app = new Vue({
       el: '#app',
       router,
       components: {App},

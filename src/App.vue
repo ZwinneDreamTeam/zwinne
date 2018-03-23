@@ -57,8 +57,7 @@
     messagingSenderId: "427115139234"
   };
 
-  let app = Firebase.initializeApp(config);
-  export const db = app.database();
+  export const db = Firebase.initializeApp(config).database();
 
   export default {
     name: 'app'

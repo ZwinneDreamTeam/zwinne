@@ -35,7 +35,7 @@ export default {
       filteredUsers: function () {
         if (this.redactorFilter === 't') {
           return this.users.filter((user) => {
-            return user.isModerator;
+            return user.isRedactor;
           })
         }
         return this.users
