@@ -27,11 +27,6 @@
         }).catch(function(error) {
           alert(error.message);
         });
-      },
-
-      hide: function () {
-        document.getElementById(navigation-menu).style.visibility = "hidden";
-;
       }
     }
   }
@@ -52,7 +47,7 @@
   .logInView {
     text-align: center;
   }
-  
+
   #navigation-menu {
     display: none;
   }

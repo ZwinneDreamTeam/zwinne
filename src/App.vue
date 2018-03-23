@@ -8,7 +8,7 @@
           <span class="md-title">Zwinne xD</span>
         </md-app-toolbar>
 
-        <md-app-drawer md-permanent="full" v-if="" id="navigation-menu">
+        <md-app-drawer md-permanent="full" id="navigation-menu">
           <md-toolbar class="md-transparent" md-elevation="0">
             Navigation
           </md-toolbar>
@@ -59,6 +59,10 @@
   .md-drawer {
     width: 230px;
     max-width: calc(100vw - 125px);
+  }
+
+  #navigation-menu {
+    display: inline;
   }
 
 </style>
