@@ -2,13 +2,11 @@
   <div>
     <h1>UZERS :DDD</h1>
     <button v-on:click="filterRedactors">FILTER</button>
-    <input type="checkbox" id="redactorsCheckbox" value="Yes">
+    <input type="checkbox" id="redactorsCheckbox">
     <label for="redactorsCheckbox">Redactors only</label>
-    <ul id="user-list" class="twocolumns">
+    <ul id="user-list">
       <li v-for="user of users">
-      <!--<li v-for="item in items">-->
         {{ user.username }} <button v-on:click="showUserDetails">see details</button>
-        <!--{{ item.message }} <button v-on:click="showUserDetails">see details</button>-->
       </li>
     </ul>
   </div>
@@ -24,28 +22,20 @@ export default {
     firebase: {
       users: usersRef
     },
-    data () {
-      return {
-        items: [
-          { message: 'wat' },
-          { message: 'teh' },
-          { message: 'fuk' },
-          { message: 'User one' },
-          { message: 'User two' }
-        ]
-      }
-    },
     methods: {
       showUserDetails () {
         window.alert('Not implemented yet')
       },
       filterRedactors() {
-        window.alert('Not implemented yet')
+        let checkBox = document.getElementById("redactorsCheckbox");
+        if (checkBox.checked) {
+          window.alert("checked")
+        } else {
+          window.alert("not checked")
+        }
+
       }
     }
-    // firebase: {
-    //   users: usersRef
-    // }
   }
 </script>
 
