@@ -1,5 +1,5 @@
 <template>
-  <div class="logInView">
+  <div class="logInView" >
     <md-button v-on:click="doLogin" class="md-raised logInButton">{{zalogujMsg}}</md-button>
   </div>
 </template>
@@ -27,25 +27,34 @@
         }).catch(function(error) {
           alert(error.message);
         });
+      },
+
+      hide: function () {
+        document.getElementById(navigation-menu).style.visibility = "hidden";
+;
       }
     }
   }
 </script>
 
-<style scoped>
+<style >
 
-.logInButton {
-  background-color: #f44336;
-  color: #ffffff;
-  text-align: center;
-  font-size: 16px;
-  width: 30vh;
-  height: 12vh;
-  margin: 30vh;
-}
+  .logInButton {
+    background-color: #f44336;
+    color: #ffffff;
+    text-align: center;
+    font-size: 16px;
+    width: 30vh;
+    height: 12vh;
+    margin: 30vh;
+  }
 
-.logInView {
-  text-align: center;
-}
+  .logInView {
+    text-align: center;
+  }
+  
+  #navigation-menu {
+    display: none;
+  }
 
 </style>
