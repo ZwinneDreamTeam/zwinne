@@ -1,11 +1,10 @@
 <template>
   <div>
     <h1>UZERS :DDD</h1>
-    <button v-on:click="filterRedactors">FILTER</button>
-    <input type="checkbox" id="redactorsCheckbox">
+    <input type="checkbox" id="redactorsCheckbox" v-model="redactorFilter" true-value="t" false-value="f">
     <label for="redactorsCheckbox">Redactors only</label>
     <ul id="user-list">
-      <li v-for="user of users">
+      <li v-for="user of filteredUsers">
         {{ user.username }} <button v-on:click="showUserDetails">see details</button>
       </li>
     </ul>
@@ -22,18 +21,24 @@ export default {
     firebase: {
       users: usersRef
     },
+    data () {
+      return {
+        redactorFilter: ""
+      }
+    },
     methods: {
       showUserDetails () {
         window.alert('Not implemented yet')
-      },
-      filterRedactors() {
-        let checkBox = document.getElementById("redactorsCheckbox");
-        if (checkBox.checked) {
-          window.alert("checked")
-        } else {
-          window.alert("not checked")
+      }
+    },
+    computed: {
+      filteredUsers: function () {
+        if (this.redactorFilter === 't') {
+          return this.users.filter((user) => {
+            return user.isModerator;
+          })
         }
-
+        return this.users
       }
     }
   }
