@@ -46,8 +46,20 @@
   </div>
 </template>
 <script>
+  import Firebase from 'Firebase'
   import Vue from 'vue'
-  import firebase from 'firebase'
+
+  let config = {
+    apiKey: "AIzaSyAduGsOpgqCLn79cI4fzBvMsC0LFfnQhWA",
+    authDomain: "zwinnexd.firebaseapp.com",
+    databaseURL: "https://zwinnexd.firebaseio.com",
+    projectId: "zwinnexd",
+    storageBucket: "zwinnexd.appspot.com",
+    messagingSenderId: "427115139234"
+  };
+
+  export const db = Firebase.initializeApp(config).database();
+
   var display;
   export default {
     name: 'app'

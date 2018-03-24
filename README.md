@@ -23,6 +23,9 @@ npm run build
 
 # build for production and view the bundle analyzer report
 npm run build --report
+
+# deploy functions to firebase
+firebase deploy --project zwinnexd
 ```
 
 ## Deploying Firebase Functions

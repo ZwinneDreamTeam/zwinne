@@ -3,23 +3,16 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import firebase from 'firebase'
+import Firebase from 'Firebase'
+import VueFire from 'vuefire'
 
-Vue.config.productionTip = false
+Vue.use(VueFire);
+
+Vue.config.productionTip = false;
 
 let app;
 
-var config = {
-  apiKey: "AIzaSyAduGsOpgqCLn79cI4fzBvMsC0LFfnQhWA",
-  authDomain: "zwinnexd.firebaseapp.com",
-  databaseURL: "https://zwinnexd.firebaseio.com",
-  projectId: "zwinnexd",
-  storageBucket: "zwinnexd.appspot.com",
-  messagingSenderId: "427115139234"
-};
-firebase.initializeApp(config);
-
-firebase.auth().onAuthStateChanged(function (user) {
+Firebase.auth().onAuthStateChanged(function (user) {
   if (!app) {
     /* eslint-disable no-new */
     app = new Vue({
