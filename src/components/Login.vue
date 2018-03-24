@@ -6,9 +6,9 @@
 
 <script>
   import Vue from 'vue'
-  import firebase from 'firebase'
+  import Firebase from 'Firebase'
 
-  var provider = new firebase.auth.GoogleAuthProvider();
+  var provider = new Firebase.auth.GoogleAuthProvider();
   provider.setCustomParameters({
     prompt: 'select_account'
   });
@@ -21,7 +21,7 @@
     },
     methods: {
       doLogin: function (event) {
-        firebase.auth().signInWithPopup(provider).then(function(result) {
+        Firebase.auth().signInWithPopup(provider).then(function(result) {
           window.location = '/#/home'
           location.reload();
         }).catch(function(error) {
