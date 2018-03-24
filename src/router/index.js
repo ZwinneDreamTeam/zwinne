@@ -6,6 +6,7 @@ import Moderator from '@/components/Moderator'
 import Home from '@/components/Home'
 import Login from '@/components/Login'
 import UsersList from '@/components/UsersList'
+import UserDetails from '@/components/UserDetails'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.css'
 import Firebase from 'Firebase'
@@ -62,6 +63,11 @@ let router = new VueRouter({
         {
           path: 'users',
           component: UsersList
+        },
+        {
+          path: 'users/user/:id',
+          name: 'userDetails',
+          component: UserDetails
         }
       ]
     }
