@@ -8,7 +8,7 @@
           <span class="md-title">Zwinne xD</span>
         </md-app-toolbar>
 
-        <md-app-drawer md-permanent="full">
+        <md-app-drawer md-permanent="full" id="navMenu">
           <md-toolbar class="md-transparent" md-elevation="0">
             Navigation
           </md-toolbar>
@@ -19,7 +19,7 @@
               <span class="md-list-item-text">Inbox</span>
             </md-list-item>
 
-            <md-list-item>
+            <md-list-item >
               <md-icon>send</md-icon>
               <span class="md-list-item-text">Sent Mail</span>
             </md-list-item>
@@ -47,6 +47,7 @@
 </template>
 <script>
   import Firebase from 'Firebase'
+  import Vue from 'vue'
 
   let config = {
     apiKey: "AIzaSyAduGsOpgqCLn79cI4fzBvMsC0LFfnQhWA",
@@ -59,11 +60,12 @@
 
   export const db = Firebase.initializeApp(config).database();
 
+  var display;
   export default {
     name: 'app'
   }
 </script>
-<style>
+<style >
   .md-app-toolbar {
     background: dodgerblue;
     color: white;
@@ -73,4 +75,10 @@
     width: 230px;
     max-width: calc(100vw - 125px);
   }
+
+  #navMenu {
+    display: inline;
+  }
+
+
 </style>
