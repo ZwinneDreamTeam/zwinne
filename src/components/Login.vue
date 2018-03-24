@@ -12,18 +12,18 @@
   provider.setCustomParameters({
     prompt: 'select_account'
   });
-
   export default {
     name: "login",
     data() {
       return {
-        "zalogujMsg": "Continue with Google"
+        "zalogujMsg": "Continue with Google",
       }
     },
     methods: {
       doLogin: function (event) {
         firebase.auth().signInWithPopup(provider).then(function(result) {
           window.location = '/#/home'
+          location.reload();
         }).catch(function(error) {
           alert(error.message);
         });
@@ -48,7 +48,7 @@
     text-align: center;
   }
 
-  #navigation-menu {
+  #navMenu {
     display: none;
   }
 
