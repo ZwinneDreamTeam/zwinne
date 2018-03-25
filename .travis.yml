@@ -1,0 +1,5 @@
+language: node_js
+node_js:
+  - "9.7.1"
+notifications:
+    slack: zwinne:OseuQ3rgyK7uPAVAXL0N14AS
