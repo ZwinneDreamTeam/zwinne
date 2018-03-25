@@ -5,12 +5,12 @@ const admin = require("firebase-admin");
 admin.initializeApp(functions.config().firebase);
 exports.OnCreateFunction = functions.auth.user().onCreate((event) => {
     var userId = event.data.uid;
-  admin.database().ref('users/' + userId).set({
+    admin.database().ref('users/' + userId).set({
         username: event.data.displayName,
         email: event.data.email,
-    isCandidate: true,
-    isRedactor: false,
-    isModerator: false,
+        isCandidate: true,
+        isRedactor: false,
+        isModerator: false,
     });
 });
 //# sourceMappingURL=index.js.map
