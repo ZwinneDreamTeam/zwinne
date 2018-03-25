@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 >User details </h1>
+    <h1>User details </h1>
 
     <div>
       Username:
@@ -12,11 +12,11 @@
     </div>
     <div>
       Permissions:
-      <div><md-switch v-model="boolean" :value="getUser().isModerator" disabled> Moderator </md-switch></div>
-      <div><md-switch v-model="boolean" :value="getUser().isCandidate" disabled> Candidate </md-switch></div>
-      <div><md-switch v-model="boolean" :value="getUser().isRedactor" disabled> Redactor </md-switch></div>
+      <div><md-switch class="md-primary" v-model="boolean" :value="getUser().isModerator"  disabled> Moderator </md-switch></div>
+      <div><md-switch v-model="boolean" :value="getUser().isCandidate"  disabled> Candidate </md-switch></div>
+      <div><md-switch v-model="boolean" :value="getUser().isRedactor" class="md-primary" disabled> Redactor </md-switch></div>
     </div>
-    <md-button v-on:click="editUser" class="md-raised"> {{edit}}</md-button>
+    <md-button v-on:click="editUser" class="md-primary"> {{edit}}</md-button>
   </div>
 </template>
 
@@ -32,7 +32,6 @@ export default {
          let userDb = db.ref('/users/' + key)
          userDb.on('value', function (snapshot) {
            user = snapshot.val();
-                    console.log(user.isModerator);
            });
          return user;
       },
@@ -41,21 +40,17 @@ export default {
       }
     },
     data: () => ({
+        user: "",
         email: "",
         username: "",
         isModerator: "",
         isCandidate: "",
-        boolean: false,
+        boolean: true,
         edit: "Edit"
     }),
   }
 </script>
 
 <style scoped>
-.md-switch {
-    display: flex;
-  }
-.md-button {
 
-}
 </style>

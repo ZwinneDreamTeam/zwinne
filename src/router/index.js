@@ -8,7 +8,8 @@ import Login from '@/components/Login'
 import UsersList from '@/components/UsersList'
 import UserDetails from '@/components/UserDetails'
 import VueMaterial from 'vue-material'
-import 'vue-material/dist/vue-material.css'
+import 'vue-material/dist/vue-material.min.css'
+import 'vue-material/dist/theme/default.css'
 import Firebase from 'Firebase'
 
 Vue.use(VueMaterial);
