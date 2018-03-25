@@ -60,11 +60,11 @@
 
   export const db = Firebase.initializeApp(config).database();
 
-  var display;
   export default {
     name: 'app'
   }
 </script>
+
 <style >
   .md-app-toolbar {
     background: dodgerblue;
@@ -79,6 +79,5 @@
   #navMenu {
     display: inline;
   }
-
 
 </style>

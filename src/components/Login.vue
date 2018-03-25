@@ -35,8 +35,8 @@
 <style >
 
   .logInButton {
-    background-color: #f44336;
-    color: #ffffff;
+    background-color: #f44336 !important;
+    color: #ffffff !important;
     text-align: center;
     font-size: 16px;
     width: 30vh;
