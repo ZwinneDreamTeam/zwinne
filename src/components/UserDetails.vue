@@ -11,12 +11,12 @@
     </div>
     <div>
       Permissions:
-      <div><md-switch v-model="isModerator" :disabled="disabled == 1"> Moderator</md-switch></div>
-      <div><md-switch v-model="isCandidate" :disabled="disabled == 1"> Candidate</md-switch></div>
-      <div><md-switch v-model="isRedactor" :disabled="disabled == 1"> Redactor</md-switch></div>
+      <div><md-switch class="md-primary" v-model="isModerator" :disabled="disabled == 1"> Moderator</md-switch></div>
+      <div><md-switch class="md-primary" v-model="isCandidate" :disabled="disabled == 1"> Candidate</md-switch></div>
+      <div><md-switch class="md-primary" v-model="isRedactor" :disabled="disabled == 1"> Redactor</md-switch></div>
     </div>
-    <md-button @click="disabled = 0" class="md-raised" v-show="disabled == 1"> {{edit}}</md-button>
-    <md-button @click="disabled = 1" v-on:click="applyChanges" class="md-raised" v-show="disabled == 0"> {{apply}}</md-button>
+    <md-button @click="disabled = 0" class="md-primary" v-show="disabled == 1"> {{edit}}</md-button>
+    <md-button @click="disabled = 1" v-on:click="applyChanges" class="md-primary" v-show="disabled == 0"> {{apply}}</md-button>
   </div>
 </template>
 
@@ -69,10 +69,5 @@ export default {
 </script>
 
 <style scoped>
-.md-switch {
-    display: flex;
-  }
-.md-button {
 
-}
 </style>
