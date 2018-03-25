@@ -13,7 +13,7 @@
     <div>
       Permissions:
       <div><md-switch class="md-primary" v-model="boolean" :value="getUser().isModerator"  disabled> Moderator </md-switch></div>
-      <div><md-switch v-model="boolean" :value="getUser().isCandidate"  disabled> Candidate </md-switch></div>
+      <div><md-switch v-model="boolean" :value="getUser().isCandidate"  disabled class="md-primary"> Candidate </md-switch></div>
       <div><md-switch v-model="boolean" :value="getUser().isRedactor" class="md-primary" disabled> Redactor </md-switch></div>
     </div>
     <md-button v-on:click="editUser" class="md-primary"> {{edit}}</md-button>

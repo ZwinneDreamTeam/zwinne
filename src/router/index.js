@@ -66,7 +66,7 @@ let router = new VueRouter({
           component: UsersList
         },
         {
-          path: 'users/user/:id',
+          path: 'users/:id',
           name: 'userDetails',
           component: UserDetails
         }
