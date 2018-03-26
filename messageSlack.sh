@@ -1,1 +1,1 @@
-curl -X POST -H 'Content-type: application/json' --data '{"text":"$1"}' https://hooks.slack.com/services/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
+curl -X POST --data-urlencode "payload={\"channel\": \"#github\", \"username\": \"webhookbot\", \"text\": \"Firebase deploy - success.\", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/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
