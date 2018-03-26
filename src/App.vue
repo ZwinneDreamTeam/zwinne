@@ -46,8 +46,7 @@
   </div>
 </template>
 <script>
-  import Firebase from 'Firebase'
-  import Vue from 'vue'
+  import firebase from 'firebase'
 
   let config = {
     apiKey: "AIzaSyAduGsOpgqCLn79cI4fzBvMsC0LFfnQhWA",
@@ -58,7 +57,7 @@
     messagingSenderId: "427115139234"
   };
 
-  export const db = Firebase.initializeApp(config).database();
+  export const db = firebase.initializeApp(config).database();
 
   export default {
     name: 'app'
