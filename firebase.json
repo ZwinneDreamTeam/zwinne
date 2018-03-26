@@ -5,6 +5,7 @@
   },
   "hosting": {
     "public": "./dist",
+    "postdeploy": "./messageSlack.sh 'Just deployed to Firebase Hosting'",
     "rewrites": [
       {
         "source": "**",
