@@ -3,7 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import Firebase from 'Firebase'
+import firebase from 'firebase'
 import VueFire from 'vuefire'
 
 Vue.use(VueFire);
@@ -12,7 +12,7 @@ Vue.config.productionTip = false;
 
 let app;
 
-Firebase.auth().onAuthStateChanged(function (user) {
+firebase.auth().onAuthStateChanged(function (user) {
   if (!app) {
     /* eslint-disable no-new */
     app = new Vue({

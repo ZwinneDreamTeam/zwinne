@@ -10,7 +10,6 @@ import UserDetails from '@/components/UserDetails'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
-import Firebase from 'Firebase'
 
 Vue.use(VueMaterial);
 Vue.use(VueRouter);
@@ -76,7 +75,7 @@ let router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  let currentUser = Firebase.auth().currentUser;
+  let currentUser = firebase.auth().currentUser;
   let requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   let requiresRedactor = to.matched.some(record => record.meta.requiresRedactor);
   let requiresCandidate = to.matched.some(record => record.meta.requiresCandidate);
@@ -86,7 +85,7 @@ router.beforeEach((to, from, next) => {
   if (requiresAuth) {
     if (currentUser) {
       if (requiresModerator || requiresCandidate || requiresRedactor) {
-        let currentUserDb = Firebase.database().ref('/users/' + currentUser.uid);
+        let currentUserDb = firebase.database().ref('/users/' + currentUser.uid);
         currentUserDb.on('value', function (snapshot) {
           let isCandidate = (snapshot.val() && snapshot.val().isCandidate);
           let isRedactor = (snapshot.val() && snapshot.val().isRedactor);
