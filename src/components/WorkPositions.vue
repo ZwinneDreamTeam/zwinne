@@ -8,22 +8,31 @@
         {{ position.name }} See details
       </li>
     </ul>
+    <button v-if="isModerator" v-on:click="addPosition">Add position</button>
   </div>
 </template>
 
 <script>
   import { db } from "../App"
+  import firebase from 'firebase'
 
   let positionsRef = db.ref('workPositions');
+  let usersRef = db.ref('users');
 
   export default {
     name: "work-positions",
     firebase: {
-      positions: positionsRef
+      positions: positionsRef,
+      users: usersRef
     },
     data () {
       return {
         positionFilter: ""
+      }
+    },
+    methods: {
+      addPosition: function () {
+        window.alert('Not implemented yet')
       }
     },
     computed: {
@@ -34,6 +43,16 @@
           })
         }
         return this.positions
+      },
+      isModerator: function () {
+        let currentUserAuth = firebase.auth().currentUser;
+        let currentUser = this.users.filter((user) => {
+          return user['.key'] === currentUserAuth.uid
+        });
+        if (currentUser[0] == null) {
+          return false
+        }
+        return currentUser[0].isModerator
       }
     }
   }
