@@ -71,7 +71,15 @@ let router = new VueRouter({
           component: UserDetails
         }
       ]
-    }
+    },
+    {
+      path: '/:id',
+      name: 'currentUserDetails',
+      component: UserDetails,
+      meta: {
+        requiresAuth: true
+      }
+    },
   ]
 });
 

@@ -12,8 +12,14 @@
           <md-toolbar class="md-transparent" md-elevation="0">
             Navigation
           </md-toolbar>
-
           <md-list>
+            <md-list-item>
+              <router-link :to="{ name: 'currentUserDetails', params: { id: getCurrentUserKey() }}">
+                <md-icon>account_circle</md-icon>
+                <span class="md-list-item-text">User profile</span>
+              </router-link>
+            </md-list-item>
+
             <md-list-item>
               <md-icon>move_to_inbox</md-icon>
               <span class="md-list-item-text">Inbox</span>
@@ -60,7 +66,13 @@
   export const db = firebase.initializeApp(config).database();
 
   export default {
-    name: 'app'
+    name: 'app',
+    methods: {
+      getCurrentUserKey: function () {
+        let currentUser = firebase.auth().currentUser
+        return currentUser.uid
+      }
+    }
   }
 </script>
 
