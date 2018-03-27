@@ -7,6 +7,7 @@ import Home from '@/components/Home'
 import Login from '@/components/Login'
 import UsersList from '@/components/UsersList'
 import UserDetails from '@/components/UserDetails'
+import WorkPositions from '@/components/WorkPositions'
 import VueMaterial from 'vue-material'
 import firebase from 'firebase'
 import 'vue-material/dist/vue-material.min.css'
@@ -30,6 +31,14 @@ let router = new VueRouter({
       path: '/',
       name: 'Home',
       component: Home,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/positions',
+      name: 'Work positions',
+      component: WorkPositions,
       meta: {
         requiresAuth: true
       }
