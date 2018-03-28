@@ -5,7 +5,7 @@
     <label for="positionsCheckbox">Active positions only</label>
     <ul id="positions-list">
       <li v-for="(position, key) of filteredPositions">
-        {{ position.name }} See details
+        {{ position.name }} <router-link :to="{ name: 'positionDetails', params: { id: position['.key'] }}">See details </router-link>
       </li>
     </ul>
     <button v-if="isModerator" v-on:click="addPosition">Add position</button>
