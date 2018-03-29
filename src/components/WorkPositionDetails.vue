@@ -38,12 +38,16 @@ export default {
          let positionDb = db.ref('/workPositions/' + key)
          positionDb.on('value', function (snapshot) {
            position = snapshot.val();
+           window.sessionStorage.setItem("name", position.name);
+           window.sessionStorage.setItem("company", position.company);
+           window.sessionStorage.setItem("description", position.description);
+           window.sessionStorage.setItem("isActive", position.isActive);
          });
 
-        this.$data.name = position.name;
-        this.$data.company = position.company;
-        this.$data.description = position.description;
-        this.$data.isActive = position.isActive;
+        this.$data.name = window.sessionStorage.getItem("name");
+        this.$data.company = window.sessionStorage.getItem("company");
+        this.$data.description = window.sessionStorage.getItem("description");
+        this.$data.isActive = window.sessionStorage.getItem("isActive");
       },
       applyChanges: function() {
         var positionData = {
