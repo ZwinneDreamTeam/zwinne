@@ -45,7 +45,7 @@ let router = new VueRouter({
       }
     },
     {
-      path: 'positions/:id',
+      path: '/positions/:id',
       name: 'positionDetails',
       component: WorkPositionDetails
     },

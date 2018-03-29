@@ -44,7 +44,6 @@ export default {
         this.$data.company = position.company;
         this.$data.description = position.description;
         this.$data.isActive = position.isActive;
-        console.log(position.isActive);
       },
       applyChanges: function() {
         var positionData = {
