@@ -73,7 +73,7 @@ let router = new VueRouter({
       ]
     },
     {
-      path: '/:id',
+      path: '/user/:id',
       name: 'currentUserDetails',
       component: UserDetails,
       meta: {
@@ -89,7 +89,6 @@ router.beforeEach((to, from, next) => {
   let requiresRedactor = to.matched.some(record => record.meta.requiresRedactor);
   let requiresCandidate = to.matched.some(record => record.meta.requiresCandidate);
   let requiresModerator = to.matched.some(record => record.meta.requiresModerator);
-
 
   if (requiresAuth) {
     if (currentUser) {

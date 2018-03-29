@@ -14,10 +14,7 @@
           </md-toolbar>
           <md-list>
             <md-list-item>
-              <router-link :to="{ name: 'currentUserDetails', params: { id: getCurrentUserKey() }}">
-                <md-icon>account_circle</md-icon>
-                <span class="md-list-item-text">User profile</span>
-              </router-link>
+
             </md-list-item>
 
             <md-list-item>
@@ -65,14 +62,9 @@
 
   export const db = firebase.initializeApp(config).database();
 
+  var currentUser
   export default {
-    name: 'app',
-    methods: {
-      getCurrentUserKey: function () {
-        let currentUser = firebase.auth().currentUser
-        return currentUser.uid
-      }
-    }
+    name: 'app'
   }
 </script>
 
