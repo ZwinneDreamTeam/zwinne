@@ -8,6 +8,7 @@ import Login from '@/components/Login'
 import UsersList from '@/components/UsersList'
 import UserDetails from '@/components/UserDetails'
 import WorkPositions from '@/components/WorkPositions'
+import WorkPositionDetails from '@/components/WorkPositionDetails'
 import VueMaterial from 'vue-material'
 import firebase from 'firebase'
 import 'vue-material/dist/vue-material.min.css'
@@ -42,6 +43,11 @@ let router = new VueRouter({
       meta: {
         requiresAuth: true
       }
+    },
+    {
+      path: '/positions/:id',
+      name: 'positionDetails',
+      component: WorkPositionDetails
     },
     {
       path: '/redactor',
