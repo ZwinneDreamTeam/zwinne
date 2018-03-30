@@ -11,18 +11,15 @@
 <script>
   import { db } from "../App"
   import firebase from 'firebase'
-
+  let usersRef = db.ref('users');
   export default {
     name: 'Home',
+    firebase: {
+      users: usersRef
+    },
     data: function () {
       return {
         user: firebase.auth().currentUser.uid
-      }
-    },
-    methods: {
-      saveUser: function () {
-        user = firebase.auth().currentUser.uid
-        window.sessionStorage.setItem('currentUser', user)
       }
     }
   }
