@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div>{{msg}}</div>
-    <router-link :to="{ name: 'currentUserDetails', params: { id: getCurrentUserKey() }}">
+    <div>{{user}}</div>
+    <router-link :to="{ name: 'currentUserDetails', params: {id: user }}">
                     <md-icon>account_circle</md-icon>
                     <span class="md-list-item-text">User profile</span>
                   </router-link>
@@ -14,20 +14,16 @@
 
   export default {
     name: 'Home',
-    data() {
+    data: function () {
       return {
-        msg: 'Home Sweet Home'
+        user: firebase.auth().currentUser.uid
       }
     },
     methods: {
-        getCurrentUserKey: function () {
-           let currentUser = firebase.auth().currentUser
-          if(this.currentUser) {
-            return currentUser.uid
-          } else {
-          return 123;
-          }
-        }
+      saveUser: function () {
+        user = firebase.auth().currentUser.uid
+        window.sessionStorage.setItem('currentUser', user)
+      }
     }
   }
 </script>

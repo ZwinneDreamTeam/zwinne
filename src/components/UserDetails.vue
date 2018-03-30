@@ -29,10 +29,13 @@ export default {
       getUser: function () {
         var user
         var key = this.$route.params.id
+        console.log(key)
          let userDb = db.ref('/users/' + key)
          userDb.on('value', function (snapshot) {
            user = snapshot.val();
+           console.log( user.username)
          });
+         console.log("user")
 
         this.$data.username = user.username;
         this.$data.email = user.email;
