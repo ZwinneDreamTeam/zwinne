@@ -36,7 +36,18 @@ cd functions
 # Install dependencies in that folder
 npm install
 # deploy functions to firebase
-firebase deploy --project zwinnexd
+firebase deploy
+
+```
+
+## Deploying to Firebase Hosting
+```
+# Install firebase-tools
+npm install -g firebase-tools
+# Build project
+npm run build
+# Deploy to firebase
+firebase deploy
 
 ```
 
