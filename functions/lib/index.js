@@ -6,7 +6,7 @@ admin.initializeApp(functions.config().firebase);
 exports.OnCreateFunction = functions.auth.user().onCreate((event) => {
     var userId = event.data.uid;
     admin.database().ref('users/' + userId).set({
-        username: event.data.displayName,
+        username: 'displayName' in event.data ? event.data.displayName : "",
         email: event.data.email,
         isCandidate: true,
         isRedactor: false,
