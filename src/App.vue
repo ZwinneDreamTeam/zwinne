@@ -4,7 +4,10 @@
       <md-app md-waterfall md-mode="fixed">
 
         <md-app-toolbar class="md-primary">
-          <span class="md-title">Zwinne xD</span>
+          <md-button class="md-icon-button" to="/">
+            <md-icon>home</md-icon>
+          </md-button>
+          <h3 class="md-title">Zwinne XD</h3>
         </md-app-toolbar>
 
         <md-app-drawer v-if="showDrawer" md-permanent="card">
@@ -14,7 +17,7 @@
         <md-app-content>
           <router-view></router-view>
         </md-app-content>
-        
+
       </md-app>
     </div>
 
