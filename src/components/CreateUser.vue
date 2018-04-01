@@ -6,18 +6,21 @@
       </md-card-header>
 
       <md-field>
+        <md-icon>person</md-icon>
         <label>Username</label>
         <md-input v-model="username" type="text" required/>
         <span class="md-error">There is an error</span>
       </md-field>
 
       <md-field>
+        <md-icon>email</md-icon>
         <label>Email</label>
         <md-input v-model="email" type="email" required/>
         <span class="md-error">There is an error</span>
       </md-field>
 
       <md-field>
+        <md-icon>lock</md-icon>
         <label>Password</label>
         <md-input v-model="password" type="password" required/>
         <span class="md-error">There is an error</span>
@@ -100,5 +103,4 @@
 </script>
 
 <style scoped>
-
 </style>
