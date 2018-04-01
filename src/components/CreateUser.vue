@@ -1,32 +1,48 @@
 <template>
   <div>
+    <md-card style="padding : 10px;">
+      <md-card-header>
+        <h1 class="md-title">Create new account</h1>
+      </md-card-header>
 
-    <h1>Create new account</h1>
-    <div>
-      Username:
-      <input v-model="username" type="text">
-    </div>
-    <div>
-      Email:
-      <input v-model="email" type="email">
-    </div>
-    <div>
-      Password:
-      <input v-model="password" type="password">
-    </div>
-    <div>
-      Permissions:
+      <md-field>
+        <label>Username</label>
+        <md-input v-model="username" type="text" required/>
+        <span class="md-error">There is an error</span>
+      </md-field>
+
+      <md-field>
+        <label>Email</label>
+        <md-input v-model="email" type="email" required/>
+        <span class="md-error">There is an error</span>
+      </md-field>
+
+      <md-field>
+        <label>Password</label>
+        <md-input v-model="password" type="password" required/>
+        <span class="md-error">There is an error</span>
+      </md-field>
+
       <div>
-        <md-switch class="md-primary" v-model="isModerator"> Moderator</md-switch>
+        <label>Permissions:</label>
+        <div>
+          <md-switch class="md-primary" v-model="isModerator">
+            <label>Moderator</label>
+          </md-switch>
+        </div>
+        <div>
+          <md-switch class="md-primary" v-model="isCandidate">
+            <label>Candidate</label>
+          </md-switch>
+        </div>
+        <div>
+          <md-switch class="md-primary" v-model="isRedactor">
+            <label> Redactor</label>
+          </md-switch>
+        </div>
       </div>
-      <div>
-        <md-switch class="md-primary" v-model="isCandidate"> Candidate</md-switch>
-      </div>
-      <div>
-        <md-switch class="md-primary" v-model="isRedactor"> Redactor</md-switch>
-      </div>
-    </div>
-    <md-button @click="submit_click" class="md-primary"> {{addUser}}</md-button>
+      <md-button @click="submit_click" class="md-raised md-primary"> {{addUser}}</md-button>
+    </md-card>
   </div>
 </template>
 
