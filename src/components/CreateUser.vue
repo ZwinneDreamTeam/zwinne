@@ -4,15 +4,15 @@
     <h1>Create new account</h1>
     <div>
       Username:
-      <input v-model="username">
+      <input v-model="username" type="text">
     </div>
     <div>
       Email:
-      <input v-model="email">
+      <input v-model="email" type="email">
     </div>
     <div>
       Password:
-      <input v-model="password">
+      <input v-model="password" type="password">
     </div>
     <div>
       Permissions:
@@ -37,7 +37,7 @@
 
   const createAccountFirebase = firebase.initializeApp(config, "create_account_instance").auth();
 
-  function createUser(user, eIsCandidate, eIsModerator, eIsRedactor) {
+  function createUser(user, eIsCandidate, eIsModerator, eIsRedactor, eUsername) {
     if (user) {
       let uid = user.uid;
       let fullUserData = {
@@ -45,10 +45,11 @@
         isCandidate: Boolean(eIsCandidate),
         isModerator: Boolean(eIsModerator),
         isRedactor: Boolean(eIsRedactor),
-        username: ""
+        username: eUsername
       };
       db.ref('/users/' + uid).set(fullUserData);
       signNewUserOut();
+      window.history.back();
     }
   }
 
@@ -71,8 +72,9 @@
     }),
     methods: {
       submit_click: function (event) {
+
         createAccountFirebase.createUserWithEmailAndPassword(this.$data.email, this.$data.password)
-          .then(user => createUser(user, this.$data.isCandidate, this.$data.isModerator, this.$data.isRedactor))
+          .then(user => createUser(user, this.$data.isCandidate, this.$data.isModerator, this.$data.isRedactor, this.$data.username))
           .catch(function (error) {
             alert(error.message);
           });

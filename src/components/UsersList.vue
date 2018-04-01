@@ -8,7 +8,9 @@
         {{ user.username }} <router-link :to="{ name: 'userDetails', params: { id: user['.key'] }}">See details </router-link>
       </li>
     </ul>
-    <md-button v-on:click="addAccountClick" class="md-raised addAccountButton">{{addAccount}}</md-button>
+    <router-link :to="{name: 'createAccount'}">
+      <button class="md-raised addAccountButton">{{addAccount}}</button>
+    </router-link>
   </div>
 </template>
 
