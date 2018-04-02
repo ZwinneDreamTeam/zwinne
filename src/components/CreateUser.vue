@@ -26,7 +26,7 @@
         <span class="md-error">A password must contain at least eight characters</span>
       </md-field>
 
-      <div>
+      <div v-if="isCurrentUser == true">
         <label>Permissions:</label>
         <div>
           <md-switch class="md-primary" v-model="isModerator">
@@ -56,9 +56,15 @@
 
   const createAccountFirebase = firebase.initializeApp(config, "create_account_instance").auth();
 
-  function createUser(user, eIsCandidate, eIsModerator, eIsRedactor, eUsername) {
+  function createUser(user, eIsCandidate, eIsModerator, eIsRedactor, eUsername, isCurrentUser) {
+    console.log(isCurrentUser);
     if (user) {
       let uid = user.uid;
+      if(isCurrentUser) {
+        eIsCandidate = true;
+        eIsModerator = false;
+        eIsRedactor = false;
+      }
       let fullUserData = {
         email: user.email,
         isCandidate: Boolean(eIsCandidate),
@@ -66,9 +72,15 @@
         isRedactor: Boolean(eIsRedactor),
         username: eUsername
       };
+
       db.ref('/users/' + uid).set(fullUserData);
       signNewUserOut();
-      window.history.back();
+      if(isCurrentUser) {
+        window.history.back();
+      }
+      else {
+        window.location = '/#/login';
+      }
     }
   }
 
@@ -90,13 +102,14 @@
       addUser: "Submit",
       validEmail: true,
       validUsername: true,
-      validPassword: true
+      validPassword: true,
+      isCurrentUser: false
     }),
     methods: {
       submit_click: function (event) {
         if (this.isValid()) {
           createAccountFirebase.createUserWithEmailAndPassword(this.$data.email, this.$data.password)
-            .then(user => createUser(user, this.$data.isCandidate, this.$data.isModerator, this.$data.isRedactor, this.$data.username))
+            .then(user => createUser(user, this.$data.isCandidate, this.$data.isModerator, this.$data.isRedactor, this.$data.username, this.isCurrentUser))
             .catch(function (error) {
               alert(error.message);
             });
@@ -133,6 +146,16 @@
       fromIncorrecUsernameToCorrect: function(){
         if(this.$data.validUsername) return;
         this.isUsernameValid();
+      },
+      checkIfUserIsLogIn: function() {
+        let currentUser = firebase.auth().currentUser;
+
+        console.log(currentUser);
+        if(currentUser) {
+          this.isCurrentUser = true;
+          } else {
+          }
+        console.log(this.isCurrentUser);
       }
     },
     computed: {
@@ -151,7 +174,10 @@
           'md-invalid': !this.validPassword
         }
       }
-    }
+    },
+     beforeMount(){
+        this.checkIfUserIsLogIn();
+     }
   }
 </script>
 
