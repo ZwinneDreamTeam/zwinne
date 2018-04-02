@@ -8,21 +8,21 @@
       <md-field :class="usernameClass">
         <md-icon>person</md-icon>
         <label>Username</label>
-        <md-input v-model="username" type="text" v-on:keyup="fromIncorrecUsernameToCorrect()" v-on:blur="isUsernameValid()" required/>
+        <md-input v-model="username" type="text" v-on:keyup="fromIncorrecUsernameToCorrect()" v-on:blur="validateUsername()" required/>
         <span class="md-error">A username must contain at least five characters</span>
       </md-field>
 
       <md-field :class="emailClass">
         <md-icon>email</md-icon>
         <label>Email</label>
-        <md-input v-model="email" type="email" v-on:keyup="fromIncorrecEmailToCorrect()" v-on:blur="isEmailValid()" required/>
+        <md-input v-model="email" type="email" v-on:keyup="fromIncorrecEmailToCorrect()" v-on:blur="validateEmail()" required/>
         <span class="md-error">Please provide valid email address</span>
       </md-field>
 
       <md-field :class="passwordClass">
         <md-icon>lock</md-icon>
         <label>Password</label>
-        <md-input v-model="password" type="password" v-on:keyup="fromIncorrecPasswordToCorrect" v-on:blur="isPasswordValid()" required/>
+        <md-input v-model="password" type="password" v-on:keyup="fromIncorrecPasswordToCorrect" v-on:blur="validatePassword()" required/>
         <span class="md-error">A password must contain at least eight characters</span>
       </md-field>
 
@@ -61,9 +61,9 @@
       let uid = user.uid;
       let fullUserData = {
         email: user.email,
-        isCandidate: Boolean(eIsCandidate),
-        isModerator: Boolean(eIsModerator),
-        isRedactor: Boolean(eIsRedactor),
+        isCandidate: eIsCandidate,
+        isModerator: eIsModerator,
+        isRedactor: eIsRedactor,
         username: eUsername
       };
       db.ref('/users/' + uid).set(fullUserData);
@@ -81,9 +81,9 @@
     data: () => ({
       email: "",
       username: "",
-      isModerator: "",
-      isCandidate: "",
-      isRedactor: "",
+      isModerator: false,
+      isCandidate: false,
+      isRedactor: false,
       edit: "Edit",
       apply: "Apply",
       password: "",
@@ -104,35 +104,35 @@
       },
       isValid: function () {
 
-        let passwordValid = this.isPasswordValid();
-        let emailValid = this.isEmailValid();
-        let usernameValid = this.isUsernameValid();
+        let passwordValid = this.validatePassword();
+        let emailValid = this.validateEmail();
+        let usernameValid = this.validateUsername();
         return emailValid && passwordValid && usernameValid;
       },
-      isPasswordValid: function () {
+      validatePassword: function () {
         this.$data.validPassword = this.$data.password.length >= 5;
         return this.$data.validPassword;
       },
-      isUsernameValid: function () {
+      validateUsername: function () {
         this.$data.validUsername = this.$data.username.length >= 5;
         return this.$data.validUsername;
       },
-      isEmailValid: function () {
+      validateEmail: function () {
         let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         this.$data.validEmail = re.test(this.$data.email);
         return this.$data.validEmail;
       },
       fromIncorrecEmailToCorrect: function(){
         if(this.$data.validEmail) return;
-        this.isEmailValid();
+        this.validateEmail();
       },
       fromIncorrecPasswordToCorrect: function(){
         if(this.$data.validPassword) return;
-        this.isPasswordValid();
+        this.validatePassword();
       },
       fromIncorrecUsernameToCorrect: function(){
         if(this.$data.validUsername) return;
-        this.isUsernameValid();
+        this.validateUsername();
       }
     },
     computed: {
