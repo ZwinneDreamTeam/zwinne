@@ -14,25 +14,22 @@
       Permissions:
       </div>
       <div v-if="isCurrentUserModerator == true">
-        <md-switch class="md-primary" v-model="isModerator" :disabled="disabled == 1"> Moderator</md-switch>
+        <md-switch class="md-primary" v-model="isModerator" :disabled="disabled == 1"> Moderator {{isModerator}} {{typeof(isModerator)}}</md-switch>
       </div>
       <div v-if="(isCurrentUserCandidate == true && disabled == 1) || isCurrentUserModerator == true">
-        <md-switch class="md-primary" v-model="isCandidate" :disabled="disabled == 1"> Candidate</md-switch>
+        <md-switch class="md-primary" v-model="isCandidate" :disabled="disabled == 1"> Candidate {{isCandidate}} {{typeof(isCandidate)}}</md-switch>
       </div>
       <div v-if="(isCurrentUserRedactor == true && disabled == 1) || isCurrentUserModerator == true">
-        <md-switch class="md-primary" v-model="isRedactor" :disabled="disabled == 1"> Redactor</md-switch>
+        <md-switch class="md-primary" v-model="isRedactor" :disabled="disabled == 1"> Redactor {{isRedactor}} {{typeof(isRedactor)}}</md-switch>
       </div>
     </div>
-
     <md-button @click="disabled = 0" class="md-primary" v-show="disabled == 1"> {{edit}}</md-button>
     <md-button @click="disabled = 1" v-on:click="applyChanges" class="md-primary" v-show="disabled == 0"> {{apply}}</md-button>
   </div>
 </template>
-
 <script>
 import { db } from "../App"
 import firebase from 'firebase'
-
 export default {
     name: "user-details",
     methods: {
@@ -49,43 +46,35 @@ export default {
            window.sessionStorage.setItem("isCandidate", user.isCandidate);
            window.sessionStorage.setItem("isRedactor", user.isRedactor);
          });
-
-        this.$data.username = window.sessionStorage.getItem("username");
-        this.$data.email = window.sessionStorage.getItem("email");
-        this.$data.isModerator = window.sessionStorage.getItem("isModerator");
-        console.log(this.$data.isModerator);
-        this.$data.isCandidate = window.sessionStorage.getItem("isCandidate");
-        console.log(this.$data.isCandidate);
-        this.$data.isRedactor = window.sessionStorage.getItem("isRedactor");
+        this.username = window.sessionStorage.getItem("username");
+        this.email = window.sessionStorage.getItem("email");
+        this.isModerator = window.sessionStorage.getItem("isModerator") === "true";
+        this.isCandidate = window.sessionStorage.getItem("isCandidate") === "true";
+        this.isRedactor = window.sessionStorage.getItem("isRedactor") === "true";
       },
       getCurrentUser: function () {
           let currentUser = firebase.auth().currentUser;
-          console.log(currentUser);
+          //console.log(currentUser);
           var cUser;
           let curentUserDb = db.ref('/users/' + currentUser.uid)
            curentUserDb.on('value', function (snapshot) {
              cUser = snapshot.val();
-              /*window.sessionStorage.setItem("currentIsModerator", cUser.isModerator);
+              window.sessionStorage.setItem("currentIsModerator", cUser.isModerator);
               window.sessionStorage.setItem("currentIsCandidate", cUser.isCandidate);
-              window.sessionStorage.setItem("currentIsRedactor", cUser.isRedactor); */
+              window.sessionStorage.setItem("currentIsRedactor", cUser.isRedactor);
             });
-
-            this.isCurrentUserModerator = cUser.isModerator;
-            this.isCurrentUserRedactor = cUser.isRedactor;
-            this.isCurrentUserCandidate = cUser.isCandidate;
-            /*this.isCurrentUserModerator = window.sessionStorage.getItem("currentIsModerator");
-            this.isCurrentUserRedactor = window.sessionStorage.getItem("currentIsRedactor");
-            this.isCurrentUserCandidate = window.sessionStorage.getItem("currentIsCandidate"); */
+            this.isCurrentUserModerator = Boolean(window.sessionStorage.getItem("currentIsModerator"));
+            this.isCurrentUserRedactor = Boolean(window.sessionStorage.getItem("currentIsRedactor"));
+            this.isCurrentUserCandidate = Boolean(window.sessionStorage.getItem("currentIsCandidate"));
       },
       applyChanges: function() {
         var userData = {
-          email: this.$data.email,
-          isCandidate: Boolean(this.$data.isCandidate),
-          isModerator: Boolean(this.$data.isModerator),
-          isRedactor: Boolean(this.$data.isRedactor),
-          username: this.$data.username
+          email: this.email,
+          isCandidate: this.isCandidate,
+          isModerator: this.isModerator,
+          isRedactor: this.isRedactor,
+          username: this.username
         };
-
         return db.ref('/users/' + this.$route.params.id).set(userData);
       }
     },
@@ -104,11 +93,9 @@ export default {
         disabled: 1,
         isCurrentUserModerator: false,
         isCurrentUserRedactor: false,
-        isCurrentUserCandidate: false,
+        isCurrentUserCandidate: false
     }),
   }
 </script>
-
 <style scoped>
-
 </style>
