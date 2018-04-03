@@ -11,13 +11,13 @@
     </div>
     <div>
       Permissions:
-      <div v-if="currentUser.isModerator === 'true'">
+      <div v-if="isCurrentUserModerator == true">
         <md-switch class="md-primary" v-model="isModerator" :disabled="disabled == 1"> Moderator</md-switch>
       </div>
-      <div v-if="currentUser.isModerator === 'false' && currentUser.isCandidate === 'true' ">
+      <div v-if="isCurrentUserModerator == false && isCurrentUserCandidate == true">
         <md-switch class="md-primary" v-model="isCandidate" :disabled="disabled == 1"> Candidate</md-switch>
       </div>
-      <div v-if="currentUser.isModerator === false && currentUser.isRedactor === true">
+      <div v-if="isCurrentUserModerator == false && isCurrentUserRedactor == true">
         <md-switch class="md-primary" v-model="isRedactor" :disabled="disabled == 1"> Redactor</md-switch>
       </div>
     </div>
@@ -41,7 +41,6 @@ export default {
          let userDb = db.ref('/users/' + key)
          userDb.on('value', function (snapshot) {
            user = snapshot.val();
-           console.log(user.username)
            window.sessionStorage.setItem("username", user.username);
            window.sessionStorage.setItem("email", user.email);
            window.sessionStorage.setItem("isModerator", user.isModerator);
@@ -56,7 +55,12 @@ export default {
         this.$data.isRedactor = window.sessionStorage.getItem("isRedactor");
       },
       getCurrentUser: function () {
-        this.currentUser = firebase.auth().currentUser;
+          let currentUser = firebase.auth().currentUser;
+          console.log(currentUser);
+          this.isCurrentUserModerator = currentUser.isModerator;
+          this.isCurrentUserRedactor = currentUser.isRedactor;
+          this.isCurrentUserCandidate = currentUser.isCandidate;
+          console.log(this.isCurrentUserModerator);
       },
       applyChanges: function() {
         var userData = {
@@ -83,7 +87,9 @@ export default {
         edit: "Edit",
         apply: "Apply",
         disabled: 1,
-        currentUser: ""
+        isCurrentUserModerator: false,
+        isCurrentUserRedactor: false,
+        isCurrentUserCandidate: false,
     }),
   }
 </script>
