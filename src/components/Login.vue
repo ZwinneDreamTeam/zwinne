@@ -30,7 +30,7 @@
 <script>
   import firebase from 'firebase'
 
-  var provider = new firebase.auth.GoogleAuthProvider();
+  let provider = new firebase.auth.GoogleAuthProvider();
   provider.setCustomParameters({
     prompt: 'select_account'
   });
@@ -44,21 +44,17 @@
        password: ""
     }),
     methods: {
-      doLogin: function (event) {
-        firebase.auth().signInWithPopup(provider).then(function (result) {
-          window.location = '/#/home'
-          location.reload();
+      doLogin(event) {
+        firebase.auth().signInWithPopup(provider).then((result) => {
+          this.$router.push('/');
         }).catch(function(error) {
           alert(error.message);
         });
       },
       confirmLogIn: function(event) {
-      firebase.auth().signInWithEmailAndPassword(this.$data.email, this.$data.password)
-        .then(function (result) {
-         window.location = '/#/home'
-         location.reload();
-        })
-        .catch(function (error) {
+      firebase.auth().signInWithEmailAndPassword(this.$data.email, this.$data.password).then((result) => {
+         this.$router.push('/');
+        }).catch(function (error) {
           alert(error.message);
         });
       }
@@ -86,11 +82,6 @@
     margin-left: 40vh;
     margin-right: 40vh;
   }
-
-  #navMenu {
-    display: none;
-  }
-
   .loginPanelView {
    text-align: center;
 
