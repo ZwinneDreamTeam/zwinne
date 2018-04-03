@@ -7,7 +7,7 @@
 <script>
   import firebase from 'firebase'
 
-  var provider = new firebase.auth.GoogleAuthProvider();
+  let provider = new firebase.auth.GoogleAuthProvider();
   provider.setCustomParameters({
     prompt: 'select_account'
   });
@@ -19,14 +19,14 @@
       }
     },
     methods: {
-      doLogin: function (event) {
-        firebase.auth().signInWithPopup(provider).then(function (result) {
-          window.location = '/#/home'
-          location.reload();
+      doLogin(event) {
+        firebase.auth().signInWithPopup(provider).then((result) => {
+          this.$router.push('/');
         }).catch(function(error) {
           alert(error.message);
         });
-      }
+      },
+
     }
   }
 </script>
@@ -45,10 +45,6 @@
 
   .logInView {
     text-align: center;
-  }
-
-  #navMenu {
-    display: none;
   }
 
 </style>
