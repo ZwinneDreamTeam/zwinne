@@ -9,15 +9,17 @@
       Email:
       <input v-model="email" :disabled="disabled == 1">
     </div>
-    <div>
+<div>
+      <div v-if="!(isCurrentUserModerator == false && disabled == 0)" >
       Permissions:
+      </div>
       <div v-if="isCurrentUserModerator == true">
         <md-switch class="md-primary" v-model="isModerator" :disabled="disabled == 1"> Moderator</md-switch>
       </div>
-      <div v-if="isCurrentUserModerator == false && isCurrentUserCandidate == true">
+      <div v-if="(isCurrentUserCandidate == true && disabled == 1) || isCurrentUserModerator == true">
         <md-switch class="md-primary" v-model="isCandidate" :disabled="disabled == 1"> Candidate</md-switch>
       </div>
-      <div v-if="isCurrentUserModerator == false && isCurrentUserRedactor == true">
+      <div v-if="(isCurrentUserRedactor == true && disabled == 1) || isCurrentUserModerator == true">
         <md-switch class="md-primary" v-model="isRedactor" :disabled="disabled == 1"> Redactor</md-switch>
       </div>
     </div>
@@ -51,16 +53,29 @@ export default {
         this.$data.username = window.sessionStorage.getItem("username");
         this.$data.email = window.sessionStorage.getItem("email");
         this.$data.isModerator = window.sessionStorage.getItem("isModerator");
+        console.log(this.$data.isModerator);
         this.$data.isCandidate = window.sessionStorage.getItem("isCandidate");
+        console.log(this.$data.isCandidate);
         this.$data.isRedactor = window.sessionStorage.getItem("isRedactor");
       },
       getCurrentUser: function () {
           let currentUser = firebase.auth().currentUser;
           console.log(currentUser);
-          this.isCurrentUserModerator = currentUser.isModerator;
-          this.isCurrentUserRedactor = currentUser.isRedactor;
-          this.isCurrentUserCandidate = currentUser.isCandidate;
-          console.log(this.isCurrentUserModerator);
+          var cUser;
+          let curentUserDb = db.ref('/users/' + currentUser.uid)
+           curentUserDb.on('value', function (snapshot) {
+             cUser = snapshot.val();
+              /*window.sessionStorage.setItem("currentIsModerator", cUser.isModerator);
+              window.sessionStorage.setItem("currentIsCandidate", cUser.isCandidate);
+              window.sessionStorage.setItem("currentIsRedactor", cUser.isRedactor); */
+            });
+
+            this.isCurrentUserModerator = cUser.isModerator;
+            this.isCurrentUserRedactor = cUser.isRedactor;
+            this.isCurrentUserCandidate = cUser.isCandidate;
+            /*this.isCurrentUserModerator = window.sessionStorage.getItem("currentIsModerator");
+            this.isCurrentUserRedactor = window.sessionStorage.getItem("currentIsRedactor");
+            this.isCurrentUserCandidate = window.sessionStorage.getItem("currentIsCandidate"); */
       },
       applyChanges: function() {
         var userData = {
@@ -81,9 +96,9 @@ export default {
     data: () => ({
         email: "",
         username: "",
-        isModerator: "",
-        isCandidate: "",
-        isRedactor: "",
+        isModerator: false,
+        isCandidate: false,
+        isRedactor: false,
         edit: "Edit",
         apply: "Apply",
         disabled: 1,
