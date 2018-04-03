@@ -9,6 +9,7 @@ import UsersList from '@/components/UsersList'
 import UserDetails from '@/components/UserDetails'
 import WorkPositions from '@/components/WorkPositions'
 import WorkPositionDetails from '@/components/WorkPositionDetails'
+import CreateUser from '@/components/CreateUser'
 import VueMaterial from 'vue-material'
 import firebase from 'firebase'
 import 'vue-material/dist/vue-material.min.css'
@@ -78,12 +79,18 @@ let router = new VueRouter({
       children: [
         {
           path: 'users',
+          name: 'users',
           component: UsersList
         },
         {
           path: 'users/:id',
           name: 'userDetails',
           component: UserDetails
+        },
+        {
+          path: 'users/account/create',
+          name: 'createAccount',
+          component: CreateUser
         }
       ]
     },

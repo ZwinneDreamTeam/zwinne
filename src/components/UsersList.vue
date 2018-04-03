@@ -8,22 +8,26 @@
         {{ user.username }} <router-link :to="{ name: 'userDetails', params: { id: user['.key'] }}">See details </router-link>
       </li>
     </ul>
+    <router-link :to="{name: 'createAccount'}">
+      <button class="md-raised addAccountButton">{{addAccount}}</button>
+    </router-link>
   </div>
 </template>
 
 <script>
-import { db } from "../App"
+  import {db} from "../App"
 
   let usersRef = db.ref('users');
 
-export default {
+  export default {
     name: "users-list",
     firebase: {
       users: usersRef
     },
-    data () {
+    data() {
       return {
-        redactorFilter: ""
+        redactorFilter: "",
+        addAccount: "Add new account"
       }
     },
     computed: {

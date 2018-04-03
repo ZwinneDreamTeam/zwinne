@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>{{user}}</div>
+    <div>Home <3 </div>
     <router-link :to="{ name: 'currentUserDetails', params: {id: user }}">
                     <md-icon>account_circle</md-icon>
                     <span class="md-list-item-text">User profile</span>
