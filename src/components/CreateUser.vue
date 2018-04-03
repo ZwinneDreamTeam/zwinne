@@ -22,7 +22,7 @@
       <md-field :class="passwordClass">
         <md-icon>lock</md-icon>
         <label>Password</label>
-        <md-input v-model="password" type="password" v-on:keyup="fromIncorrecPasswordToCorrect" v-on:blur="validatePassword()" required/>
+        <md-input v-model="password" type="password" v-on:keyup="fromIncorrecPasswordToCorrect()" v-on:blur="validatePassword()" required/>
         <span class="md-error">A password must contain at least eight characters</span>
       </md-field>
 
@@ -106,7 +106,7 @@
         return emailValid && passwordValid && usernameValid;
       },
       validatePassword: function () {
-        this.$data.validPassword = this.$data.password.length >= 5;
+        this.$data.validPassword = this.$data.password.length >= 8;
         return this.$data.validPassword;
       },
       validateUsername: function () {

@@ -39,11 +39,6 @@
         }
         return this.users
       }
-    },
-    methods: {
-      addAccountClick: function (event) {
-
-      }
     }
   }
 </script>
