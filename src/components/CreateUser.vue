@@ -8,21 +8,21 @@
       <md-field :class="usernameClass">
         <md-icon>person</md-icon>
         <label>Username</label>
-        <md-input v-model="username" type="text" v-on:keyup="fromIncorrecUsernameToCorrect()" v-on:blur="validateUsername()" required/>
+        <md-input v-model="username" type="text" v-on:keyup="validateUsernameIfIncorrect()" v-on:blur="validateUsername()" required/>
         <span class="md-error">A username must contain at least five characters</span>
       </md-field>
 
       <md-field :class="emailClass">
         <md-icon>email</md-icon>
         <label>Email</label>
-        <md-input v-model="email" type="email" v-on:keyup="fromIncorrecEmailToCorrect()" v-on:blur="validateEmail()" required/>
+        <md-input v-model="email" type="email" v-on:keyup="validateEmailIfIncorrect()" v-on:blur="validateEmail()" required/>
         <span class="md-error">Please provide valid email address</span>
       </md-field>
 
       <md-field :class="passwordClass">
         <md-icon>lock</md-icon>
         <label>Password</label>
-        <md-input v-model="password" type="password" v-on:keyup="fromIncorrecPasswordToCorrect()" v-on:blur="validatePassword()" required/>
+        <md-input v-model="password" type="password" v-on:keyup="validatePasswordIfIncorrect()" v-on:blur="validatePassword()" required/>
         <span class="md-error">A password must contain at least eight characters</span>
       </md-field>
 
@@ -118,15 +118,15 @@
         this.$data.validEmail = re.test(this.$data.email);
         return this.$data.validEmail;
       },
-      fromIncorrecEmailToCorrect: function(){
+      validateEmailIfIncorrect: function(){
         if(this.$data.validEmail) return;
         this.validateEmail();
       },
-      fromIncorrecPasswordToCorrect: function(){
+      validatePasswordIfIncorrect: function(){
         if(this.$data.validPassword) return;
         this.validatePassword();
       },
-      fromIncorrecUsernameToCorrect: function(){
+      validateUsernameIfIncorrect: function(){
         if(this.$data.validUsername) return;
         this.validateUsername();
       }
