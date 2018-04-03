@@ -11,10 +11,17 @@
     </div>
     <div>
       Permissions:
-      <div><md-switch class="md-primary" v-model="isModerator" :disabled="disabled == 1"> Moderator</md-switch></div>
-      <div><md-switch class="md-primary" v-model="isCandidate" :disabled="disabled == 1"> Candidate</md-switch></div>
-      <div><md-switch class="md-primary" v-model="isRedactor" :disabled="disabled == 1"> Redactor</md-switch></div>
+      <div v-if="currentUser.isModerator === 'true'">
+        <md-switch class="md-primary" v-model="isModerator" :disabled="disabled == 1"> Moderator</md-switch>
+      </div>
+      <div v-if="currentUser.isModerator === 'false' && currentUser.isCandidate === 'true' ">
+        <md-switch class="md-primary" v-model="isCandidate" :disabled="disabled == 1"> Candidate</md-switch>
+      </div>
+      <div v-if="currentUser.isModerator === false && currentUser.isRedactor === true">
+        <md-switch class="md-primary" v-model="isRedactor" :disabled="disabled == 1"> Redactor</md-switch>
+      </div>
     </div>
+
     <md-button @click="disabled = 0" class="md-primary" v-show="disabled == 1"> {{edit}}</md-button>
     <md-button @click="disabled = 1" v-on:click="applyChanges" class="md-primary" v-show="disabled == 0"> {{apply}}</md-button>
   </div>
@@ -22,6 +29,7 @@
 
 <script>
 import { db } from "../App"
+import firebase from 'firebase'
 
 export default {
     name: "user-details",
@@ -47,12 +55,15 @@ export default {
         this.$data.isCandidate = window.sessionStorage.getItem("isCandidate");
         this.$data.isRedactor = window.sessionStorage.getItem("isRedactor");
       },
+      getCurrentUser: function () {
+        this.currentUser = firebase.auth().currentUser;
+      },
       applyChanges: function() {
         var userData = {
           email: this.$data.email,
-          isCandidate: this.$data.isCandidate,
-          isModerator: this.$data.isModerator,
-          isRedactor: this.$data.isRedactor,
+          isCandidate: Boolean(this.$data.isCandidate),
+          isModerator: Boolean(this.$data.isModerator),
+          isRedactor: Boolean(this.$data.isRedactor),
           username: this.$data.username
         };
 
@@ -61,6 +72,7 @@ export default {
     },
     beforeMount(){
       this.getUser();
+      this.getCurrentUser();
     },
     data: () => ({
         email: "",
@@ -70,7 +82,8 @@ export default {
         isRedactor: "",
         edit: "Edit",
         apply: "Apply",
-        disabled: 1
+        disabled: 1,
+        currentUser: ""
     }),
   }
 </script>
