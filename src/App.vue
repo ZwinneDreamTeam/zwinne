@@ -7,6 +7,9 @@
           <md-button class="md-icon-button" to="/">
             <md-icon>home</md-icon>
           </md-button>
+          <md-button @click="logout" class="md-icon-button">
+            <md-icon>power_settings_new</md-icon>
+          </md-button>
           <h3 class="md-title">Zwinne XD</h3>
         </md-app-toolbar>
 
@@ -49,6 +52,15 @@
     updated() {
       this.$data.showDrawer = this.$route.fullPath !== '/login';
     },
+    methods: {
+      logout(event) {
+        firebase.auth().signOut().then(
+          (data) => {
+            this.$router.replace({name: 'Login'});
+          }
+        )
+      }
+    }
   };
 
 
