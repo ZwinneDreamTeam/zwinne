@@ -1,6 +1,6 @@
 <template>
   <div class="logInView" >
-    <md-card class="loginPanelView" style="padding : 10px;">
+    <md-card class="loginPanelView" >
        <md-card-header>
          <h1 class="md-title">Login</h1>
        </md-card-header>
@@ -84,7 +84,7 @@
   }
   .loginPanelView {
    text-align: center;
-
+   padding : 10px;
   }
 
 </style>
