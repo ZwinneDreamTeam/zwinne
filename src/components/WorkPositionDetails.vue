@@ -2,19 +2,26 @@
   <div>
     <h1>Position details</h1>
     <div>
-      Name:
-      <input v-model="name" :disabled="disabled == 1">
+     <md-field>
+       <label>Name</label>
+       <md-input v-model="name" type="text" :disabled="disabled == 1"/>
+     </md-field>
     </div>
     <div>
-      Company:
-      <input v-model="company" :disabled="disabled == 1">
+     <md-field>
+       <label>Company</label>
+       <md-input v-model="company" type="text" :disabled="disabled == 1"/>
+     </md-field>
     </div>
     <div>
-      Description:
-      <input v-model="description" :disabled="disabled == 1">
+      <md-field>
+       <label>Description</label>
+       <md-textarea v-model="description" type="text" :disabled="disabled == 1"/>
+     </md-field>
     </div>
-    <div><md-switch class="md-primary" v-model="isActive" :disabled="disabled == 1">Active</md-switch></div>
-
+    <div>
+      <md-switch class="md-primary" v-model="isActive" :disabled="disabled == 1">Active</md-switch>
+    </div>
     <md-button @click="disabled = 0" class="md-primary" v-show="disabled == 1 && canEdit"> {{edit}}</md-button>
     <md-button @click="disabled = 1" v-on:click="applyChanges" class="md-primary" v-show="disabled == 0 && canEdit"> {{apply}}</md-button>
   </div>
@@ -44,10 +51,10 @@ export default {
            window.sessionStorage.setItem("isActive", position.isActive);
          });
 
-        this.$data.name = window.sessionStorage.getItem("name");
-        this.$data.company = window.sessionStorage.getItem("company");
-        this.$data.description = window.sessionStorage.getItem("description");
-        this.$data.isActive = window.sessionStorage.getItem("isActive");
+        this.name = window.sessionStorage.getItem("name");
+        this.company = window.sessionStorage.getItem("company");
+        this.description = window.sessionStorage.getItem("description");
+        this.isActive = window.sessionStorage.getItem("isActive") === "true";
       },
       applyChanges: function() {
         var positionData = {
@@ -79,7 +86,7 @@ export default {
         name: "",
         company: "",
         description: "",
-        isActive: "",
+        isActive: false,
         edit: "Edit",
         apply: "Apply",
         disabled: 1
