@@ -1,60 +1,91 @@
 <template>
   <div>
-    <h1>Available positions</h1>
-    <input type="checkbox" id="positionsCheckbox" v-model="positionFilter" true-value="t" false-value="f"/>
-    <label for="positionsCheckbox">Active positions only</label>
-    <ul id="positions-list">
-      <li v-for="(position, key) of filteredPositions">
-        {{ position.name }} <router-link :to="{ name: 'positionDetails', params: { id: position['.key'] }}">See details </router-link>
-      </li>
-    </ul>
-    <router-link :to="{name: 'addPosition'}">
-      <button  class="md-raised md-primary">Add Position </button>
-    </router-link>
+    <md-table v-model="positions" :md-sort.sync="currentSort" :md-sort-order.sync="currentSortOrder"
+              :md-sort-fn="customSort" md-card>
+      <md-table-toolbar>
+        <h1 class="md-title">Stanowiska</h1>
+        <!--TODO: Odkomentować kiedy będzie widok dodawania stanowiska-->
+        <!--<router-link :to="{name: 'createWorkPosition'}">-->
+        <md-button class="md-raised md-primary" v-if="isModerator">Dodaj stanowisko</md-button>
+        <!--</router-link>-->
+      </md-table-toolbar>
+
+      <md-table-row slot="md-table-row" slot-scope="{item}" md-selectable="single" @click.native="onSelect(item)">
+        <md-table-cell md-label="Nazwa" md-sort-by="name">{{ item.name }}</md-table-cell>
+        <md-table-cell md-label="Aktywne" md-sort-by="isActive">
+          <md-icon class="iconCheck" v-if="item.isActive">check</md-icon>
+          <md-icon class="iconClose" v-if="!item.isActive">close</md-icon>
+        </md-table-cell>
+      </md-table-row>
+    </md-table>
   </div>
 </template>
 
 <script>
-  import { db } from "../App"
-  import firebase from 'firebase'
+  import firebase from 'firebase';
 
-  let positionsRef = db.ref('workPositions');
-  let usersRef = db.ref('users');
+  let db = firebase.database();
 
   export default {
     name: "work-positions",
     firebase: {
-      positions: positionsRef,
-      users: usersRef
+      positions: db.ref('workPositions')
     },
-    data () {
+    data() {
       return {
-        positionFilter: ""
+        isModerator: false,
+        currentSort: 'name',
+        currentSortOrder: 'asc',
       }
     },
-    computed: {
-      filteredPositions: function () {
-        if (this.positionFilter === 't') {
-          return this.positions.filter((position) => {
-            return position.isActive;
-          })
+    mounted() {
+      let currentUserAuth = firebase.auth().currentUser;
+      db.ref('users/' + currentUserAuth.uid).on('value', (snapshot) => {
+        this.isModerator = (snapshot.val() && snapshot.val().isModerator);
+      });
+    },
+    methods: {
+      compareBooleans(a, b, sortBy) {
+        if (a[sortBy] === b[sortBy])
+          return 0;
+        else if (a[sortBy] && !b[sortBy]) {
+          return this.currentSortOrder === 'desc' ? 1 : -1;
+        } else {
+          return this.currentSortOrder === 'desc' ? -1 : 1;
         }
-        return this.positions
+
       },
-      isModerator: function () {
-        let currentUserAuth = firebase.auth().currentUser;
-        let currentUser = this.users.filter((user) => {
-          return user['.key'] === currentUserAuth.uid
-        });
-        if (currentUser[0] == null) {
-          return false
+      compareStrings(a, b, sortBy) {
+        if (this.currentSortOrder === 'desc') {
+          return a[sortBy].localeCompare(b[sortBy])
+        } else {
+          return b[sortBy].localeCompare(a[sortBy])
         }
-        return currentUser[0].isModerator
-      }
-    }
+      },
+      customSort(value) {
+        return value.sort((a, b) => {
+          const sortBy = this.currentSort;
+
+          if (typeof(a[sortBy]) === "boolean") {
+            return this.compareBooleans(a, b, sortBy);
+          } else {
+            return this.compareStrings(a, b, sortBy);
+          }
+        })
+      },
+      onSelect(item) {
+        this.$router.push({name: 'positionDetails', params: {id: item['.key']}});
+      },
+    },
   }
 </script>
 
 <style scoped>
+  .iconCheck {
+    color: green !important;
+  }
 
+  .iconClose {
+    color: darkred !important;
+  }
 </style>
