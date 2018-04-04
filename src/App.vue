@@ -54,19 +54,19 @@
 
 </script>
 
-<style>
+<style scoped>
   .md-app-toolbar {
-    background: dodgerblue;
-    color: white;
+    background: dodgerblue !important;
+    color: white !important;
   }
 
   .md-drawer {
-    width: 230px;
-    max-width: calc(100vw - 125px);
+    width: 230px !important;
+    max-width: calc(100vw - 125px) !important;
   }
 
   .md-app {
-    position: absolute;
+    position: absolute !important;
     min-height: 100% !important;
     min-width: 100% !important;
   }
