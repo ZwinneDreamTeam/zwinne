@@ -1,5 +1,5 @@
 <template>
-  <md-card style="padding : 10px;">
+  <md-card >
       <md-card-header>
         <h1 class="md-title">User details</h1>
       </md-card-header>
@@ -101,6 +101,7 @@ export default {
   }
 </script>
 <style scoped>
-
-
+  .md-card {
+    padding : 10px;
+  }
 </style>
