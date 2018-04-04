@@ -1,5 +1,8 @@
 <template>
   <div>
+    <router-link :to="{name: 'createAccount'}">
+      <button class="md-raised addAccountButton">{{addAccount}}</button>
+    </router-link>
     <md-table v-model="users" :md-sort.sync="currentSort" :md-sort-order.sync="currentSortOrder"
               :md-sort-fn="customSort" md-card>
       <md-table-toolbar>
@@ -41,6 +44,7 @@
         redactorFilter: false,
         currentSort: 'username',
         currentSortOrder: 'asc',
+        addAccount: "Add new account"
       }
     },
     methods: {

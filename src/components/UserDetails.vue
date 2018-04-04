@@ -32,13 +32,18 @@ export default {
          let userDb = db.ref('/users/' + key)
          userDb.on('value', function (snapshot) {
            user = snapshot.val();
+           window.sessionStorage.setItem("username", user.username);
+           window.sessionStorage.setItem("email", user.email);
+           window.sessionStorage.setItem("isModerator", user.isModerator);
+           window.sessionStorage.setItem("isCandidate", user.isCandidate);
+           window.sessionStorage.setItem("isRedactor", user.isRedactor);
          });
 
-        this.$data.username = user.username;
-        this.$data.email = user.email;
-        this.$data.isModerator = user.isModerator;
-        this.$data.isCandidate = user.isCandidate;
-        this.$data.isRedactor = user.isRedactor;
+        this.$data.username = window.sessionStorage.getItem("username");
+        this.$data.email = window.sessionStorage.getItem("email");
+        this.$data.isModerator = window.sessionStorage.getItem("isModerator");
+        this.$data.isCandidate = window.sessionStorage.getItem("isCandidate");
+        this.$data.isRedactor = window.sessionStorage.getItem("isRedactor");
       },
       applyChanges: function() {
         var userData = {

@@ -27,7 +27,7 @@
   import firebase from 'firebase'
   import AppDrawer from './components/AppDrawer'
 
-  let config = {
+  export let config = {
     apiKey: "AIzaSyAduGsOpgqCLn79cI4fzBvMsC0LFfnQhWA",
     authDomain: "zwinnexd.firebaseapp.com",
     databaseURL: "https://zwinnexd.firebaseio.com",
