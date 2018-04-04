@@ -1,31 +1,35 @@
 <template>
-  <div>
-    <h1>User details </h1>
-    <div>
-      Username:
-      <input v-model="username" :disabled="disabled == 1">
+  <md-card style="padding : 10px;">
+      <md-card-header>
+        <h1 class="md-title">User details</h1>
+      </md-card-header>
+
+     <md-field >
+        <md-icon>person</md-icon>
+        <label>Username</label>
+        <md-input v-model="username" :disabled="disabled == 1"/>
+     </md-field>
+     <md-field>
+         <md-icon>email</md-icon>
+         <label>Email</label>
+         <md-input v-model="email" :disabled="disabled == 1"/>
+     </md-field>
+
+    <div v-if="!(isCurrentUserModerator == false && disabled == 0)" >
+    <label>Permissions:</label>
     </div>
-    <div>
-      Email:
-      <input v-model="email" :disabled="disabled == 1">
+    <div v-if="isCurrentUserModerator == true">
+      <md-switch class="md-primary" v-model="isModerator" :disabled="disabled == 1"> Moderator </md-switch>
     </div>
-<div>
-      <div v-if="!(isCurrentUserModerator == false && disabled == 0)" >
-      Permissions:
-      </div>
-      <div v-if="isCurrentUserModerator == true">
-        <md-switch class="md-primary" v-model="isModerator" :disabled="disabled == 1"> Moderator </md-switch>
-      </div>
-      <div v-if="(isCurrentUserCandidate == true && disabled == 1) || isCurrentUserModerator == true">
-        <md-switch class="md-primary" v-model="isCandidate" :disabled="disabled == 1"> Candidate </md-switch>
-      </div>
-      <div v-if="(isCurrentUserRedactor == true && disabled == 1) || isCurrentUserModerator == true">
-        <md-switch class="md-primary" v-model="isRedactor" :disabled="disabled == 1"> Redactor </md-switch>
-      </div>
+    <div v-if="(isCurrentUserCandidate == true && disabled == 1) || isCurrentUserModerator == true">
+      <md-switch class="md-primary" v-model="isCandidate" :disabled="disabled == 1"> Candidate </md-switch>
     </div>
-    <md-button @click="disabled = 0" class="md-primary" v-show="disabled == 1"> {{edit}}</md-button>
-    <md-button @click="disabled = 1" v-on:click="applyChanges" class="md-primary" v-show="disabled == 0"> {{apply}}</md-button>
-  </div>
+    <div v-if="(isCurrentUserRedactor == true && disabled == 1) || isCurrentUserModerator == true">
+      <md-switch class="md-primary" v-model="isRedactor" :disabled="disabled == 1"> Redactor </md-switch>
+    </div>
+    <md-button @click="disabled = 0" class="md-primary md-raised" v-show="disabled == 1"> {{edit}} </md-button>
+    <md-button @click="disabled = 1" v-on:click="applyChanges" class="md-primary md-raised" v-show="disabled == 0"> {{apply}}</md-button>
+  </md-card>
 </template>
 <script>
 import { db } from "../App"
@@ -97,4 +101,6 @@ export default {
   }
 </script>
 <style scoped>
+
+
 </style>
