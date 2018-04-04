@@ -1,99 +1,75 @@
 <template>
-  <div>
+  <md-card class="positionDetails">
     <h1>Position details</h1>
     <div>
-     <md-field>
-       <label>Name</label>
-       <md-input v-model="name" type="text" :disabled="disabled"/>
-     </md-field>
-    </div>
-    <div>
-     <md-field>
-       <label>Company</label>
-       <md-input v-model="company" type="text" :disabled="disabled"/>
-     </md-field>
+      <md-field>
+        <label>Name</label>
+        <md-input v-model="position.name" type="text" :disabled="disabled"/>
+      </md-field>
     </div>
     <div>
       <md-field>
-       <label>Description</label>
-       <md-textarea v-model="description" type="text" :disabled="disabled"/>
-     </md-field>
+        <label>Company</label>
+        <md-input v-model="position.company" type="text" :disabled="disabled"/>
+      </md-field>
     </div>
     <div>
-      <md-switch class="md-primary" v-model="isActive" :disabled="disabled">Active</md-switch>
+      <md-field>
+        <label>Description</label>
+        <md-textarea v-model="position.description" type="text" :disabled="disabled"/>
+      </md-field>
     </div>
-    <md-button @click="disabled = !disabled" class="md-primary" v-show="disabled && canEdit"> {{edit}}</md-button>
-    <md-button @click="disabled = !disabled" v-on:click="applyChanges" class="md-primary" v-show="!disabled && canEdit"> {{apply}}</md-button>
-  </div>
+    <div>
+      <md-switch class="md-primary" v-model="position.isActive" :disabled="disabled">Active</md-switch>
+    </div>
+    <md-button class="md-primary md-raised" @click="disabled = false" v-if="disabled && canEdit">Edytuj</md-button>
+    <md-button class="md-primary md-raised" @click="disabled = true" v-on:click="applyChanges"
+               v-if="!disabled && canEdit">
+      Zatwierdz
+    </md-button>
+  </md-card>
 </template>
 
 <script>
-import { db } from "../App"
-import firebase from 'firebase'
+  import firebase from 'firebase'
 
-let usersRef = db.ref('users');
+  let db = firebase.database();
 
-export default {
+  export default {
     name: "position-details",
-    firebase: {
-      users: usersRef
+    mounted() {
+      var key = this.$route.params.id;
+      db.ref('workPositions/' + key).on('value', snapshot => {
+        this.position = snapshot.val();
+      });
+      db.ref('users/' + firebase.auth().currentUser.uid).on('value', snapshot => {
+        this.isModerator = snapshot.val().isModerator;
+        this.isRedactor = snapshot.val().isRedactor;
+      });
     },
     methods: {
-      getPosition: function () {
-        var position
-        var key = this.$route.params.id
-         let positionDb = db.ref('/workPositions/' + key)
-         positionDb.on('value', function (snapshot) {
-           position = snapshot.val();
-           window.sessionStorage.setItem("name", position.name);
-           window.sessionStorage.setItem("company", position.company);
-           window.sessionStorage.setItem("description", position.description);
-           window.sessionStorage.setItem("isActive", position.isActive);
-         });
-
-        this.name = window.sessionStorage.getItem("name");
-        this.company = window.sessionStorage.getItem("company");
-        this.description = window.sessionStorage.getItem("description");
-        this.isActive = window.sessionStorage.getItem("isActive") === "true";
-      },
-      applyChanges: function() {
-        var positionData = {
-          company: this.$data.company,
-          description: this.$data.description,
-          isActive: this.$data.isActive,
-          name: this.$data.name
-        };
-
-        return db.ref('/workPositions/' + this.$route.params.id).set(positionData);
+      applyChanges() {
+        return db.ref('/workPositions/' + this.$route.params.id).set(this.position);
       }
     },
     computed: {
-      canEdit: function () {
-        let currentUserAuth = firebase.auth().currentUser;
-        let currentUser = this.users.filter((user) => {
-          return user['.key'] === currentUserAuth.uid
-        });
-        if (currentUser[0] == null) {
-          return false
-        }
-        return (currentUser[0].isModerator || currentUser[0].isRedactor)
+      canEdit() {
+        return this.isModerator || this.isRedactor;
       }
     },
-    beforeMount(){
-      this.getPosition();
-    },
+
     data: () => ({
-        name: "",
-        company: "",
-        description: "",
-        isActive: false,
-        edit: "Edit",
-        apply: "Apply",
-        disabled: true
+      position: {},
+      disabled: true,
+      isModerator: false,
+      isRedactor: false,
     }),
   }
 </script>
 
 <style scoped>
 
+  .positionDetails {
+    padding: 16px;
+  }
 </style>
