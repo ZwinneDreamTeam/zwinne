@@ -41,15 +41,14 @@
 </template>
 
 <script>
-  import {db} from "../App"
   import firebase from 'firebase'
 
-  let usersRef = db.ref('users');
+  let db = firebase.database();
 
   export default {
     name: "position-add",
     firebase: {
-      users: usersRef
+      users: db.ref('users')
     },
     data: () => ({
       name: "",
