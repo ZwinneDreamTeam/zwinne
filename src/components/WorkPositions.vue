@@ -8,7 +8,9 @@
         {{ position.name }} <router-link :to="{ name: 'positionDetails', params: { id: position['.key'] }}">See details </router-link>
       </li>
     </ul>
-    <button v-if="isModerator" v-on:click="addPosition">Add position</button>
+    <router-link :to="{name: 'addPosition'}">
+      <button  class="md-raised md-primary">Add Position </button>
+    </router-link>
   </div>
 </template>
 
@@ -28,11 +30,6 @@
     data () {
       return {
         positionFilter: ""
-      }
-    },
-    methods: {
-      addPosition: function () {
-        window.alert('Not implemented yet')
       }
     },
     computed: {
