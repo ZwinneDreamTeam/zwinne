@@ -36,7 +36,7 @@ export default {
       getUser: function () {
         var user
         var key = this.$route.params.id
-        console.log(key)
+
          let userDb = db.ref('/users/' + key)
          userDb.on('value', function (snapshot) {
            user = snapshot.val();
@@ -54,7 +54,6 @@ export default {
       },
       getCurrentUser: function () {
           let currentUser = firebase.auth().currentUser;
-          //console.log(currentUser);
           var cUser;
           let curentUserDb = db.ref('/users/' + currentUser.uid)
            curentUserDb.on('value', function (snapshot) {

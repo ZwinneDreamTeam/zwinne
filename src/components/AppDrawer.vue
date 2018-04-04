@@ -6,6 +6,11 @@
       <span class="md-list-item-text">{{label_positions}}</span>
     </md-list-item>
 
+    <md-list-item :to="{ name: 'currentUserDetails', params: {id: uid }}">
+      <md-icon>account_circle</md-icon>
+      <span class="md-list-item-text"> {{label_user_profile}} </span>
+    </md-list-item>
+
     <div v-if="isCandidate">
       <md-subheader>{{label_candidate}}</md-subheader>
       <md-list-item>
@@ -49,15 +54,17 @@
         label_moderator: "Moderator",
         label_positions: "Stanowiska",
         label_users: "Użytkownicy",
+        label_user_profile: "Dane użytkownika",
         isModerator: false,
         isRedactor: false,
         isCandidate: false,
+        uid: ""
       }
     },
     mounted() {
       console.log("mounted");
-      let uid = firebase.auth().currentUser.uid;
-      firebase.database().ref('/users/' + uid).on('value', (snapshot) => {
+      this.uid = firebase.auth().currentUser.uid;
+      firebase.database().ref('/users/' + this.uid).on('value', (snapshot) => {
         let user = snapshot.val();
         this.isCandidate = user.isCandidate;
         this.isRedactor = user.isRedactor;
@@ -68,5 +75,7 @@
 </script>
 
 <style scoped>
+
+
 
 </style>

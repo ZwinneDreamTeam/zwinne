@@ -37,7 +37,6 @@
 
   export const db = firebase.initializeApp(config).database();
 
-  var currentUser
   export default {
     components: {AppDrawer},
     name: 'app',
