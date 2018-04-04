@@ -1,6 +1,6 @@
 <template>
   <div>
-    <md-card style="padding : 10px;">
+    <md-card class="md-raised positionsListCard">
       <md-card-header>
         <h1 class="md-title">Add new position</h1>
       </md-card-header>
@@ -139,5 +139,9 @@
 </script>
 
 <style scoped>
+
+  .positionsListCard {
+    padding: 10px;
+  }
 
 </style>
