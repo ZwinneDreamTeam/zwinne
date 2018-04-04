@@ -14,13 +14,13 @@
       Permissions:
       </div>
       <div v-if="isCurrentUserModerator == true">
-        <md-switch class="md-primary" v-model="isModerator" :disabled="disabled == 1"> Moderator {{isModerator}} {{typeof(isModerator)}}</md-switch>
+        <md-switch class="md-primary" v-model="isModerator" :disabled="disabled == 1"> Moderator </md-switch>
       </div>
       <div v-if="(isCurrentUserCandidate == true && disabled == 1) || isCurrentUserModerator == true">
-        <md-switch class="md-primary" v-model="isCandidate" :disabled="disabled == 1"> Candidate {{isCandidate}} {{typeof(isCandidate)}}</md-switch>
+        <md-switch class="md-primary" v-model="isCandidate" :disabled="disabled == 1"> Candidate </md-switch>
       </div>
       <div v-if="(isCurrentUserRedactor == true && disabled == 1) || isCurrentUserModerator == true">
-        <md-switch class="md-primary" v-model="isRedactor" :disabled="disabled == 1"> Redactor {{isRedactor}} {{typeof(isRedactor)}}</md-switch>
+        <md-switch class="md-primary" v-model="isRedactor" :disabled="disabled == 1"> Redactor </md-switch>
       </div>
     </div>
     <md-button @click="disabled = 0" class="md-primary" v-show="disabled == 1"> {{edit}}</md-button>
