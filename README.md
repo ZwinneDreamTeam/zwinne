@@ -11,6 +11,9 @@ npm install
 # sciagniecie material designowych elementow
 npm install vue-material@beta --save
 
+# install vuefire to fetch data from firebase
+npm install --save vuefire
+
 # serve with hot reload at localhost:8080
 npm run dev
 
@@ -20,6 +23,9 @@ npm run build
 
 # build for production and view the bundle analyzer report
 npm run build --report
+
+# deploy functions to firebase
+firebase deploy --project zwinnexd
 ```
 
 ## Deploying Firebase Functions
@@ -30,7 +36,18 @@ cd functions
 # Install dependencies in that folder
 npm install
 # deploy functions to firebase
-firebase deploy --project zwinnexd
+firebase deploy
+
+```
+
+## Deploying to Firebase Hosting
+```
+# Install firebase-tools
+npm install -g firebase-tools
+# Build project
+npm run build
+# Deploy to firebase
+firebase deploy
 
 ```
 
