@@ -84,6 +84,7 @@ let router = new VueRouter({
       children: [
         {
           path: 'users',
+          name: 'users',
           component: UsersList
         },
         {

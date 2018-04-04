@@ -1,45 +1,23 @@
 <template>
   <div id="app">
-
     <div class="page-container">
-
       <md-app md-waterfall md-mode="fixed">
+
         <md-app-toolbar class="md-primary">
-          <span class="md-title">Zwinne xD</span>
+          <md-button class="md-icon-button" to="/">
+            <md-icon>home</md-icon>
+          </md-button>
+          <h3 class="md-title">Zwinne XD</h3>
         </md-app-toolbar>
 
-        <md-app-drawer md-permanent="full" id="navMenu">
-          <md-toolbar class="md-transparent" md-elevation="0">
-            Navigation
-          </md-toolbar>
-
-          <md-list>
-            <md-list-item>
-              <md-icon>move_to_inbox</md-icon>
-              <span class="md-list-item-text">Inbox</span>
-            </md-list-item>
-
-            <md-list-item >
-              <md-icon>send</md-icon>
-              <span class="md-list-item-text">Sent Mail</span>
-            </md-list-item>
-
-            <md-list-item>
-              <md-icon>delete</md-icon>
-              <span class="md-list-item-text">Trash</span>
-            </md-list-item>
-
-            <md-list-item>
-              <md-icon>error</md-icon>
-              <span class="md-list-item-text">Spam</span>
-            </md-list-item>
-          </md-list>
+        <md-app-drawer v-if="showDrawer" md-permanent="card">
+          <app-drawer></app-drawer>
         </md-app-drawer>
 
         <md-app-content>
-
           <router-view></router-view>
         </md-app-content>
+
       </md-app>
     </div>
 
@@ -47,6 +25,7 @@
 </template>
 <script>
   import firebase from 'firebase'
+  import AppDrawer from './components/AppDrawer'
 
   export let config = {
     apiKey: "AIzaSyAduGsOpgqCLn79cI4fzBvMsC0LFfnQhWA",
@@ -60,23 +39,36 @@
   export const db = firebase.initializeApp(config).database();
 
   export default {
-    name: 'app'
-  }
+    components: {AppDrawer},
+    name: 'app',
+    data() {
+      return {
+        showDrawer: this.$route.fullPath !== '/login' && this.$route.fullPath !== '/register',
+      }
+    },
+    updated() {
+      this.$data.showDrawer = this.$route.fullPath !== '/login';
+      this.$data.showDrawer = this.$route.fullPath !== '/register';
+    },
+  };
+
+
 </script>
 
-<style >
+<style scoped>
   .md-app-toolbar {
-    background: dodgerblue;
-    color: white;
+    background: dodgerblue !important;
+    color: white !important;
   }
 
   .md-drawer {
-    width: 230px;
-    max-width: calc(100vw - 125px);
+    width: 230px !important;
+    max-width: calc(100vw - 125px) !important;
   }
 
-  #navMenu {
-    display: inline;
+  .md-app {
+    position: absolute !important;
+    min-height: 100% !important;
+    min-width: 100% !important;
   }
-
 </style>
