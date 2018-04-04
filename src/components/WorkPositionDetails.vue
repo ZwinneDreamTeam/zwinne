@@ -4,26 +4,26 @@
     <div>
      <md-field>
        <label>Name</label>
-       <md-input v-model="name" type="text" :disabled="disabled == 1"/>
+       <md-input v-model="name" type="text" :disabled="disabled"/>
      </md-field>
     </div>
     <div>
      <md-field>
        <label>Company</label>
-       <md-input v-model="company" type="text" :disabled="disabled == 1"/>
+       <md-input v-model="company" type="text" :disabled="disabled"/>
      </md-field>
     </div>
     <div>
       <md-field>
        <label>Description</label>
-       <md-textarea v-model="description" type="text" :disabled="disabled == 1"/>
+       <md-textarea v-model="description" type="text" :disabled="disabled"/>
      </md-field>
     </div>
     <div>
-      <md-switch class="md-primary" v-model="isActive" :disabled="disabled == 1">Active</md-switch>
+      <md-switch class="md-primary" v-model="isActive" :disabled="disabled">Active</md-switch>
     </div>
-    <md-button @click="disabled = 0" class="md-primary" v-show="disabled == 1 && canEdit"> {{edit}}</md-button>
-    <md-button @click="disabled = 1" v-on:click="applyChanges" class="md-primary" v-show="disabled == 0 && canEdit"> {{apply}}</md-button>
+    <md-button @click="disabled = !disabled" class="md-primary" v-show="disabled && canEdit"> {{edit}}</md-button>
+    <md-button @click="disabled = !disabled" v-on:click="applyChanges" class="md-primary" v-show="!disabled && canEdit"> {{apply}}</md-button>
   </div>
 </template>
 
@@ -89,7 +89,7 @@ export default {
         isActive: false,
         edit: "Edit",
         apply: "Apply",
-        disabled: 1
+        disabled: true
     }),
   }
 </script>
