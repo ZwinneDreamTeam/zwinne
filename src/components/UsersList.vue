@@ -1,12 +1,12 @@
 <template>
   <div>
-    <router-link :to="{name: 'createAccount'}">
-      <button class="md-raised addAccountButton">{{addAccount}}</button>
-    </router-link>
     <md-table v-model="users" :md-sort.sync="currentSort" :md-sort-order.sync="currentSortOrder"
               :md-sort-fn="customSort" md-card>
       <md-table-toolbar>
         <h1 class="md-title">Użytkownicy</h1>
+        <router-link :to="{name: 'createAccount'}">
+          <md-button class="md-raised md-primary">{{addAccount}}</md-button>
+        </router-link>
       </md-table-toolbar>
 
       <md-table-row slot="md-table-row" slot-scope="{item}" md-selectable="single" @click.native="onSelect(item)">
