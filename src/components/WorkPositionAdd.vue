@@ -25,7 +25,7 @@
         <!--<md-icon>description</md-icon>-->
         <label>Description</label>
         <md-textarea v-model="description" type="text" v-on:keyup="validateDescriptionIfIncorrect()"
-                  v-on:blur="validateDescription()" required/>
+                     v-on:blur="validateDescription()" required/>
         <span class="md-error">A description must contain at least 2 characters</span>
       </md-field>
 
@@ -70,10 +70,7 @@
             name: this.$data.name
           };
           db.ref('/workPositions/' + firebase.database().ref('workPositions').push().key).set(positionData);
-          this.$data.name = "";
-          this.$data.company = "";
-          this.$data.description = "";
-          this.$data.isActive = false;
+          this.$router.go(-1);
         }
       },
       isValid: function () {
