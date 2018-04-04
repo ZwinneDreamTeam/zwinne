@@ -24,7 +24,7 @@
       <md-field :class="descriptionClass">
         <!--<md-icon>description</md-icon>-->
         <label>Description</label>
-        <md-input v-model="description" type="text" v-on:keyup="validateDescriptionIfIncorrect()"
+        <md-textarea v-model="description" type="text" v-on:keyup="validateDescriptionIfIncorrect()"
                   v-on:blur="validateDescription()" required/>
         <span class="md-error">A description must contain at least 2 characters</span>
       </md-field>

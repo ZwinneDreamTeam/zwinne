@@ -4,10 +4,9 @@
               :md-sort-fn="customSort" md-card>
       <md-table-toolbar>
         <h1 class="md-title">Stanowiska</h1>
-        <!--TODO: Odkomentować kiedy będzie widok dodawania stanowiska-->
-        <!--<router-link :to="{name: 'createWorkPosition'}">-->
-        <md-button class="md-raised md-primary" v-if="isModerator">Dodaj stanowisko</md-button>
-        <!--</router-link>-->
+        <router-link v-if="isModerator" :to="{name: 'addPosition'}">
+        <md-button class="md-raised md-primary">Dodaj stanowisko</md-button>
+        </router-link>
       </md-table-toolbar>
 
       <md-table-row slot="md-table-row" slot-scope="{item}" md-selectable="single" @click.native="onSelect(item)">
