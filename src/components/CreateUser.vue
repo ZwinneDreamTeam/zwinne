@@ -106,7 +106,7 @@
               isCandidate: true,
               isModerator: false,
               isRedactor: false,
-              username: self.$data.username
+              username: this.$data.username
             };
             db.ref('/users/' + user.uid).set(userForDatabase);
             self.$router.push('/');
