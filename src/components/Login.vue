@@ -1,6 +1,29 @@
 <template>
   <div class="logInView" >
-    <md-button v-on:click="doLogin" class="md-raised logInButton">{{zalogujMsg}}</md-button>
+    <md-card class="loginPanelView" >
+       <md-card-header>
+         <h1 class="md-title">{{loginLabel}}</h1>
+       </md-card-header>
+
+       <md-field >
+         <md-icon>person</md-icon>
+         <label>{{emailLabel}}</label>
+         <md-input v-model="email" type="text" required/>
+       </md-field>
+       <md-field >
+         <md-icon>lock</md-icon>
+         <label>{{passwordLabel}}</label>
+         <md-input v-model="password" type="password" required/>
+       </md-field>
+       <div>
+       <md-button v-on:click="confirmLogIn()" class="md-raised registerButton">{{confirm}}</md-button>
+       </div>
+       <h2 class="md-title">{{orLabel}}</h2>
+      <md-button v-on:click="doLogin" class="md-raised logInButton">{{zalogujMsg}}</md-button>
+      <router-link :to="{name: 'register'}">
+        <md-button class="md-raised logInButton registerButton">{{register}}</md-button>
+      </router-link>
+    </md-card>
   </div>
 </template>
 
@@ -13,11 +36,17 @@
   });
   export default {
     name: "login",
-    data() {
-      return {
-        "zalogujMsg": "Continue with Google",
-      }
-    },
+    data: () => ({
+      "zalogujMsg": "Kontynuuj z Google",
+      "register": "Zarejestruj się",
+      "confirm": "Zaloguj",
+      "loginLabel": "Zaloguj się",
+      "emailLabel": "Email",
+      "passwordLabel": "Hasło",
+      "orLabel": "Albo...",
+       email: "",
+       password: ""
+    }),
     methods: {
       doLogin(event) {
         firebase.auth().signInWithPopup(provider).then((result) => {
@@ -26,7 +55,23 @@
           alert(error.message);
         });
       },
-
+      confirmLogIn: function(event) {
+      firebase.auth().signInWithEmailAndPassword(this.$data.email, this.$data.password).then((result) => {
+         this.$router.push('/');
+         this.error = false;
+        }).catch(function (error) {
+         var errorCode = error.code;
+         if (errorCode === 'auth/wrong-password') {
+           alert('Nieprawidłowe hasło');
+         } else if (errorCode === 'auth/user-not-found') {
+           alert('Nie istnieje użytkownik o podanym adresie email');
+         } else if (errorCode === 'auth/user-disabled') {
+           alert('Użytkownik zablokowany');
+         } else if (errorCode === 'auth/invalid-email') {
+           alert('Niepoprawna struktura adresu email');
+         }
+        });
+      }
     }
   }
 </script>
@@ -36,15 +81,24 @@
   .logInButton {
     background-color: #f44336 !important;
     color: #ffffff !important;
-    text-align: center;
-    font-size: 16px;
-    width: 30vh;
-    height: 12vh;
-    margin: 30vh;
+    font-size: 12px;
+    width: 20vh;
+    height: 6vh;
+  }
+
+  .registerButton {
+    background-color: #3366FF !important;
+    color: #ffffff !important;
   }
 
   .logInView {
     text-align: center;
+    margin-left: 40vh;
+    margin-right: 40vh;
+  }
+  .loginPanelView {
+   text-align: center;
+   padding : 10px;
   }
 
 </style>
