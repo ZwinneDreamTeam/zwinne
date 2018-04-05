@@ -2,23 +2,23 @@
   <div class="logInView" >
     <md-card class="loginPanelView" >
        <md-card-header>
-         <h1 class="md-title">Login</h1>
+         <h1 class="md-title">{{loginLabel}}</h1>
        </md-card-header>
 
        <md-field >
          <md-icon>person</md-icon>
-         <label>Email</label>
+         <label>{{emailLabel}}</label>
          <md-input v-model="email" type="text" required/>
        </md-field>
        <md-field >
          <md-icon>lock</md-icon>
-         <label>Password</label>
+         <label>{{passwordLabel}}</label>
          <md-input v-model="password" type="password" required/>
        </md-field>
        <div>
        <md-button v-on:click="confirmLogIn()" class="md-raised registerButton">{{confirm}}</md-button>
        </div>
-       <h1 class="md-title">Or...</h1>
+       <h2 class="md-title">{{orLabel}}</h2>
       <md-button v-on:click="doLogin" class="md-raised logInButton">{{zalogujMsg}}</md-button>
       <router-link :to="{name: 'register'}">
         <md-button class="md-raised logInButton registerButton">{{register}}</md-button>
@@ -37,9 +37,13 @@
   export default {
     name: "login",
     data: () => ({
-      "zalogujMsg": "Continue with Google",
-      "register": "Register",
-      "confirm": "Confirm",
+      "zalogujMsg": "Kontynuuj z Google",
+      "register": "Zarejestruj się",
+      "confirm": "Zaloguj",
+      "loginLabel": "Zaloguj się",
+      "emailLabel": "Email",
+      "passwordLabel": "Hasło",
+      "orLabel": "Albo...",
        email: "",
        password: ""
     }),
@@ -54,8 +58,18 @@
       confirmLogIn: function(event) {
       firebase.auth().signInWithEmailAndPassword(this.$data.email, this.$data.password).then((result) => {
          this.$router.push('/');
+         this.error = false;
         }).catch(function (error) {
-          alert(error.message);
+         var errorCode = error.code;
+         if (errorCode === 'auth/wrong-password') {
+           alert('Nieprawidłowe hasło');
+         } else if (errorCode === 'auth/user-not-found') {
+           alert('Nie istnieje użytkownik o podanym adresie email');
+         } else if (errorCode === 'auth/user-disabled') {
+           alert('Użytkownik zablokowany');
+         } else if (errorCode === 'auth/invalid-email') {
+           alert('Niepoprawna struktura adresu email');
+         }
         });
       }
     }
