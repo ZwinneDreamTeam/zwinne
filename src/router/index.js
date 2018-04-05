@@ -9,6 +9,7 @@ import UsersList from '@/components/UsersList'
 import UserDetails from '@/components/UserDetails'
 import WorkPositions from '@/components/WorkPositions'
 import WorkPositionDetails from '@/components/WorkPositionDetails'
+import WorkPositionAdd from '@/components/WorkPositionAdd'
 import CreateUser from '@/components/CreateUser'
 import VueMaterial from 'vue-material'
 import firebase from 'firebase'
@@ -43,6 +44,15 @@ let router = new VueRouter({
       component: WorkPositions,
       meta: {
         requiresAuth: true
+      }
+    },
+    {
+      path: '/positions/create',
+      name: 'addPosition',
+      component: WorkPositionAdd,
+      meta: {
+        requiresAuth: true,
+        requiresModerator: true
       }
     },
     {

@@ -79,7 +79,7 @@ export default {
         name: "",
         company: "",
         description: "",
-        isActive: "",
+        isActive: false,
         edit: "Edit",
         apply: "Apply",
         disabled: 1
