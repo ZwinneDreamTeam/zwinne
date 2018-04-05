@@ -1,31 +1,31 @@
 <template>
   <md-card >
       <md-card-header>
-        <h1 class="md-title">User details</h1>
+        <h1 class="md-title">{{title}}</h1>
       </md-card-header>
 
      <md-field >
         <md-icon>person</md-icon>
-        <label>Username</label>
-        <md-input v-model="username" :disabled="disabled == 1"/>
+        <label>{{usernameLabel}}</label>
+        <md-input v-model="user.username" :disabled="disabled == 1"/>
      </md-field>
      <md-field>
          <md-icon>email</md-icon>
-         <label>Email</label>
-         <md-input v-model="email" :disabled="disabled == 1"/>
+         <label>{{emailLabel}}</label>
+         <md-input v-model="user.email" :disabled="disabled == 1"/>
      </md-field>
 
     <div v-if="!(isCurrentUserModerator == false && disabled == 0)" >
-    <label>Permissions:</label>
+    <label>{{permissionsLabel}}</label>
     </div>
     <div v-if="isCurrentUserModerator == true">
-      <md-switch class="md-primary" v-model="isModerator" :disabled="disabled == 1"> Moderator </md-switch>
+      <md-switch class="md-primary" v-model="user.isModerator" :disabled="disabled == 1"> {{moderatorLabel}} </md-switch>
     </div>
     <div v-if="(isCurrentUserCandidate == true && disabled == 1) || isCurrentUserModerator == true">
-      <md-switch class="md-primary" v-model="isCandidate" :disabled="disabled == 1"> Candidate </md-switch>
+      <md-switch class="md-primary" v-model="user.isCandidate" :disabled="disabled == 1"> {{candidateLabel}} </md-switch>
     </div>
     <div v-if="(isCurrentUserRedactor == true && disabled == 1) || isCurrentUserModerator == true">
-      <md-switch class="md-primary" v-model="isRedactor" :disabled="disabled == 1"> Redactor </md-switch>
+      <md-switch class="md-primary" v-model="user.isRedactor" :disabled="disabled == 1"> {{redactorLabel}} </md-switch>
     </div>
     <md-button @click="disabled = 0" class="md-primary md-raised" v-show="disabled == 1"> {{edit}} </md-button>
     <md-button @click="disabled = 1" v-on:click="applyChanges" class="md-primary md-raised" v-show="disabled == 0"> {{apply}}</md-button>
@@ -37,60 +37,30 @@ import firebase from 'firebase'
 export default {
     name: "user-details",
     methods: {
-      getUser: function () {
-        var user
-        var key = this.$route.params.id
-
-         let userDb = db.ref('/users/' + key)
-         userDb.on('value', function (snapshot) {
-           user = snapshot.val();
-           window.sessionStorage.setItem("username", user.username);
-           window.sessionStorage.setItem("email", user.email);
-           window.sessionStorage.setItem("isModerator", user.isModerator);
-           window.sessionStorage.setItem("isCandidate", user.isCandidate);
-           window.sessionStorage.setItem("isRedactor", user.isRedactor);
-         });
-        this.username = window.sessionStorage.getItem("username");
-        this.email = window.sessionStorage.getItem("email");
-        this.isModerator = window.sessionStorage.getItem("isModerator") === "true";
-        this.isCandidate = window.sessionStorage.getItem("isCandidate") === "true";
-        this.isRedactor = window.sessionStorage.getItem("isRedactor") === "true";
-      },
-      getCurrentUser: function () {
-          let currentUser = firebase.auth().currentUser;
-          var cUser;
-          let curentUserDb = db.ref('/users/' + currentUser.uid)
-           curentUserDb.on('value', function (snapshot) {
-             cUser = snapshot.val();
-              window.sessionStorage.setItem("currentIsModerator", cUser.isModerator);
-              window.sessionStorage.setItem("currentIsCandidate", cUser.isCandidate);
-              window.sessionStorage.setItem("currentIsRedactor", cUser.isRedactor);
-            });
-            this.isCurrentUserModerator = Boolean(window.sessionStorage.getItem("currentIsModerator"));
-            this.isCurrentUserRedactor = Boolean(window.sessionStorage.getItem("currentIsRedactor"));
-            this.isCurrentUserCandidate = Boolean(window.sessionStorage.getItem("currentIsCandidate"));
-      },
       applyChanges: function() {
-        var userData = {
-          email: this.email,
-          isCandidate: this.isCandidate,
-          isModerator: this.isModerator,
-          isRedactor: this.isRedactor,
-          username: this.username
-        };
-        return db.ref('/users/' + this.$route.params.id).set(userData);
+        return db.ref('/users/' + this.$route.params.id).set(this.user);
       }
     },
-    beforeMount(){
-      this.getUser();
-      this.getCurrentUser();
+    mounted() {
+     var key = this.$route.params.id;
+     db.ref('users/' + key).on('value', snapshot => {
+       this.user = snapshot.val();
+     });
+     db.ref('users/' + firebase.auth().currentUser.uid).on('value', snapshot => {
+       this.isCurrentUserModerator = snapshot.val().isModerator;
+       this.isCurrentUserRedactor = snapshot.val().isRedactor;
+       this.isCurrentUserCandidate = snapshot.val().isCandidate;
+     });
     },
     data: () => ({
-        email: "",
-        username: "",
-        isModerator: false,
-        isCandidate: false,
-        isRedactor: false,
+        user: {},
+        title: "Dane użytkownika",
+        emailLabel: "Email",
+        usernameLabel: "Nazwa użytkownika",
+        moderatorLabel: "Moderator",
+        candidateLabel: "Kandydat",
+        redactorLabel: "Redaktor",
+        permissionsLabel: "Uprawnienia",
         edit: "Edit",
         apply: "Apply",
         disabled: 1,
