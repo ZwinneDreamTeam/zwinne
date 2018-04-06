@@ -8,25 +8,28 @@
       <md-field :class="usernameClass">
         <md-icon>person</md-icon>
         <label>Username</label>
-        <md-input v-model="username" type="text" v-on:keyup="validateUsernameIfIncorrect()" v-on:blur="validateUsername()" required/>
+        <md-input v-model="username" type="text" v-on:keyup="validateUsernameIfIncorrect()"
+                  v-on:blur="validateUsername()" required/>
         <span class="md-error">A username must contain at least five characters</span>
       </md-field>
 
       <md-field :class="emailClass">
         <md-icon>email</md-icon>
         <label>Email</label>
-        <md-input v-model="email" type="email" v-on:keyup="validateEmailIfIncorrect()" v-on:blur="validateEmail()" required/>
+        <md-input v-model="email" type="email" v-on:keyup="validateEmailIfIncorrect()" v-on:blur="validateEmail()"
+                  required/>
         <span class="md-error">Please provide valid email address</span>
       </md-field>
 
       <md-field :class="passwordClass">
         <md-icon>lock</md-icon>
         <label>Password</label>
-        <md-input v-model="password" type="password" v-on:keyup="validatePasswordIfIncorrect()" v-on:blur="validatePassword()" required/>
+        <md-input v-model="password" type="password" v-on:keyup="validatePasswordIfIncorrect()"
+                  v-on:blur="validatePassword()" required/>
         <span class="md-error">A password must contain at least eight characters</span>
       </md-field>
 
-      <div v-if="isCurrentUser == true">
+      <div v-if="isCurrentUser">
         <label>Permissions:</label>
         <div>
           <md-switch class="md-primary" v-model="isModerator">
@@ -79,9 +82,8 @@
       isCurrentUser: false
     }),
     methods: {
-      submit_click (event) {
-        let self = this;
-        if (this.isValid() && this.isCurrentUser == true) {
+      submit_click(event) {
+        if (this.isValid() && this.isCurrentUser === true) {
           createAccountFirebase.createUserWithEmailAndPassword(this.$data.email, this.$data.password)
             .then((user) => {
               let userForDatabase = {
@@ -99,22 +101,18 @@
               alert(error.message);
             });
         }
-        else if (this.isValid() && this.isCurrentUser == false) {
+        else if (this.isValid() && this.isCurrentUser === false) {
           firebase.auth().createUserWithEmailAndPassword(this.$data.email, this.$data.password)
-          .then((user) => {
-            let userForDatabase = {
-              email: user.email,
-              isCandidate: true,
-              isModerator: false,
-              isRedactor: false,
-              username: this.$data.username
-            };
-            db.ref('/users/' + user.uid).set(userForDatabase);
-            this.$router.push('/');
-          })
-          .catch(function (error) {
-            alert(error.message);
-          });
+            .then((user) => {
+              let userForDatabase = {
+                username: this.$data.username
+              };
+              db.ref('/users/' + user.uid).update(userForDatabase);
+              this.$router.push('/');
+            })
+            .catch(function (error) {
+              alert(error.message);
+            });
         }
       },
       isValid: function () {
@@ -137,21 +135,21 @@
         this.$data.validEmail = re.test(this.$data.email);
         return this.$data.validEmail;
       },
-      validateEmailIfIncorrect: function(){
-        if(this.$data.validEmail) return;
+      validateEmailIfIncorrect: function () {
+        if (this.$data.validEmail) return;
         this.validateEmail();
       },
-      validatePasswordIfIncorrect: function(){
-        if(this.$data.validPassword) return;
+      validatePasswordIfIncorrect: function () {
+        if (this.$data.validPassword) return;
         this.validatePassword();
       },
-      validateUsernameIfIncorrect: function(){
-        if(this.$data.validUsername) return;
+      validateUsernameIfIncorrect: function () {
+        if (this.$data.validUsername) return;
         this.validateUsername();
       },
-      checkIfUserIsLogIn: function() {
+      checkIfUserIsLogIn: function () {
         let currentUser = firebase.auth().currentUser;
-        if(currentUser) this.isCurrentUser = true;
+        if (currentUser) this.isCurrentUser = true;
       }
     },
     computed: {
@@ -171,9 +169,9 @@
         }
       }
     },
-     beforeMount(){
-        this.checkIfUserIsLogIn();
-     }
+    beforeMount() {
+      this.checkIfUserIsLogIn();
+    }
   }
 </script>
 
