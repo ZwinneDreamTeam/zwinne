@@ -8,6 +8,12 @@
             <md-icon>home</md-icon>
           </md-button>
           <h3 class="md-title">Zwinne XD</h3>
+
+          <div class="md-toolbar-section-end">
+            <md-button @click="logout" class="md-icon-button" v-show="isUserLoggedIn()">
+              <md-icon>power_settings_new</md-icon>
+            </md-button>
+          </div>
         </md-app-toolbar>
 
         <md-app-drawer v-if="showDrawer" md-permanent="card">
@@ -49,6 +55,18 @@
     updated() {
       this.$data.showDrawer = this.$route.fullPath !== '/login';
     },
+    methods: {
+      isUserLoggedIn(event) {
+        return firebase.auth().currentUser != null
+      },
+      logout(event) {
+        firebase.auth().signOut().then(
+          (data) => {
+            this.$router.replace({name: 'Login'});
+          }
+        )
+      }
+    }
   };
 
 
