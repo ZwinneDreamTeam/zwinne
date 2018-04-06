@@ -12,23 +12,23 @@
      <md-field>
          <md-icon>email</md-icon>
          <label>{{emailLabel}}</label>
-         <md-input v-model="user.email" :disabled="disabled == 1"/>
+         <md-input v-model="user.email" :disabled="disabled == true"/>
      </md-field>
 
-    <div v-if="!(isCurrentUserModerator == false && disabled == 0)" >
+    <div v-if="!(isCurrentUserModerator == false && disabled == false)" >
     <label>{{permissionsLabel}}</label>
     </div>
     <div v-if="isCurrentUserModerator == true">
-      <md-switch class="md-primary" v-model="user.isModerator" :disabled="disabled == 1"> {{moderatorLabel}} </md-switch>
+      <md-switch class="md-primary" v-model="user.isModerator" :disabled="disabled == true"> {{moderatorLabel}} </md-switch>
     </div>
-    <div v-if="(isCurrentUserCandidate == true && disabled == 1) || isCurrentUserModerator == true">
-      <md-switch class="md-primary" v-model="user.isCandidate" :disabled="disabled == 1"> {{candidateLabel}} </md-switch>
+    <div v-if="(isCurrentUserCandidate == true && disabled == true) || isCurrentUserModerator == true">
+      <md-switch class="md-primary" v-model="user.isCandidate" :disabled="disabled == true"> {{candidateLabel}} </md-switch>
     </div>
-    <div v-if="(isCurrentUserRedactor == true && disabled == 1) || isCurrentUserModerator == true">
-      <md-switch class="md-primary" v-model="user.isRedactor" :disabled="disabled == 1"> {{redactorLabel}} </md-switch>
+    <div v-if="(isCurrentUserRedactor == true && disabled == true) || isCurrentUserModerator == true">
+      <md-switch class="md-primary" v-model="user.isRedactor" :disabled="disabled == true"> {{redactorLabel}} </md-switch>
     </div>
-    <md-button @click="disabled = 0" class="md-primary md-raised" v-show="disabled == 1"> {{edit}} </md-button>
-    <md-button @click="disabled = 1" v-on:click="applyChanges" class="md-primary md-raised" v-show="disabled == 0"> {{apply}}</md-button>
+    <md-button @click="disabled = false" class="md-primary md-raised" v-show="disabled == true"> {{edit}} </md-button>
+    <md-button @click="disabled = true" v-on:click="applyChanges" class="md-primary md-raised" v-show="disabled == false"> {{apply}}</md-button>
   </md-card>
 </template>
 <script>
@@ -63,7 +63,7 @@ export default {
         permissionsLabel: "Uprawnienia",
         edit: "Edit",
         apply: "Apply",
-        disabled: 1,
+        disabled: true,
         isCurrentUserModerator: false,
         isCurrentUserRedactor: false,
         isCurrentUserCandidate: false
