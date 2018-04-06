@@ -54,6 +54,7 @@
   import {config} from "../App"
   import {db} from "../App"
 
+
   const createAccountFirebase = firebase.initializeApp(config, "create_account_instance").auth();
 
   function signNewUserOut() {
@@ -85,14 +86,14 @@
             .then((user) => {
               let userForDatabase = {
                 email: user.email,
-                isCandidate: self.$data.isCandidate,
-                isModerator: self.$data.isModerator,
-                isRedactor: self.$data.isRedactor,
-                username: self.$data.username
+                isCandidate: this.$data.isCandidate,
+                isModerator: this.$data.isModerator,
+                isRedactor: this.$data.isRedactor,
+                username: this.$data.username
               };
               db.ref('/users/' + user.uid).set(userForDatabase);
               signNewUserOut();
-              self.$router.replace({name: 'users'});
+              this.$router.replace({name: 'users'});
             })
             .catch(function (error) {
               alert(error.message);
@@ -109,7 +110,7 @@
               username: this.$data.username
             };
             db.ref('/users/' + user.uid).set(userForDatabase);
-            self.$router.push('/');
+            this.$router.push('/');
           })
           .catch(function (error) {
             alert(error.message);

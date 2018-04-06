@@ -47,8 +47,7 @@
       }
     },
     updated() {
-      this.$data.showDrawer = this.$route.fullPath !== '/login';
-      this.$data.showDrawer = this.$route.fullPath !== '/register';
+      this.$data.showDrawer = this.$route.fullPath !== '/login' && this.$route.fullPath !== '/register'
     },
   };
 
