@@ -1,78 +1,77 @@
 <template>
-  <div>
-    <h1>User details </h1>
-    <div>
-      Username:
-      <input v-model="username" :disabled="disabled == 1">
-    </div>
-    <div>
-      Email:
-      <input v-model="email" :disabled="disabled == 1">
-    </div>
-    <div>
-      Permissions:
-      <div><md-switch class="md-primary" v-model="isModerator" :disabled="disabled == 1"> Moderator</md-switch></div>
-      <div><md-switch class="md-primary" v-model="isCandidate" :disabled="disabled == 1"> Candidate</md-switch></div>
-      <div><md-switch class="md-primary" v-model="isRedactor" :disabled="disabled == 1"> Redactor</md-switch></div>
-    </div>
-    <md-button @click="disabled = 0" class="md-primary" v-show="disabled == 1"> {{edit}}</md-button>
-    <md-button @click="disabled = 1" v-on:click="applyChanges" class="md-primary" v-show="disabled == 0"> {{apply}}</md-button>
-  </div>
-</template>
+  <md-card >
+      <md-card-header>
+        <h1 class="md-title">{{title}}</h1>
+      </md-card-header>
 
+     <md-field >
+        <md-icon>person</md-icon>
+        <label>{{usernameLabel}}</label>
+        <md-input v-model="user.username" :disabled="disabled"/>
+     </md-field>
+     <md-field>
+         <md-icon>email</md-icon>
+         <label>{{emailLabel}}</label>
+         <md-input v-model="user.email" :disabled="disabled"/>
+     </md-field>
+
+    <div v-if="!(!isCurrentUserModerator && !disabled)" >
+    <label>{{permissionsLabel}}</label>
+    </div>
+    <div v-if="isCurrentUserModerator">
+      <md-switch class="md-primary" v-model="user.isModerator" :disabled="disabled"> {{moderatorLabel}} </md-switch>
+    </div>
+    <div v-if="(isCurrentUserCandidate && disabled) || isCurrentUserModerator">
+      <md-switch class="md-primary" v-model="user.isCandidate" :disabled="disabled"> {{candidateLabel}} </md-switch>
+    </div>
+    <div v-if="(isCurrentUserRedactor && disabled) || isCurrentUserModerator">
+      <md-switch class="md-primary" v-model="user.isRedactor" :disabled="disabled"> {{redactorLabel}} </md-switch>
+    </div>
+    <md-button @click="disabled = false" class="md-primary md-raised" v-show="disabled"> {{edit}} </md-button>
+    <md-button @click="disabled = true" v-on:click="applyChanges" class="md-primary md-raised" v-show="!disabled"> {{apply}}</md-button>
+  </md-card>
+</template>
 <script>
 import { db } from "../App"
-
+import firebase from 'firebase'
 export default {
     name: "user-details",
     methods: {
-      getUser: function () {
-        var user
-        var key = this.$route.params.id
-         let userDb = db.ref('/users/' + key)
-         userDb.on('value', function (snapshot) {
-           user = snapshot.val();
-           window.sessionStorage.setItem("username", user.username);
-           window.sessionStorage.setItem("email", user.email);
-           window.sessionStorage.setItem("isModerator", user.isModerator);
-           window.sessionStorage.setItem("isCandidate", user.isCandidate);
-           window.sessionStorage.setItem("isRedactor", user.isRedactor);
-         });
-
-        this.$data.username = window.sessionStorage.getItem("username");
-        this.$data.email = window.sessionStorage.getItem("email");
-        this.$data.isModerator = window.sessionStorage.getItem("isModerator");
-        this.$data.isCandidate = window.sessionStorage.getItem("isCandidate");
-        this.$data.isRedactor = window.sessionStorage.getItem("isRedactor");
-      },
       applyChanges: function() {
-        var userData = {
-          email: this.$data.email,
-          isCandidate: this.$data.isCandidate,
-          isModerator: this.$data.isModerator,
-          isRedactor: this.$data.isRedactor,
-          username: this.$data.username
-        };
-
-        return db.ref('/users/' + this.$route.params.id).set(userData);
+        return db.ref('/users/' + this.$route.params.id).set(this.user);
       }
     },
-    beforeMount(){
-      this.getUser();
+    mounted() {
+     var key = this.$route.params.id;
+     db.ref('users/' + key).on('value', snapshot => {
+       this.user = snapshot.val();
+     });
+     db.ref('users/' + firebase.auth().currentUser.uid).on('value', snapshot => {
+       this.isCurrentUserModerator = snapshot.val().isModerator;
+       this.isCurrentUserRedactor = snapshot.val().isRedactor;
+       this.isCurrentUserCandidate = snapshot.val().isCandidate;
+     });
     },
     data: () => ({
-        email: "",
-        username: "",
-        isModerator: "",
-        isCandidate: "",
-        isRedactor: "",
+        user: {},
+        title: "Dane użytkownika",
+        emailLabel: "Email",
+        usernameLabel: "Nazwa użytkownika",
+        moderatorLabel: "Moderator",
+        candidateLabel: "Kandydat",
+        redactorLabel: "Redaktor",
+        permissionsLabel: "Uprawnienia",
         edit: "Edit",
         apply: "Apply",
-        disabled: 1
+        disabled: true,
+        isCurrentUserModerator: false,
+        isCurrentUserRedactor: false,
+        isCurrentUserCandidate: false
     }),
   }
 </script>
-
 <style scoped>
-
+  .md-card {
+    padding : 10px;
+  }
 </style>

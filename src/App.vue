@@ -15,7 +15,6 @@
             </md-button>
           </div>
         </md-app-toolbar>
-
         <md-app-drawer v-if="showDrawer" md-permanent="card">
           <app-drawer></app-drawer>
         </md-app-drawer>
