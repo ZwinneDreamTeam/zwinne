@@ -31,7 +31,7 @@
     </div>
 
     <md-button class="md-primary md-raised" @click="disabled = false" v-if="disabled && canEdit">Edytuj</md-button>
-    <md-button class="md-primary md-raised" @click="disabled = true" v-on:click="applyChanges"
+    <md-button class="md-primary md-raised" v-on:click="applyChanges"
                v-if="!disabled && canEdit">
       Zapisz
     </md-button>
@@ -58,7 +58,8 @@
     },
     methods: {
       applyChanges() {
-      if(this.isValid()) {
+        if(this.isValid()) {
+          this.disabled = true;
           return db.ref('/workPositions/' + this.$route.params.id).set(this.position);
         }
       },
