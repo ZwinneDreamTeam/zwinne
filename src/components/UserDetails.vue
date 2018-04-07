@@ -7,7 +7,7 @@
      <md-field >
         <md-icon>person</md-icon>
         <label>{{usernameLabel}}</label>
-        <md-input v-model="user.username" :disabled="disabled == 1"/>
+        <md-input v-model="user.username" :disabled="disabled"/>
      </md-field>
      <md-field>
          <md-icon>email</md-icon>
