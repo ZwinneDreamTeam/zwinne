@@ -1,92 +1,135 @@
 <template>
-  <div>
-    <h1>Position details</h1>
-    <div>
-      Name:
-      <input v-model="name" :disabled="disabled == 1">
-    </div>
-    <div>
-      Company:
-      <input v-model="company" :disabled="disabled == 1">
-    </div>
-    <div>
-      Description:
-      <input v-model="description" :disabled="disabled == 1">
-    </div>
-    <div><md-switch class="md-primary" v-model="isActive" :disabled="disabled == 1">Active</md-switch></div>
+<div>
+  <md-card class="positionDetails">
+      <md-card-header>
+        <h1 class="md-title">Szczegóły stanowiska</h1>
+      </md-card-header>
 
-    <md-button @click="disabled = 0" class="md-primary" v-show="disabled == 1 && canEdit"> {{edit}}</md-button>
-    <md-button @click="disabled = 1" v-on:click="applyChanges" class="md-primary" v-show="disabled == 0 && canEdit"> {{apply}}</md-button>
+      <md-field :class="nameClass">
+        <label>Nazwa stanowiska</label>
+        <md-input v-model="position.name" type="text" :disabled="disabled"
+              v-on:keyup="validateNameIfIncorrect()" v-on:blur="validateName()" required/>
+        <span class="md-error">Nazwa stanowiska musi zawierać co najmniej 2 znaki</span>
+      </md-field>
+
+      <md-field :class="companyClass">
+        <label>Nazwa firmy</label>
+        <md-input v-model="position.company" type="text" :disabled="disabled"
+            v-on:keyup="validateCompanyIfIncorrect()" v-on:blur="validateCompany()" required/>
+        <span class="md-error">Nazwa firmy musi zawierać co najmniej 2 znaki</span>
+      </md-field>
+
+      <md-field :class="descriptionClass">
+        <label>Opis stanowiska</label>
+        <md-textarea v-model="position.description" type="text" :disabled="disabled"
+            v-on:keyup="validateDescriptionIfIncorrect()" v-on:blur="validateDescription()" required/>
+        <span class="md-error">Opis stanowiska musi zawierać co najmniej 2 znaki</span>
+      </md-field>
+
+    <div>
+      <md-switch class="md-primary" v-model="position.isActive" :disabled="disabled">Aktywne</md-switch>
+    </div>
+
+    <md-button class="md-primary md-raised" @click="disabled = false" v-if="disabled && canEdit">Edytuj</md-button>
+    <md-button class="md-primary md-raised" v-on:click="applyChanges"
+               v-if="!disabled && canEdit">
+      Zapisz
+    </md-button>
+  </md-card>
   </div>
 </template>
 
 <script>
-import { db } from "../App"
-import firebase from 'firebase'
+  import firebase from 'firebase'
 
-let usersRef = db.ref('users');
+  let db = firebase.database();
 
-export default {
+  export default {
     name: "position-details",
-    firebase: {
-      users: usersRef
+    mounted() {
+      var key = this.$route.params.id;
+      db.ref('workPositions/' + key).on('value', snapshot => {
+        this.position = snapshot.val();
+      });
+      db.ref('users/' + firebase.auth().currentUser.uid).on('value', snapshot => {
+        this.isModerator = snapshot.val().isModerator;
+        this.isRedactor = snapshot.val().isRedactor;
+      });
     },
     methods: {
-      getPosition: function () {
-        var position
-        var key = this.$route.params.id
-         let positionDb = db.ref('/workPositions/' + key)
-         positionDb.on('value', function (snapshot) {
-           position = snapshot.val();
-           window.sessionStorage.setItem("name", position.name);
-           window.sessionStorage.setItem("company", position.company);
-           window.sessionStorage.setItem("description", position.description);
-           window.sessionStorage.setItem("isActive", position.isActive);
-         });
-
-        this.$data.name = window.sessionStorage.getItem("name");
-        this.$data.company = window.sessionStorage.getItem("company");
-        this.$data.description = window.sessionStorage.getItem("description");
-        this.$data.isActive = window.sessionStorage.getItem("isActive");
+      applyChanges() {
+        if(this.isValid()) {
+          this.disabled = true;
+          return db.ref('/workPositions/' + this.$route.params.id).set(this.position);
+        }
       },
-      applyChanges: function() {
-        var positionData = {
-          company: this.$data.company,
-          description: this.$data.description,
-          isActive: this.$data.isActive,
-          name: this.$data.name
-        };
-
-        return db.ref('/workPositions/' + this.$route.params.id).set(positionData);
+      isValid: function () {
+        let nameValid = this.validateName();
+        let companyValid = this.validateCompany();
+        let descriptionValid = this.validateDescription();
+        return nameValid && companyValid && descriptionValid;
+      },
+      validateName: function () {
+        this.$data.validName = this.position.name.length >= 2;
+        return this.$data.validName;
+      },
+      validateNameIfIncorrect: function () {
+        if (this.$data.validName) return;
+        this.validateName();
+      },
+      validateCompany: function () {
+        this.$data.validCompany = this.position.company.length >= 2;
+        return this.$data.validCompany;
+      },
+      validateCompanyIfIncorrect: function () {
+        if (this.$data.validCompany) return;
+        this.validateCompany();
+      },
+      validateDescription: function () {
+        this.$data.validDescription = this.position.description.length >= 2;
+        return this.$data.validDescription;
+      },
+      validateDescriptionIfIncorrect: function () {
+        if (this.$data.validDescription) return;
+        this.validateDescription();
       }
     },
     computed: {
-      canEdit: function () {
-        let currentUserAuth = firebase.auth().currentUser;
-        let currentUser = this.users.filter((user) => {
-          return user['.key'] === currentUserAuth.uid
-        });
-        if (currentUser[0] == null) {
-          return false
+      canEdit() {
+        return this.isModerator || this.isRedactor;
+      },
+      nameClass() {
+        return {
+          'md-invalid': !this.validName
         }
-        return (currentUser[0].isModerator || currentUser[0].isRedactor)
+      },
+      companyClass() {
+        return {
+          'md-invalid': !this.validCompany
+        }
+      },
+      descriptionClass() {
+        return {
+          'md-invalid': !this.validDescription
+        }
       }
     },
-    beforeMount(){
-      this.getPosition();
-    },
+
     data: () => ({
-        name: "",
-        company: "",
-        description: "",
-        isActive: false,
-        edit: "Edit",
-        apply: "Apply",
-        disabled: 1
+      position: {},
+      disabled: true,
+      isModerator: false,
+      isRedactor: false,
+      validName: true,
+      validCompany: true,
+      validDescription: true
     }),
   }
 </script>
 
 <style scoped>
 
+  .positionDetails {
+    padding: 16px;
+  }
 </style>
