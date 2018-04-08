@@ -1,10 +1,17 @@
 <template>
   <div class="logInView" >
+    <md-dialog :md-active.sync="shouldShowDialog" layout-padding>
+      <md-dialog-title>{{forgotPasswordDialogTitle}}</md-dialog-title>
+      <md-field>
+        <label>{{forgotPasswordPlaceholderText}}</label>
+        <md-input v-model="resetPasswordEmail" :disabled="false"/>
+      </md-field>
+      <md-button v-on:click="handleForgotPassword" class="md-raised registerButton">{{forgotPasswordSend}}</md-button>
+    </md-dialog>
     <md-card class="loginPanelView" >
        <md-card-header>
          <h1 class="md-title">{{loginLabel}}</h1>
        </md-card-header>
-
        <md-field >
          <md-icon>person</md-icon>
          <label>{{emailLabel}}</label>
@@ -23,6 +30,7 @@
       <router-link :to="{name: 'register'}">
         <md-button class="md-raised logInButton registerButton">{{register}}</md-button>
       </router-link>
+      <md-button v-on:click="showForgotPasswordDialog" class="md-raised logInButton forgotPasswordButton">{{forgotPasswordLabel}}</md-button>
     </md-card>
   </div>
 </template>
@@ -44,8 +52,14 @@
       "emailLabel": "Email",
       "passwordLabel": "Hasło",
       "orLabel": "Albo...",
-       email: "",
-       password: ""
+      "forgotPasswordLabel": "Forgot paswörd :DD",
+      "forgotPasswordDialogTitle": "Reset hasła",
+      "forgotPasswordPlaceholderText": "Podaj adres e-mail na który wysłany zostanie link resetujący hasło",
+      "forgotPasswordSend": "Wyślij",
+      email: "",
+      password: "",
+      resetPasswordEmail: "",
+      shouldShowDialog: false
     }),
     methods: {
       doLogin(event) {
@@ -71,6 +85,18 @@
            alert('Niepoprawna struktura adresu email');
          }
         });
+      },
+      showForgotPasswordDialog() {
+        this.shouldShowDialog = true
+      },
+      handleForgotPassword() {
+        let emailAddress = this.resetPasswordEmail;
+        firebase.auth().sendPasswordResetEmail(emailAddress).then(() => {
+          alert("E-mail z linkiem resetującym hasło został wysłany na podany adres");
+          this.shouldShowDialog = false
+        }).catch((error) => {
+          alert("Użytkownik z podanym adresem e-mail nie istnieje");
+        });
       }
     }
   }
@@ -91,6 +117,11 @@
     color: #ffffff !important;
   }
 
+  .forgotPasswordButton {
+    background-color: #bbbbbb !important;
+    color: #ffffff !important;
+  }
+
   .logInView {
     text-align: center;
     margin-left: 40vh;
@@ -99,6 +130,10 @@
   .loginPanelView {
    text-align: center;
    padding : 10px;
+  }
+  .md-dialog {
+    padding: 10px;
+    min-width: 550px;
   }
 
 </style>
