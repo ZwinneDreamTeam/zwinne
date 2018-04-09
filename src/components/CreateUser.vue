@@ -83,7 +83,7 @@
     }),
     methods: {
       submit_click(event) {
-        if (this.isValid() && this.isCurrentUser === true) {
+        if (this.isValid() && this.isCurrentUser) {
           createAccountFirebase.createUserWithEmailAndPassword(this.$data.email, this.$data.password)
             .then((user) => {
               let userForDatabase = {
@@ -101,7 +101,7 @@
               alert(error.message);
             });
         }
-        else if (this.isValid() && this.isCurrentUser === false) {
+        else if (this.isValid() && !this.isCurrentUser) {
           firebase.auth().createUserWithEmailAndPassword(this.$data.email, this.$data.password)
             .then((user) => {
               let userForDatabase = {
