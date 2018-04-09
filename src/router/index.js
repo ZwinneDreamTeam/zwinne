@@ -11,6 +11,7 @@ import WorkPositions from '@/components/WorkPositions'
 import WorkPositionDetails from '@/components/WorkPositionDetails'
 import WorkPositionAdd from '@/components/WorkPositionAdd'
 import CreateUser from '@/components/CreateUser'
+import CreatedTestList from '@/components/tests/CreatedTestList'
 import VueMaterial from 'vue-material'
 import firebase from 'firebase'
 import 'vue-material/dist/vue-material.min.css'
@@ -69,6 +70,15 @@ let router = new VueRouter({
       path: '/redactor',
       name: 'Redactor',
       component: Redactor,
+      meta: {
+        requiresAuth: true,
+        requiresRedactor: true
+      }
+    },
+    {
+      path: '/createdTests',
+      name: 'created-tests',
+      component: CreatedTestList,
       meta: {
         requiresAuth: true,
         requiresRedactor: true
