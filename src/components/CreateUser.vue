@@ -105,9 +105,13 @@
           firebase.auth().createUserWithEmailAndPassword(this.$data.email, this.$data.password)
             .then((user) => {
               let userForDatabase = {
+                email: user.email,
+                isCandidate: true,
+                isModerator: false,
+                isRedactor: false,
                 username: this.$data.username
               };
-              db.ref('/users/' + user.uid).update(userForDatabase);
+              db.ref('/users/' + user.uid).set(userForDatabase);
               this.$router.push('/');
             })
             .catch(function (error) {
