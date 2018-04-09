@@ -1,10 +1,10 @@
 <template>
   <div class="logInView" >
-    <md-dialog :md-active.sync="shouldShowDialog" layout-padding>
+    <md-dialog :md-active.sync="shouldShowDialog" layout-padding class="forgot-password-dialog">
       <md-dialog-title>{{forgotPasswordDialogTitle}}</md-dialog-title>
       <md-field>
         <label>{{forgotPasswordPlaceholderText}}</label>
-        <md-input v-model="resetPasswordEmail" :disabled="false"/>
+        <md-input v-model="resetPasswordEmail"/>
       </md-field>
       <md-button v-on:click="handleForgotPassword" class="md-raised registerButton">{{forgotPasswordSend}}</md-button>
     </md-dialog>
@@ -52,7 +52,7 @@
       "emailLabel": "Email",
       "passwordLabel": "Hasło",
       "orLabel": "Albo...",
-      "forgotPasswordLabel": "Forgot paswörd :DD",
+      "forgotPasswordLabel": "Zapomniałem hasła",
       "forgotPasswordDialogTitle": "Reset hasła",
       "forgotPasswordPlaceholderText": "Podaj adres e-mail na który wysłany zostanie link resetujący hasło",
       "forgotPasswordSend": "Wyślij",
@@ -119,7 +119,6 @@
 
   .forgotPasswordButton {
     background-color: #bbbbbb !important;
-    color: #ffffff !important;
   }
 
   .logInView {
@@ -131,9 +130,9 @@
    text-align: center;
    padding : 10px;
   }
-  .md-dialog {
-    padding: 10px;
-    min-width: 550px;
+  .forgot-password-dialog {
+    padding: 10px !important;
+    min-width: 550px !important;
   }
 
 </style>
