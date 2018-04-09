@@ -27,10 +27,9 @@
        </div>
        <h2 class="md-title">{{orLabel}}</h2>
       <md-button v-on:click="doLogin" class="md-raised logInButton">{{zalogujMsg}}</md-button>
-      <router-link :to="{name: 'register'}">
-        <md-button class="md-raised logInButton registerButton">{{register}}</md-button>
-      </router-link>
+      <md-button  :to="{ name: 'Register'}" class="md-raised logInButton registerButton">{{register}}</md-button>
       <md-button v-on:click="showForgotPasswordDialog" class="md-raised logInButton forgotPasswordButton">{{forgotPasswordLabel}}</md-button>
+
     </md-card>
   </div>
 </template>
@@ -42,6 +41,7 @@
   provider.setCustomParameters({
     prompt: 'select_account'
   });
+
   export default {
     name: "login",
     data: () => ({

@@ -48,11 +48,11 @@
     name: 'app',
     data() {
       return {
-        showDrawer: this.$route.fullPath !== '/login',
+        showDrawer: this.$route.fullPath !== '/login' && this.$route.fullPath !== '/register',
       }
     },
     updated() {
-      this.$data.showDrawer = this.$route.fullPath !== '/login';
+      this.$data.showDrawer = this.$route.fullPath !== '/login' && this.$route.fullPath !== '/register'
     },
     methods: {
       isUserLoggedIn(event) {
