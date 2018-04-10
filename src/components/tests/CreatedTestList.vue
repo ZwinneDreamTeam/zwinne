@@ -93,8 +93,7 @@
         })
       },
       onSelect(item) {
-        alert("NOT IMPLEMTED YET");
-        // this.$router.push({name: 'positionDetails', params: {id: item['.key']}});
+        this.$router.push({name: 'test-details', params: {id: item.key}});
       },
     },
   }

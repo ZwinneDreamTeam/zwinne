@@ -13,6 +13,7 @@ import WorkPositionAdd from '@/components/WorkPositionAdd'
 import CreateUser from '@/components/CreateUser'
 import CreatedTestList from '@/components/tests/CreatedTestList'
 import AddTest from '@/components/tests/AddTest'
+import TestDetails from '@/components/tests/TestDetails'
 import VueMaterial from 'vue-material'
 import firebase from 'firebase'
 import 'vue-material/dist/vue-material.min.css'
@@ -139,6 +140,14 @@ let router = new VueRouter({
       meta: {
         requiresAuth: true,
         requiresRedactor: true,
+      }
+    },
+    {
+      path: '/tests/:id',
+      name: 'test-details',
+      component: TestDetails,
+      meta: {
+        requiresAuth: true,
       }
     },
   ]
