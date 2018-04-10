@@ -11,6 +11,7 @@ import WorkPositions from '@/components/WorkPositions'
 import WorkPositionDetails from '@/components/WorkPositionDetails'
 import WorkPositionAdd from '@/components/WorkPositionAdd'
 import CreateUser from '@/components/CreateUser'
+import UserTests from '@/components/UserTests'
 import VueMaterial from 'vue-material'
 import firebase from 'firebase'
 import 'vue-material/dist/vue-material.min.css'
@@ -81,8 +82,18 @@ let router = new VueRouter({
       meta: {
         requiresAuth: true,
         requiresCandidate: true
-      }
+      },
     },
+    {
+      path: '/candidate/tests',
+      name: 'userTests',
+      component: UserTests,
+      meta: {
+        requiresAuth: true,
+        requiresCandidate: true
+      },
+    },
+
     {
       path: '/moderator',
       name: 'Moderator',
