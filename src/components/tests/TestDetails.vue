@@ -10,7 +10,9 @@
         </div>
       </md-card-header>
       <md-field>
-        <md-select v-model="testModel.ownerUid" :placeholder="testModel.ownerName" :disabled="!canChangeOwner">
+        <md-icon>person</md-icon>
+        <md-select class="selectRedactors" v-model="testModel.ownerUid" :placeholder="testModel.ownerName"
+                   :disabled="!canChangeOwner">
           <md-option v-for="redactor in redactors" :key="redactor['.key']" :value="redactor['.key']">
             {{redactor.username}}
           </md-option>
@@ -19,9 +21,11 @@
       <md-field :class="testNameClass">
         <md-icon>title</md-icon>
         <label>Nazwa testu</label>
-        <md-input v-model="testModel.name" required v-on:blur="validateTestName()" v-on:keyup="validateTestName()"/>
+        <md-input v-model="testModel.name" required v-on:blur="validateTestName()" v-on:keyup="validateTestName()"
+                  :disabled="!editMode"/>
         <span class="md-error">Wymagana nazwa testu</span>
       </md-field>
+      <md-switch class="md-primary" v-model="testModel.isActive" :disabled="!editMode">Aktywny</md-switch>
     </md-card>
     <md-card class="createTestCard">
       TODO: Pytania
@@ -29,6 +33,9 @@
     <md-button @click="submit_click" v-if="editMode" class="md-raised md-primary confirmButton">
       Zatwierdź zmiany
     </md-button>
+    <md-snackbar md-position="center" :md-active.sync="showSnackbar" md-persistent>
+      <span>{{snackBarMessage}}</span>
+    </md-snackbar>
   </div>
 </template>
 
@@ -43,6 +50,8 @@
         currentUser: {},
         testModel: {},
         isTestNameValid: true,
+        snackBarMessage: "Zapisano",
+        showSnackbar: false,
       };
     },
     firebase: {
@@ -73,12 +82,17 @@
     },
     methods: {
       submit_click() {
-        // this.validateTestName();
-        // if (this.isTestNameValid) {
-        //   firebase.database().ref("tests").push(this.testModel).then(() => {
-        //     this.$router.push({name: 'created-tests'});
-        //   });
-        // }
+        this.validateTestName();
+        if (this.isTestNameValid) {
+          firebase.database().ref("tests/" + this.testModel.key).update({
+            ownerUid: this.testModel.ownerUid,
+            name: this.testModel.name,
+            isActive: this.testModel.isActive,
+          }).then(() => {
+            this.editMode = false;
+            this.showSnackbar = true;
+          });
+        }
       },
       validateTestName() {
         this.isTestNameValid = Boolean(this.testModel.name) && Boolean(this.testModel.name.trim());
@@ -105,6 +119,10 @@
   }
 
   .confirmButton {
+    margin-left: 16px;
+  }
+
+  .selectRedactors {
     margin-left: 16px;
   }
 </style>
