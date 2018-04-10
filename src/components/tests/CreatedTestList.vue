@@ -4,12 +4,13 @@
               :md-sort-fn="customSort" md-card>
       <md-table-toolbar>
         <h1 class="md-title">Stworzone testy</h1>
-        <!--<router-link :to="{name: 'addTest'}">-->
-        <md-button class="md-raised md-primary">Dodaj test</md-button>
-        <!--</router-link>-->
+        <router-link :to="{name: 'add-test'}">
+          <md-button class="md-raised md-primary">Dodaj test</md-button>
+        </router-link>
       </md-table-toolbar>
 
       <md-table-row slot="md-table-row" slot-scope="{item}" md-selectable="single" @click.native="onSelect(item)">
+        <md-table-cell md-label="Nazwa" md-sort-by="name">{{ item.name }}</md-table-cell>
         <md-table-cell md-label="Stanowisko" md-sort-by="positionName">{{ item.positionName }}</md-table-cell>
         <md-table-cell md-label="Właściciel" md-sort-by="ownerName">{{ item.ownerName }}</md-table-cell>
         <md-table-cell md-label="Aktywne" md-sort-by="isActive">
@@ -74,6 +75,15 @@
       customSort(value) {
         return value.sort((a, b) => {
           const sortBy = this.currentSort;
+
+          //handle nulls
+          if (this.currentSortOrder === 'asc') {
+            if (!a[sortBy]) return -1;
+            else if (!b[sortBy]) return 1;
+          } else {
+            if (!a[sortBy]) return 1;
+            else if (!b[sortBy]) return -1;
+          }
 
           if (typeof(a[sortBy]) === "boolean") {
             return this.compareBooleans(a, b, sortBy);

@@ -12,6 +12,7 @@ import WorkPositionDetails from '@/components/WorkPositionDetails'
 import WorkPositionAdd from '@/components/WorkPositionAdd'
 import CreateUser from '@/components/CreateUser'
 import CreatedTestList from '@/components/tests/CreatedTestList'
+import AddTest from '@/components/tests/AddTest'
 import VueMaterial from 'vue-material'
 import firebase from 'firebase'
 import 'vue-material/dist/vue-material.min.css'
@@ -44,41 +45,11 @@ let router = new VueRouter({
         requiresAuth: true
       }
     },
-    {
-      path: '/positions',
-      name: 'Work positions',
-      component: WorkPositions,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/positions/create',
-      name: 'addPosition',
-      component: WorkPositionAdd,
-      meta: {
-        requiresAuth: true,
-        requiresModerator: true
-      }
-    },
-    {
-      path: '/positions/:id',
-      name: 'positionDetails',
-      component: WorkPositionDetails
-    },
+    //=============== ROLES ===============
     {
       path: '/redactor',
       name: 'Redactor',
       component: Redactor,
-      meta: {
-        requiresAuth: true,
-        requiresRedactor: true
-      }
-    },
-    {
-      path: '/createdTests',
-      name: 'created-tests',
-      component: CreatedTestList,
       meta: {
         requiresAuth: true,
         requiresRedactor: true
@@ -93,6 +64,7 @@ let router = new VueRouter({
         requiresCandidate: true
       }
     },
+    //=============== USERS ==============
     {
       path: '/moderator',
       name: 'Moderator',
@@ -125,6 +97,48 @@ let router = new VueRouter({
       component: UserDetails,
       meta: {
         requiresAuth: true
+      }
+    },
+    //========= WORK POSITIONS ==========
+    {
+      path: '/positions',
+      name: 'Work positions',
+      component: WorkPositions,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/positions/create',
+      name: 'addPosition',
+      component: WorkPositionAdd,
+      meta: {
+        requiresAuth: true,
+        requiresModerator: true
+      }
+    },
+    {
+      path: '/positions/:id',
+      name: 'positionDetails',
+      component: WorkPositionDetails
+    },
+    //============= TESTS =============
+    {
+      path: '/createdTests',
+      name: 'created-tests',
+      component: CreatedTestList,
+      meta: {
+        requiresAuth: true,
+        requiresRedactor: true
+      }
+    },
+    {
+      path: '/tests/add',
+      name: 'add-test',
+      component: AddTest,
+      meta: {
+        requiresAuth: true,
+        requiresRedactor: true,
       }
     },
   ]
