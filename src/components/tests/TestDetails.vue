@@ -43,7 +43,7 @@
 
     </md-card>
 
-    <test-detail-questions v-bind:questions="testModel.questions" v-bind:mode="questionsMode" v-bind:testId="testModel.key" v-on:questionSubmitted="onQuestionAdded"/>
+    <test-detail-questions v-bind:questions="testModel.questions" v-bind:mode="questionsMode" v-bind:testId="testModel.key" v-on:questionAdded="onQuestionAdded"/>
 
     <md-button @click="submit_click" v-if="editMode" class="md-raised md-primary confirmButton">
       Zatwierdź zmiany

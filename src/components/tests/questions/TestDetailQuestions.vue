@@ -2,7 +2,7 @@
   <div>
     <div class="md-table-head-label">Pytania</div>
 
-    <md-card v-for="question in questions" class="questionCard">
+    <md-card v-for="question in questions" :key="question.name" class="questionCard">
       {{question.name}}
       {{question.type}}
     </md-card>
@@ -17,15 +17,14 @@
   export default {
     components: {AddQuestion},
     name: "test-detail-questions",
-    props: ['questions', 'mode', 'testId'],
-    emits: ['questionSubmitted'],
+    props: ['questions', 'mode'],
+    emits: ['questionAdded'],
     data() {
       return {};
     },
     methods: {
       onQuestionSubmitted(question) {
-        console.log(question);
-        this.$emit('questionSubmitted', question);
+        this.$emit('questionAdded', question);
       }
     }
   }

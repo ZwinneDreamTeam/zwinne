@@ -17,7 +17,7 @@
       </md-field>
     </md-card>
     <!--<md-card class="createTestCard">-->
-      <test-detail-questions v-bind:mode="mode" v-bind:questions="testModel.questions" v-on:questionSubmitted="onQuestionAdded"/>
+      <test-detail-questions v-bind:mode="mode" v-bind:questions="testModel.questions" v-on:questionAdded="onQuestionAdded"/>
     <!--</md-card>-->
     <md-button @click="submit_click" class="md-raised md-primary confirmButton">Dodaj test</md-button>
   </div>
@@ -59,13 +59,11 @@
         }
       },
       onQuestionAdded(question) {
-        // firebase.database().ref("tests/" + this.testModel.key + "/questions").push(question);
-        console.log(question);
         this.testModel.questions.push(question);
       },
       validateTestName() {
         this.isTestNameValid = Boolean(this.testModel.name) && Boolean(this.testModel.name.trim());
-      }
+      },
     },
     computed: {
       testNameClass() {
