@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="page-container">
+    <div class="page-container" @contextmenu.prevent="$refs.ctxMenu.open">
       <md-app md-waterfall md-mode="fixed">
 
         <md-app-toolbar class="md-primary">
@@ -26,11 +26,18 @@
       </md-app>
     </div>
 
+    <context-menu id="context-menu" ref="ctxMenu">
+      <li @click="doSomething()" >option 1</li>
+      <li class="disabled">option 2</li>
+      <li>option 3</li>
+    </context-menu>
+
   </div>
 </template>
 <script>
   import firebase from 'firebase'
   import AppDrawer from './components/AppDrawer'
+  import contextMenu from 'vue-context-menu'
 
   export let config = {
     apiKey: "AIzaSyAduGsOpgqCLn79cI4fzBvMsC0LFfnQhWA",
@@ -44,15 +51,27 @@
   export const db = firebase.initializeApp(config).database();
 
   export default {
-    components: {AppDrawer},
+    components: {AppDrawer, contextMenu},
     name: 'app',
+    created() {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (firebase.auth().currentUser == null) {
+          this.contextMenuEnable = false;
+        } else {
+          db.ref('users/' + firebase.auth().currentUser.uid).on('value', snapshot => {
+            this.contextMenuEnable = snapshot != null && (!snapshot.val().isCandidate || snapshot.val().isModerator || snapshot.val().isRedactor);
+          });
+        }
+      });
+    },
     data() {
       return {
         showDrawer: this.$route.fullPath !== '/login' && this.$route.fullPath !== '/register',
+        contextMenuEnable: false,
       }
     },
     updated() {
-      this.$data.showDrawer = this.$route.fullPath !== '/login' && this.$route.fullPath !== '/register'
+      this.$data.showDrawer = this.$route.fullPath !== '/login' && this.$route.fullPath !== '/register';
     },
     methods: {
       isUserLoggedIn(event) {
@@ -64,6 +83,8 @@
             this.$router.replace({name: 'Login'});
           }
         )
+      }, doSomething() {
+
       }
     }
   };
