@@ -11,7 +11,8 @@ import WorkPositions from '@/components/WorkPositions'
 import WorkPositionDetails from '@/components/WorkPositionDetails'
 import WorkPositionAdd from '@/components/WorkPositionAdd'
 import CreateUser from '@/components/CreateUser'
-import CreatedTestList from '@/components/tests/CreatedTestList'
+import CreatedTestsList from '@/components/tests/CreatedTestsList'
+import AllTestsList from '@/components/tests/AllTestsList'
 import AddTest from '@/components/tests/AddTest'
 import TestDetails from '@/components/tests/TestDetails'
 import VueMaterial from 'vue-material'
@@ -127,10 +128,19 @@ let router = new VueRouter({
     {
       path: '/createdTests',
       name: 'created-tests',
-      component: CreatedTestList,
+      component: CreatedTestsList,
       meta: {
         requiresAuth: true,
         requiresRedactor: true
+      }
+    },
+    {
+      path: '/tests',
+      name: 'all-tests',
+      component: AllTestsList,
+      meta: {
+        requiresAuth: true,
+        requiresModerator: true
       }
     },
     {

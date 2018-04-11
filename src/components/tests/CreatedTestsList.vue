@@ -23,6 +23,7 @@
 </template>
 
 <script>
+  let customSort = require('../../utils/CustomSort');
   import firebase from 'firebase';
 
   let db = firebase.database();
@@ -55,41 +56,9 @@
         });
     },
     methods: {
-      compareBooleans(a, b, sortBy) {
-        if (a[sortBy] === b[sortBy])
-          return 0;
-        else if (a[sortBy] && !b[sortBy]) {
-          return this.currentSortOrder === 'desc' ? 1 : -1;
-        } else {
-          return this.currentSortOrder === 'desc' ? -1 : 1;
-        }
-
-      },
-      compareStrings(a, b, sortBy) {
-        if (this.currentSortOrder === 'desc') {
-          return a[sortBy].localeCompare(b[sortBy])
-        } else {
-          return b[sortBy].localeCompare(a[sortBy])
-        }
-      },
       customSort(value) {
         return value.sort((a, b) => {
-          const sortBy = this.currentSort;
-
-          //handle nulls
-          if (this.currentSortOrder === 'asc') {
-            if (!a[sortBy]) return -1;
-            else if (!b[sortBy]) return 1;
-          } else {
-            if (!a[sortBy]) return 1;
-            else if (!b[sortBy]) return -1;
-          }
-
-          if (typeof(a[sortBy]) === "boolean") {
-            return this.compareBooleans(a, b, sortBy);
-          } else {
-            return this.compareStrings(a, b, sortBy);
-          }
+          return customSort.customSort(a, b, this.currentSort, this.currentSortOrder);
         })
       },
       onSelect(item) {
