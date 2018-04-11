@@ -16,9 +16,9 @@
         <span class="md-error">Wymagana nazwa testu</span>
       </md-field>
     </md-card>
-    <!--<md-card class="createTestCard">-->
-      <test-detail-questions v-bind:mode="mode" v-bind:questions="testModel.questions" v-on:questionAdded="onQuestionAdded"/>
-    <!--</md-card>-->
+
+    <test-detail-questions v-bind:mode="mode" v-bind:questions="testModel.questions" v-on:questionAdded="onQuestionAdded"/>
+
     <md-button @click="submit_click" class="md-raised md-primary confirmButton">Dodaj test</md-button>
   </div>
 </template>
