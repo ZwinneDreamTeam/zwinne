@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="page-container" @contextmenu.prevent="$refs.ctxMenu.open">
+    <div class="page-container" @contextmenu.prevent="$refs.ctxMenu.open" @contextmenu.>
       <md-app md-waterfall md-mode="fixed">
 
         <md-app-toolbar class="md-primary">
@@ -27,9 +27,16 @@
     </div>
 
     <context-menu id="context-menu" ref="ctxMenu">
-      <li @click="doSomething()" >option 1</li>
-      <li class="disabled">option 2</li>
-      <li>option 3</li>
+      <md-list>
+        <md-list-item @click="findInWiki()">
+          <md-icon>find_in_page</md-icon>
+          <span class="md-list-item-text">{{label_wiki}}</span>
+        </md-list-item>
+        <md-list-item @click="findSynonym()">
+          <md-icon>search</md-icon>
+          <span class="md-list-item-text">{{label_synonym}}</span>
+        </md-list-item>
+      </md-list>
     </context-menu>
 
   </div>
@@ -68,6 +75,8 @@
       return {
         showDrawer: this.$route.fullPath !== '/login' && this.$route.fullPath !== '/register',
         contextMenuEnable: false,
+        label_wiki: "Znajdź w wikipedii",
+        label_synonym: "Znajdź synonim",
       }
     },
     updated() {
@@ -83,7 +92,9 @@
             this.$router.replace({name: 'Login'});
           }
         )
-      }, doSomething() {
+      }, findInWiki() {
+        window.open("https://www.wikipedia.org/", '_blank');
+      }, findSynonym() {
 
       }
     }
