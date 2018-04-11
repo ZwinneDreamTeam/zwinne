@@ -26,7 +26,7 @@
       </md-app>
     </div>
 
-    <context-menu id="context-menu" ref="ctxMenu">
+    <context-menu id="context-menu" ref="ctxMenu" v-if="contextMenuEnable">
       <md-list>
         <md-list-item @click="findInWiki()">
           <md-icon>find_in_page</md-icon>
