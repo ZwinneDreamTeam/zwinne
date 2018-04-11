@@ -16,25 +16,29 @@
         <span class="md-error">Wymagana nazwa testu</span>
       </md-field>
     </md-card>
-    <md-card class="createTestCard">
-      TODO: Pytania
-    </md-card>
+    <!--<md-card class="createTestCard">-->
+      <test-detail-questions v-bind:mode="mode" v-bind:questions="testModel.questions" v-on:questionSubmitted="onQuestionAdded"/>
+    <!--</md-card>-->
     <md-button @click="submit_click" class="md-raised md-primary confirmButton">Dodaj test</md-button>
   </div>
 </template>
 
 <script>
   import firebase from 'firebase';
+  import TestDetailQuestions from "./questions/TestDetailQuestions";
 
   export default {
+    components: {TestDetailQuestions},
     name: "create-test",
     data() {
       return {
         userDisplayName: "",
         testModel: {
-          isActive: true
+          isActive: true,
+          questions: [],
         },
         isTestNameValid: true,
+        mode: "edit",
       };
 
     },
@@ -53,6 +57,11 @@
             this.$router.push({name: 'created-tests'});
           });
         }
+      },
+      onQuestionAdded(question) {
+        // firebase.database().ref("tests/" + this.testModel.key + "/questions").push(question);
+        console.log(question);
+        this.testModel.questions.push(question);
       },
       validateTestName() {
         this.isTestNameValid = Boolean(this.testModel.name) && Boolean(this.testModel.name.trim());

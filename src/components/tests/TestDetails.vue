@@ -43,9 +43,7 @@
 
     </md-card>
 
-    <md-card class="createTestCard">
-      TODO: Pytania
-    </md-card>
+    <test-detail-questions v-bind:questions="testModel.questions" v-bind:mode="questionsMode" v-bind:testId="testModel.key" v-on:questionSubmitted="onQuestionAdded"/>
 
     <md-button @click="submit_click" v-if="editMode" class="md-raised md-primary confirmButton">
       Zatwierdź zmiany
@@ -60,9 +58,11 @@
 
 <script>
   import firebase from 'firebase';
+  import TestDetailQuestions from "./questions/TestDetailQuestions";
 
   export default {
     name: "test-details",
+    components: {TestDetailQuestions},
     data() {
       return {
         editMode: false,
@@ -115,11 +115,17 @@
           });
         }
       },
+      onQuestionAdded(question) {
+        firebase.database().ref("tests/" + this.testModel.key + "/questions").push(question);
+      },
       validateTestName() {
         this.isTestNameValid = Boolean(this.testModel.name) && Boolean(this.testModel.name.trim());
       }
     },
     computed: {
+      questionsMode() {
+        return this.editMode ? 'edit' : 'display';
+      },
       testNameClass() {
         return {
           'md-invalid': !this.isTestNameValid
