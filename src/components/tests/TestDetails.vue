@@ -1,6 +1,7 @@
 <template>
   <div>
     <md-card class="createTestCard">
+
       <md-card-header>
         <md-card-header-text>
           <h1 class="md-title">Szczegóły testu</h1>
@@ -9,15 +10,17 @@
           <md-switch class="md-primary" v-model="editMode">Tryb edycji</md-switch>
         </div>
       </md-card-header>
+
       <md-field>
         <md-icon>person</md-icon>
-        <md-select class="selectRedactors" v-model="testModel.ownerUid" :placeholder="testModel.ownerName"
-                   :disabled="!canChangeOwner">
+        <md-select class="mySelect" v-model="testModel.ownerUid" :placeholder="testModel.ownerName"
+                   :disabled="!canChangeOwnerOrPosition">
           <md-option v-for="redactor in redactors" :key="redactor['.key']" :value="redactor['.key']">
             {{redactor.username}}
           </md-option>
         </md-select>
       </md-field>
+
       <md-field :class="testNameClass">
         <md-icon>title</md-icon>
         <label>Nazwa testu</label>
@@ -25,17 +28,33 @@
                   :disabled="!editMode"/>
         <span class="md-error">Wymagana nazwa testu</span>
       </md-field>
+
+      <md-field>
+        <md-icon>work</md-icon>
+        <md-select class="mySelect" v-model="testModel.positionId" :placeholder="positionPlaceholder"
+                   :disabled="!canChangeOwnerOrPosition">
+          <md-option v-for="position in positions" :key="position['.key']" :value="position['.key']">
+            {{position.name}}
+          </md-option>
+        </md-select>
+      </md-field>
+
       <md-switch class="md-primary" v-model="testModel.isActive" :disabled="!editMode">Aktywny</md-switch>
+
     </md-card>
+
     <md-card class="createTestCard">
       TODO: Pytania
     </md-card>
+
     <md-button @click="submit_click" v-if="editMode" class="md-raised md-primary confirmButton">
       Zatwierdź zmiany
     </md-button>
+
     <md-snackbar md-position="center" :md-active.sync="showSnackbar" md-persistent>
       <span>{{snackBarMessage}}</span>
     </md-snackbar>
+
   </div>
 </template>
 
@@ -56,6 +75,7 @@
     },
     firebase: {
       redactors: firebase.database().ref("users/").orderByChild("isRedactor").equalTo(true),
+      positions: firebase.database().ref("workPositions/").orderByChild("isActive").equalTo(true),
     },
     mounted() {
       let currentAuthUser = firebase.auth().currentUser;
@@ -71,7 +91,7 @@
         test.key = snapshot.key;
 
         let usernamePromise = firebase.database().ref('users/' + test.ownerUid + "/username").once('value');
-        let positionNamePromise = firebase.database().ref('workPositions/' + test.positionUid + "/name").once('value');
+        let positionNamePromise = firebase.database().ref('workPositions/' + test.positionId + "/name").once('value');
 
         Promise.all([usernamePromise, positionNamePromise]).then(async (values) => {
           test.ownerName = values[0].val();
@@ -88,6 +108,7 @@
             ownerUid: this.testModel.ownerUid,
             name: this.testModel.name,
             isActive: this.testModel.isActive,
+            positionId: this.testModel.positionId ? this.testModel.positionId : null,
           }).then(() => {
             this.editMode = false;
             this.showSnackbar = true;
@@ -104,7 +125,14 @@
           'md-invalid': !this.isTestNameValid
         }
       },
-      canChangeOwner() {
+      positionPlaceholder() {
+        if (this.testModel.positionName) {
+          return this.testModel.positionName;
+        } else {
+          return "Stanowisko";
+        }
+      },
+      canChangeOwnerOrPosition() {
         return this.editMode && this.currentUser.isModerator;
       }
     }
@@ -122,7 +150,7 @@
     margin-left: 16px;
   }
 
-  .selectRedactors {
+  .mySelect {
     margin-left: 16px;
   }
 </style>

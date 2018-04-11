@@ -41,7 +41,7 @@
           test.key = snapshot.key;
 
           let usernamePromise = db.ref('users/' + test.ownerUid + "/username").once('value');
-          let positionNamePromise = db.ref('workPositions/' + test.positionUid + "/name").once('value');
+          let positionNamePromise = db.ref('workPositions/' + test.positionId + "/name").once('value');
 
           Promise.all([usernamePromise, positionNamePromise]).then((values) => {
             test.ownerName = values[0].val();
