@@ -11,7 +11,7 @@
     <md-field>
       <md-icon>list</md-icon>
       <label>Rodzaj pytania</label>
-      <md-select class="mySelect" v-model="questionModel.type">
+      <md-select class="mySelect" v-model="questionModel.type" required>
         <md-option value="text">Otwarte</md-option>
         <md-option value="select">Wyboru</md-option>
         <md-option value="scale">Skali</md-option>
