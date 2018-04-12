@@ -23,12 +23,10 @@
 <script>
   import firebase from 'firebase';
 
-  let db = firebase.database();
-
   export default {
     name: "work-positions",
     firebase: {
-      positions: db.ref('workPositions')
+      positions: firebase.database().ref('workPositions')
     },
     data() {
       return {
@@ -39,7 +37,7 @@
     },
     mounted() {
       let currentUserAuth = firebase.auth().currentUser;
-      db.ref('users/' + currentUserAuth.uid).on('value', (snapshot) => {
+      firebase.database().ref('users/' + currentUserAuth.uid).on('value', (snapshot) => {
         this.isModerator = (snapshot.val() && snapshot.val().isModerator);
       });
     },

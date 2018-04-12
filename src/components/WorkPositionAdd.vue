@@ -43,12 +43,10 @@
 <script>
   import firebase from 'firebase'
 
-  let db = firebase.database();
-
   export default {
     name: "position-add",
     firebase: {
-      users: db.ref('users')
+      users: firebase.database().ref('users')
     },
     data: () => ({
       name: "",
@@ -69,7 +67,7 @@
             isActive: this.$data.isActive,
             name: this.$data.name
           };
-          db.ref('/workPositions/' + firebase.database().ref('workPositions').push().key).set(positionData);
+          firebase.database().ref('/workPositions/' + firebase.database().ref('workPositions').push().key).set(positionData);
           this.$router.go(-1);
         }
       },
