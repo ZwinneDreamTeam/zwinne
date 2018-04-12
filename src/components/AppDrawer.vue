@@ -13,19 +13,18 @@
 
     <div v-if="isCandidate">
       <md-subheader>{{label_candidate}}</md-subheader>
-    <md-list-item to="/candidate/tests">
-      <md-icon>library_books</md-icon>
-      <span class="md-list-item-text"> {{label_user_tests}} </span>
-    </md-list-item>
+      <md-list-item to="/candidate/tests">
+        <md-icon>library_books</md-icon>
+        <span class="md-list-item-text"> {{label_user_tests}} </span>
+      </md-list-item>
     </div>
 
     <div v-if="isRedactor">
       <md-subheader>{{label_redactor}}</md-subheader>
-      <md-list-item>
-        <md-icon>error</md-icon>
-        <span class="md-list-item-text">Brak pozycji</span>
+      <md-list-item to="/candidate/tests">
+        <md-icon>library_books</md-icon>
+        <span class="md-list-item-text"> {{label_tests_to_mark}} </span>
       </md-list-item>
-
     </div>
 
     <div v-if="isModerator">
@@ -56,6 +55,7 @@
         label_users: "Użytkownicy",
         label_user_profile: "Dane użytkownika",
         label_user_tests: "Ukończone testy",
+        label_tests_to_mark: "Oceń testy",
         isModerator: false,
         isRedactor: false,
         isCandidate: false,

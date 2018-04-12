@@ -12,6 +12,11 @@
           <md-icon class="iconCheck" v-if="item.isActive">check</md-icon>
           <md-icon class="iconClose" v-if="!item.isActive">close</md-icon>
         </md-table-cell>
+        <div v-if="isRedactor">
+          <md-table-cell md-label="Oceń">
+            <md-button class="md-raised md-primary">Oceń test</md-button>
+          </md-table-cell>
+        </div>
       </md-table-row>
     </md-table>
   </div>
@@ -25,11 +30,12 @@
   export default {
     name: "user_tests",
     firebase: {
-      tests:  db.ref('tests')
+      tests: db.ref('tests')
     },
     data() {
       return {
-        //isCandidate: false,
+        isCandidate: false,
+        isRedactor: false,
         currentSort: 'name',
         currentSortOrder: 'asc',
         currentUserAuthUid: '',
@@ -37,9 +43,11 @@
     },
     mounted() {
       this.currentUserAuthUid = firebase.auth().currentUser.uid;
- //     db.ref('users/' + currentUserAuth).on('value', (snapshot) => {
- //       this.isCandidate = (snapshot.val() && snapshot.val().isCandidate);
- //     });
+      db.ref('users/' + currentUserAuth).on('value', (snapshot) => {
+        this.isCandidate = (snapshot.val() && snapshot.val().isCandidate);
+        this.isRedactor = (snapshot.val() && snapshot.val().isRedactor);
+      });
+      //this.tests = db.ref('tests');
     },
     methods: {
       compareBooleans(a, b, sortBy) {
