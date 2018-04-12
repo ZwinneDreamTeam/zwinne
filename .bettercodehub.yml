@@ -1,0 +1,11 @@
+exclude:
+- /.eslintrc.js
+- /build/.*
+- /config/.*
+component_depth: 1
+languages:
+- name: javascript
+  production:
+    include:
+      - .*\.vue
+      - .*\.js
