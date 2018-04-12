@@ -6,26 +6,22 @@
         <h1 class="md-title">Wszystkie testy</h1>
       </md-table-toolbar>
 
-      <md-table-row slot="md-table-row" slot-scope="{item}" md-selectable="single" @click.native="onSelect(item)">
-        <md-table-cell md-label="Nazwa" md-sort-by="name">{{ item.name }}</md-table-cell>
-        <md-table-cell md-label="Stanowisko" md-sort-by="positionName">{{ item.positionName }}</md-table-cell>
-        <md-table-cell md-label="Właściciel" md-sort-by="ownerName">{{ item.ownerName }}</md-table-cell>
-        <md-table-cell md-label="Aktywne" md-sort-by="isActive">
-          <check-icon v-bind:value="item.isActive"/>
-        </md-table-cell>
-      </md-table-row>
+      <basic-test-row v-bind:test="item" slot="md-table-row" slot-scope="{item}" md-selectable="single"
+                      @click.native="onSelect(item)"/>
     </md-table>
   </div>
 </template>
 
 <script>
-  import CheckIcon from "../reusable/CheckIcon";
   import firebase from 'firebase';
+  import BasicTestRow from "../reusable/BasicTestRow";
 
-  let customSort = require('../../utils/CustomSort');
+  let customSortInTests = require('../../utils/CustomSort');
 
   export default {
-    components: {CheckIcon},
+    components: {
+      BasicTestRow,
+    },
     name: "all-tests",
     data() {
       return {
@@ -53,7 +49,7 @@
     methods: {
       customSort(value) {
         return value.sort((a, b) => {
-          return customSort.customSort(a, b, this.currentSort, this.currentSortOrder);
+          return customSortInTests.customSort(a, b, this.currentSort, this.currentSortOrder);
         })
       },
       onSelect(item) {

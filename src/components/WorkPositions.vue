@@ -23,7 +23,7 @@
   import firebase from 'firebase';
   import CheckIcon from "./reusable/CheckIcon";
 
-  let customSort = require('../utils/CustomSort');
+  let customSortInPositions = require('../utils/CustomSort');
 
   export default {
     components: {CheckIcon},
@@ -47,7 +47,7 @@
     methods: {
       customSort(value) {
         return value.sort((a, b) => {
-          return customSort.customSort(a, b, this.currentSort, this.currentSortOrder);
+          return customSortInPositions.customSort(a, b, this.currentSort, this.currentSortOrder);
         })
       },
       onSelect(item) {
