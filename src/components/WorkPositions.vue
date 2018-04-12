@@ -12,8 +12,7 @@
       <md-table-row slot="md-table-row" slot-scope="{item}" md-selectable="single" @click.native="onSelect(item)">
         <md-table-cell md-label="Nazwa" md-sort-by="name">{{ item.name }}</md-table-cell>
         <md-table-cell md-label="Aktywne" md-sort-by="isActive">
-          <md-icon class="iconCheck" v-if="item.isActive">check</md-icon>
-          <md-icon class="iconClose" v-if="!item.isActive">close</md-icon>
+          <check-icon v-bind:value="item.isActive"/>
         </md-table-cell>
       </md-table-row>
     </md-table>
@@ -22,8 +21,12 @@
 
 <script>
   import firebase from 'firebase';
+  import CheckIcon from "./reusable/CheckIcon";
+
+  let customSort = require('../utils/CustomSort');
 
   export default {
+    components: {CheckIcon},
     name: "work-positions",
     firebase: {
       positions: firebase.database().ref('workPositions')
@@ -42,32 +45,9 @@
       });
     },
     methods: {
-      compareBooleans(a, b, sortBy) {
-        if (a[sortBy] === b[sortBy])
-          return 0;
-        else if (a[sortBy] && !b[sortBy]) {
-          return this.currentSortOrder === 'desc' ? 1 : -1;
-        } else {
-          return this.currentSortOrder === 'desc' ? -1 : 1;
-        }
-
-      },
-      compareStrings(a, b, sortBy) {
-        if (this.currentSortOrder === 'desc') {
-          return a[sortBy].localeCompare(b[sortBy])
-        } else {
-          return b[sortBy].localeCompare(a[sortBy])
-        }
-      },
       customSort(value) {
         return value.sort((a, b) => {
-          const sortBy = this.currentSort;
-
-          if (typeof(a[sortBy]) === "boolean") {
-            return this.compareBooleans(a, b, sortBy);
-          } else {
-            return this.compareStrings(a, b, sortBy);
-          }
+          return customSort.customSort(a, b, this.currentSort, this.currentSortOrder);
         })
       },
       onSelect(item) {
@@ -78,11 +58,5 @@
 </script>
 
 <style scoped>
-  .iconCheck {
-    color: green !important;
-  }
 
-  .iconClose {
-    color: darkred !important;
-  }
 </style>

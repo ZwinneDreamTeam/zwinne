@@ -46,6 +46,9 @@
       });
     },
     methods: {
+      validateTestName() {
+        this.isTestNameValid = Boolean(this.testModel.name) && Boolean(this.testModel.name.trim());
+      },
       submit_click() {
         this.validateTestName();
         if (this.isTestNameValid) {
@@ -54,9 +57,6 @@
           });
         }
       },
-      validateTestName() {
-        this.isTestNameValid = Boolean(this.testModel.name) && Boolean(this.testModel.name.trim());
-      }
     },
     computed: {
       testNameClass() {

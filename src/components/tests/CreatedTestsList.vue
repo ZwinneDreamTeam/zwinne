@@ -14,8 +14,7 @@
         <md-table-cell md-label="Stanowisko" md-sort-by="positionName">{{ item.positionName }}</md-table-cell>
         <md-table-cell md-label="Właściciel" md-sort-by="ownerName">{{ item.ownerName }}</md-table-cell>
         <md-table-cell md-label="Aktywne" md-sort-by="isActive">
-          <md-icon class="iconCheck" v-if="item.isActive">check</md-icon>
-          <md-icon class="iconClose" v-if="!item.isActive">close</md-icon>
+          <check-icon v-bind:value="item.isActive"/>
         </md-table-cell>
       </md-table-row>
     </md-table>
@@ -23,12 +22,13 @@
 </template>
 
 <script>
-  let customSort = require('../../utils/CustomSort');
+  import CheckIcon from "../reusable/CheckIcon";
   import firebase from 'firebase';
 
-  let db = firebase.database();
+  let customSort = require('../../utils/CustomSort');
 
   export default {
+    components: {CheckIcon},
     name: "created-tests",
     data() {
       return {
@@ -39,14 +39,14 @@
     },
     mounted() {
       let currentUserAuth = firebase.auth().currentUser;
-      db.ref('tests')
+      firebase.database().ref('tests')
         .orderByChild('ownerUid').equalTo(currentUserAuth.uid)
         .on('child_added', (snapshot) => {
           let test = snapshot.val();
           test.key = snapshot.key;
 
-          let usernamePromise = db.ref('users/' + test.ownerUid + "/username").once('value');
-          let positionNamePromise = db.ref('workPositions/' + test.positionId + "/name").once('value');
+          let usernamePromise = firebase.database().ref('users/' + test.ownerUid + "/username").once('value');
+          let positionNamePromise = firebase.database().ref('workPositions/' + test.positionId + "/name").once('value');
 
           Promise.all([usernamePromise, positionNamePromise]).then((values) => {
             test.ownerName = values[0].val();
@@ -69,11 +69,5 @@
 </script>
 
 <style scoped>
-  .iconCheck {
-    color: green !important;
-  }
 
-  .iconClose {
-    color: darkred !important;
-  }
 </style>

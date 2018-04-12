@@ -13,16 +13,13 @@
         <md-table-cell md-label="Nazwa" md-sort-by="username">{{ item.username }}</md-table-cell>
         <md-table-cell md-label="Email" md-sort-by="email">{{ item.email }}</md-table-cell>
         <md-table-cell md-label="Kandydat" md-sort-by="isCandidate">
-          <md-icon class="iconCheck" v-if="item.isCandidate">check</md-icon>
-          <md-icon class="iconClose" v-if="!item.isCandidate">close</md-icon>
+          <check-icon v-bind:value="item.isCandidate"/>
         </md-table-cell>
         <md-table-cell md-label="Redaktor" md-sort-by="isRedactor">
-          <md-icon class="iconCheck" v-if="item.isRedactor">check</md-icon>
-          <md-icon class="iconClose" v-if="!item.isRedactor">close</md-icon>
+          <check-icon v-bind:value="item.isRedactor"/>
         </md-table-cell>
         <md-table-cell md-label="Moderator" md-sort-by="isModerator">
-          <md-icon class="iconCheck" v-if="item.isModerator">check</md-icon>
-          <md-icon class="iconClose" v-if="!item.isModerator">close</md-icon>
+          <check-icon v-bind:value="item.isModerator"/>
         </md-table-cell>
       </md-table-row>
     </md-table>
@@ -31,13 +28,15 @@
 
 <script>
   import firebase from 'firebase';
+  import CheckIcon from "./reusable/CheckIcon";
 
-  let db = firebase.database();
+  let customSort = require('../utils/CustomSort');
 
   export default {
+    components: {CheckIcon},
     name: "users-list",
     firebase: {
-      users: db.ref('users')
+      users: firebase.database().ref('users')
     },
     data() {
       return {
@@ -48,32 +47,9 @@
       }
     },
     methods: {
-      compareBooleans(a, b, sortBy) {
-        if (a[sortBy] === b[sortBy])
-          return 0;
-        else if (a[sortBy] && !b[sortBy]) {
-          return this.currentSortOrder === 'desc' ? 1 : -1;
-        } else {
-          return this.currentSortOrder === 'desc' ? -1 : 1;
-        }
-
-      },
-      compareStrings(a, b, sortBy) {
-        if (this.currentSortOrder === 'desc') {
-          return a[sortBy].localeCompare(b[sortBy])
-        } else {
-          return b[sortBy].localeCompare(a[sortBy])
-        }
-      },
       customSort(value) {
         return value.sort((a, b) => {
-          const sortBy = this.currentSort;
-
-          if (typeof(a[sortBy]) === "boolean") {
-            return this.compareBooleans(a, b, sortBy);
-          } else {
-            return this.compareStrings(a, b, sortBy);
-          }
+          return customSort.customSort(a, b, this.currentSort, this.currentSortOrder);
         })
       },
       onSelect(item) {
@@ -84,11 +60,5 @@
 </script>
 
 <style scoped>
-  .iconCheck {
-    color: green !important;
-  }
 
-  .iconClose {
-    color: darkred !important;
-  }
 </style>
