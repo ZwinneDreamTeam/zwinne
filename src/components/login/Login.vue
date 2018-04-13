@@ -2,26 +2,15 @@
   <div class="logInView" >
     <md-dialog :md-active.sync="shouldShowDialog" layout-padding class="forgot-password-dialog">
       <md-dialog-title>Reset hasła</md-dialog-title>
-      <md-field>
-        <label>Podaj adres e-mail na który wysłany zostanie link resetujący hasło</label>
-        <md-input v-model="resetPasswordEmail"/>
-      </md-field>
+      <custom-text-field v-model="resetPasswordEmail" label="Podaj adres e-mail na który wysłany zostanie link resetujący hasło"/>
       <md-button v-on:click="handleForgotPassword" class="md-raised registerButton">Wyślij</md-button>
     </md-dialog>
     <md-card class="loginPanelView" >
        <md-card-header>
          <h1 class="md-title">Zaloguj się</h1>
        </md-card-header>
-       <md-field >
-         <md-icon>person</md-icon>
-         <label>Email</label>
-         <md-input v-model="email" type="text" required/>
-       </md-field>
-       <md-field >
-         <md-icon>lock</md-icon>
-         <label>Hasło</label>
-         <md-input v-model="password" type="password" required/>
-       </md-field>
+      <custom-text-field v-model="email" label="Email" icon="person"/>
+      <custom-text-field v-model="password" label="Hasło" icon="lock"/>
        <div>
        <md-button v-on:click="confirmLogIn" class="md-raised registerButton">Zaloguj</md-button>
        </div>
@@ -36,6 +25,7 @@
 
 <script>
   import firebase from 'firebase'
+  import CustomTextField from "../reusable/CustomTextField";
 
   let provider = new firebase.auth.GoogleAuthProvider();
   provider.setCustomParameters({
@@ -43,6 +33,7 @@
   });
 
   export default {
+    components: {CustomTextField},
     name: "login",
     data: () => ({
       email: "",
