@@ -7,7 +7,7 @@
           <h1 class="md-title">Szczegóły testu</h1>
         </md-card-header-text>
         <div v-if="currentUser.isRedactor || currentUser.isModerator">
-          <md-switch class="md-primary" v-model="editMode">Tryb edycji</md-switch>
+          <md-switch class="md-primary" v-model="editMode" v-on:change="onEditModeChanged">Tryb edycji</md-switch>
         </div>
       </md-card-header>
 
@@ -43,9 +43,8 @@
 
     </md-card>
 
-    <md-card class="createTestCard">
-      TODO: Pytania
-    </md-card>
+    <test-detail-questions v-bind:questions="testModel.questions" v-bind:mode="questionsMode"
+                           v-bind:testId="testModel.key" v-on:questionAdded="onQuestionAdded"/>
 
     <md-button @click="submit_click" v-if="editMode" class="md-raised md-primary confirmButton">
       Zatwierdź zmiany
@@ -60,13 +59,16 @@
 
 <script>
   import firebase from 'firebase';
+  import TestDetailQuestions from "./questions/TestDetailQuestions";
 
   export default {
     name: "test-details",
+    components: {TestDetailQuestions},
     data() {
       return {
         editMode: false,
         currentUser: {},
+        originalTestModel: {},
         testModel: {},
         isTestNameValid: true,
         snackBarMessage: "Zapisano",
@@ -97,6 +99,7 @@
           test.ownerName = values[0].val();
           test.positionName = values[1].val();
           this.testModel = test;
+          this.originalTestModel = this.deepCopyTest(this.testModel);
         });
       });
     },
@@ -109,17 +112,40 @@
             name: this.testModel.name,
             isActive: this.testModel.isActive,
             positionId: this.testModel.positionId ? this.testModel.positionId : null,
+            questions: this.testModel.questions,
           }).then(() => {
+            this.originalTestModel = this.deepCopyTest(this.testModel);
             this.editMode = false;
             this.showSnackbar = true;
           });
         }
       },
+      onQuestionAdded(question) {
+        this.testModel.questions.push(question);
+      },
       validateTestName() {
         this.isTestNameValid = Boolean(this.testModel.name) && Boolean(this.testModel.name.trim());
-      }
+      },
+      onEditModeChanged() {
+        this.testModel = this.deepCopyTest(this.originalTestModel);
+      },
+      deepCopyTest(test) {
+        return {
+          ownerUid: test.ownerUid,
+          ownerName: test.ownerName,
+          positionId: test.positionId,
+          positionName: test.positionName,
+          name: test.name,
+          isActive: test.isActive,
+          key: test.key,
+          questions: test.questions.slice(0),
+        };
+      },
     },
     computed: {
+      questionsMode() {
+        return this.editMode ? 'edit' : 'display';
+      },
       testNameClass() {
         return {
           'md-invalid': !this.isTestNameValid
