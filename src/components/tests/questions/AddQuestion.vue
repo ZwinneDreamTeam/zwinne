@@ -1,6 +1,14 @@
 <template>
   <md-card class="questionCard">
     <h3>Nowe pytanie</h3>
+    <md-field>
+      <md-icon>list</md-icon>
+      <label>Język pytania</label>
+      <md-select class="mySelect" v-model="questionModel.language" required>
+        <md-option value="polski">Polski</md-option>
+        <md-option value="angielski">Angielski</md-option>
+      </md-select>
+    </md-field>
     <md-field :class="questionNameClass">
       <md-icon>help</md-icon>
       <label>Treść pytania</label>
@@ -83,6 +91,7 @@
         isNewPossibleAnswerValid: true,
         newPossibleAnswerErrorMessage: "",
         questionModel: {
+          language: "text",
           type: "text",
           possibleAnswers: [],
         },
@@ -95,6 +104,7 @@
         if (this.isQuestionNameValid && this.isQuestionDetailsValid) {
           this.$emit('questionSubmitted', this.questionModel);
           this.questionModel = {
+            language: "text",
             type: "text",
             possibleAnswers: [],
           };

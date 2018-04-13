@@ -3,6 +3,7 @@
     <div class="md-table-head-label">Pytania</div>
 
     <md-card v-for="question in questions" :key="question.name" class="questionCard">
+      <span class="questionLanguage"><i>Język: {{question.language}}</i></span><br/>
       <span class="questionName">{{question.name}}</span>
       <div class="questionType">{{questionType(question.type)}}
         <span v-if="question.type === 'scale'">({{question.scaleMin}} - {{question.scaleMax}})</span>
@@ -63,5 +64,10 @@
   .questionType {
     font-size: 12px;
     color: grey;
+  }
+
+  .questionLanguage {
+    font-size: 12px;
+    color: black;
   }
 </style>
