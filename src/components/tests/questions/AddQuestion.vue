@@ -4,18 +4,29 @@
     <md-field>
       <md-icon>list</md-icon>
       <label>Język pytania</label>
-      <md-select class="mySelect" v-model="questionModel.language" required>
-        <md-option value="polski">Polski</md-option>
-        <md-option value="angielski">Angielski</md-option>
+      <md-select class="mySelect" v-model="language">
+        <md-option value="pl">Polski</md-option>
+        <md-option value="en">Angielski</md-option>
       </md-select>
     </md-field>
-    <md-field :class="questionNameClass">
-      <md-icon>help</md-icon>
-      <label>Treść pytania</label>
-      <md-input v-model="questionModel.name" required v-on:blur="validateQuestionName()"
-                v-on:keyup="validateQuestionName()"/>
-      <span class="md-error">Wymagana treść pytania</span>
-    </md-field>
+      <div v-if="language === 'pl'">
+        <md-field :class="questionNameClass">
+          <md-icon>help</md-icon>
+          <label>Treść pytania</label>
+          <md-input v-model="questionModel.pl" required v-on:blur="validateQuestionName()"
+                    v-on:keyup="validateQuestionName()"/>
+          <span class="md-error">Wymagana treść pytania</span>
+        </md-field>
+      </div>
+      <div v-else-if="language === 'en'">
+        <md-field :class="questionNameClass">
+          <md-icon>help</md-icon>
+          <label>Treść pytania</label>
+          <md-input v-model="questionModel.en" required v-on:blur="validateQuestionName()"
+                    v-on:keyup="validateQuestionName()"/>
+          <span class="md-error">Wymagana treść pytania</span>
+        </md-field>
+      </div>
     <md-field>
       <md-icon>list</md-icon>
       <label>Rodzaj pytania</label>
@@ -90,10 +101,15 @@
         isQuestionDetailsValid: true,
         isNewPossibleAnswerValid: true,
         newPossibleAnswerErrorMessage: "",
+        language: "pl",
         questionModel: {
-          language: "text",
+          pl: "",
+          en: "",
           type: "text",
-          possibleAnswers: [],
+          possibleAnswers: {
+            pl: [],
+            en: []
+          },
         },
       };
     },
@@ -104,16 +120,20 @@
         if (this.isQuestionNameValid && this.isQuestionDetailsValid) {
           this.$emit('questionSubmitted', this.questionModel);
           this.questionModel = {
-            language: "text",
+            pl: "",
+            en: "",
             type: "text",
-            possibleAnswers: [],
+            possibleAnswers: {
+              pl: [],
+              en: []
+            },
           };
         }
       },
       addPossibleAnswer() {
         this.validateNewPossibleAnswer();
         if (this.isNewPossibleAnswerValid) {
-          this.questionModel.possibleAnswers.push(this.newPossibleAnswer);
+          this.questionModel.possibleAnswers['.'+language].push(this.newPossibleAnswer);
           this.newPossibleAnswer = "";
           if (!this.isQuestionDetailsValid) {
             this.validateQuestionDetails();
@@ -127,7 +147,11 @@
         }
       },
       validateQuestionName() {
-        this.isQuestionNameValid = Boolean(this.questionModel.name) && Boolean(this.questionModel.name.trim());
+        if(this.language === "pl") {
+          this.isQuestionNameValid = Boolean(this.questionModel.pl) && Boolean(this.questionModel.pl.trim());
+        } else if(this.language === "en") {
+          this.isQuestionNameValid = Boolean(this.questionModel.en) && Boolean(this.questionModel.en.trim());
+        }
       },
       validateQuestionDetails() {
         if (this.questionModel.type === 'text' || this.questionModel.type === 'number') {
