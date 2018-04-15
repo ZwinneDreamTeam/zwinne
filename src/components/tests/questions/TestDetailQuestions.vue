@@ -44,7 +44,7 @@
         </md-card>
       </div>
       <add-language questionID="id" v-if="addLanguageToTest===id" v-on:languageSubmitted="onLanguageAdded"
-          v-bind:questionID=addLanguageToTest />
+          v-bind:questionID=addLanguageToTest v-bind:questions=questions />
     </div>
 
     <add-question v-if="mode === 'edit'" v-on:questionSubmitted="onQuestionSubmitted"/>

@@ -25,14 +25,14 @@
       <md-list v-if="language==='pl'">
         <md-list-item v-for="(answer, id) in questionModel.possibleAnswers.en" :key="id">
           <md-field>
-            <md-input v-model="questionModel.possibleAnswers.pl[id]" type="text" required/>
+            <md-input v-model="possibleAnswers.pl[id]" type="text" required/>
           </md-field>
         </md-list-item>
       </md-list>
       <md-list v-else-if="language==='en'">
         <md-list-item v-for="(answer, id) in questionModel.possibleAnswers.pl" :key="id">
           <md-field>
-            <md-input v-model="questionModel.possibleAnswers.en[id]" type="text" required/>
+            <md-input v-model="possibleAnswers.en[id]" type="text" required/>
           </md-field>
         </md-list-item>
       </md-list>
@@ -51,7 +51,7 @@
 
   export default {
     name: "add-language",
-    props: ['questionID'],
+    props: ['questionID', 'questions'],
     emits: ['languageSubmitted'],
     data() {
       return {
@@ -62,39 +62,30 @@
         newPossibleAnswerErrorMessage: "",
         language: "en",
         questionModel: {},
+        possibleAnswers: {
+          pl: [],
+          en: []
+        }
       };
     },
     mounted() {
-      let testID = this.$route.params.id;
-      this.questionRef = db.ref('/tests/' + testID + '/questions/' + this.questionID);
-      this.questionRef.on('value', (snapshot) => {
-        let question = snapshot.val();
-        this.questionModel = {
-          pl: question.pl,
-          en: question.en,
-          type: question.type,
-          scaleMin: question.scaleMin,
-          scaleMax: question.scaleMax,
-          possibleAnswers: {
-            pl: [],
-            en: []
-          },
-        };
+        let question = this.questions[this.questionID];
+        this.questionModel = question;
 
         if(question.type==='select'){
           if(question.possibleAnswers.pl) {
-            this.questionModel.possibleAnswers.pl = question.possibleAnswers.pl;
+            this.possibleAnswers.pl = question.possibleAnswers.pl;
           } else if(question.possibleAnswers.en) {
-             this.questionModel.possibleAnswers.en = question.possibleAnswers.en;
+             this.possibleAnswers.en = question.possibleAnswers.en;
            }
         }
-      });
     },
     methods: {
       addLanguage() {
         this.validateQuestionName();
         this.validateQuestionDetails();
         if (this.isQuestionNameValid && this.isQuestionDetailsValid) {
+          this.questionModel.possibleAnswers = this.possibleAnswers;
           this.$emit('languageSubmitted', this.questionModel, this.questionID);
         }
       },
@@ -110,9 +101,9 @@
           this.isQuestionDetailsValid = true;
         } else if (this.questionModel.type === 'select') {
           if(this.language==='pl'){
-            this.isQuestionDetailsValid = this.questionModel.possibleAnswers.pl.length > 1;
+            this.isQuestionDetailsValid = this.possibleAnswers.pl.length > 1;
           } else if(this.language==='en'){
-             this.isQuestionDetailsValid = this.questionModel.possibleAnswers.en.length > 1;
+             this.isQuestionDetailsValid = this.possibleAnswers.en.length > 1;
            }
           if (!this.isQuestionDetailsValid) {
             this.newPossibleAnswerErrorMessage = "Wymagane minimum 2 odpowiedzi";
