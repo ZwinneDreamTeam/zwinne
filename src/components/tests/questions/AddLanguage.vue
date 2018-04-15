@@ -73,17 +73,21 @@
           pl: question.pl,
           en: question.en,
           type: question.type,
+          scaleMin: question.scaleMin,
+          scaleMax: question.scaleMax,
           possibleAnswers: {
             pl: [],
             en: []
           },
         };
 
-        if(question.possibleAnswers.pl) {
-          this.questionModel.possibleAnswers.pl = question.possibleAnswers.pl;
-        } else if(question.possibleAnswers.en) {
-           this.questionModel.possibleAnswers.en = question.possibleAnswers.en;
-         }
+        if(question.type==='select'){
+          if(question.possibleAnswers.pl) {
+            this.questionModel.possibleAnswers.pl = question.possibleAnswers.pl;
+          } else if(question.possibleAnswers.en) {
+             this.questionModel.possibleAnswers.en = question.possibleAnswers.en;
+           }
+        }
       });
     },
     methods: {
@@ -91,8 +95,7 @@
         this.validateQuestionName();
         this.validateQuestionDetails();
         if (this.isQuestionNameValid && this.isQuestionDetailsValid) {
-          this.questionRef.update(this.questionModel);
-          this.$emit('languageSubmitted');
+          this.$emit('languageSubmitted', this.questionModel, this.questionID);
         }
       },
       validateQuestionName() {

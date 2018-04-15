@@ -59,7 +59,7 @@
     components: {AddQuestion, AddLanguage},
     name: "test-detail-questions",
     props: ['testId', 'questions', 'mode'],
-    emits: ['questionAdded', 'questionID'],
+    emits: ['questionAdded', 'questionID', 'languageAdded'],
     data() {
       return {
         language: "all",
@@ -70,8 +70,9 @@
       addLanguage(id) {
         this.addLanguageToTest = id;
       },
-      onLanguageAdded() {
+      onLanguageAdded(model, id) {
         this.addLanguageToTest = -1;
+        this.$emit('languageAdded', model, id)
       },
       onQuestionSubmitted(question) {
         this.$emit('questionAdded', question);
