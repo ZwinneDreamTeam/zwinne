@@ -2,6 +2,7 @@
   <div>
     <div class="md-table-head-label">Pytania</div>
 
+
     <md-card v-for="question in questions" :key="question.name" class="questionCard">
       <span class="questionName">{{question.name}}</span>
       <div class="questionType">{{questionType(question.type)}}
@@ -15,12 +16,18 @@
       </div>
     </md-card>
 
+    <div>
+      <md-button v-on:click="createPDF(questions)" class="md-raised md-primary downloadPdfButton">Pobierz PDF
+      </md-button>
+    </div>
+
     <add-question v-if="mode === 'edit'" v-on:questionSubmitted="onQuestionSubmitted"/>
   </div>
 </template>
 
 <script>
   import AddQuestion from "./AddQuestion";
+  import jsPDF from "jsPDF";
 
   export default {
     components: {AddQuestion},
@@ -45,6 +52,47 @@
           case 'select':
             return 'Pytanie wyboru';
         }
+      },
+      createPDF(questions) {
+        const doc = new jsPDF();
+        let height = 0;
+        for (let i = 0; i < this.questions.length; i++) {
+          doc.setFontSize(12);
+          height += 10;
+
+          doc.text((i + 1).toString() + ". " + questions[i].name, 10, height + 10);
+
+          height += 6;
+          doc.setFontSize(10);
+
+          switch (questions[i].type) {
+            case 'text':
+              doc.setLineWidth(5);
+              doc.text('Pytanie otwarte', 10, height + 10);
+              break;
+            case 'scale':
+              doc.text('Pytanie skali (' + questions[i].scaleMin + ' - ' + questions[i].scaleMax + ')', 10, height + 10);
+              break;
+            case 'number':
+              doc.text('Pytanie liczbowe', 10, height + 10);
+              break;
+            case 'select':
+              let text = 'Pytanie wyboru: ';
+              for (let j = 0; j < this.questions[i].possibleAnswers.length; j++) {
+                if (j === 0) {
+                  text += questions[i].possibleAnswers[j];
+                } else {
+                  text += ", " + questions[i].possibleAnswers[j];
+                }
+              }
+              doc.text(text, 10, height + 10);
+              break;
+          }
+
+          height += 5;
+        }
+
+        doc.save('test.pdf');
       }
     },
   }
@@ -58,6 +106,10 @@
 
   .questionName {
     font-size: 16px;
+  }
+
+  .downloadPdfButton {
+    margin-left: 16px;
   }
 
   .questionType {
