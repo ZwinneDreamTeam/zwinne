@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="page-container" @contextmenu.prevent="$refs.ctxMenu.open" @contextmenu.>
+    <div class="page-container" @contextmenu.prevent="$refs.ctxMenu.open">
       <md-app md-waterfall md-mode="fixed">
 
         <md-app-toolbar class="md-primary">
@@ -66,7 +66,7 @@
           this.contextMenuEnable = false;
         } else {
           db.ref('users/' + firebase.auth().currentUser.uid).on('value', snapshot => {
-            this.contextMenuEnable = snapshot != null && (!snapshot.val().isCandidate || snapshot.val().isModerator || snapshot.val().isRedactor);
+            this.contextMenuEnable = snapshot != null && (!snapshot.val().isCandidate || !(snapshot.val().isModerator == null || snapshot.val().isModerator) || !(snapshot.val().isRedactor == null || !snapshot.val().isRedactor));
           });
         }
       });
