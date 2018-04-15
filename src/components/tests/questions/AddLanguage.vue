@@ -22,16 +22,18 @@
     <div class="questionDetails">
 
     <div v-if="questionModel.type === 'select'">
-      <md-list v-if="language === 'pl'">
-        <md-list-item v-for="(answer, id) in questionModel.possibleAnswers.pl" :key="answer">
-          <md-input v-model="questionModel.possibleAnswers.pl['.'+id]" required v-on:blur="validateNewPossibleAnswer()"
-                          v-on:keyup="validateNewPossibleAnswer()"/>
+      <md-list v-if="language==='pl'">
+        <md-list-item v-for="(answer, id) in questionModel.possibleAnswers.en" :key="id">
+          <md-field>
+            <md-input v-model="questionModel.possibleAnswers.pl[id]" type="text" required/>
+          </md-field>
         </md-list-item>
       </md-list>
-      <md-list v-if="language === 'en'">
-        <md-list-item v-for="(answer, id) in questionModel.possibleAnswers.en" :key="answer">
-          <md-input v-model="questionModel.possibleAnswers.en['.'+id]" required v-on:blur="validateNewPossibleAnswer()"
-                          v-on:keyup="validateNewPossibleAnswer()"/>
+      <md-list v-else-if="language==='en'">
+        <md-list-item v-for="(answer, id) in questionModel.possibleAnswers.pl" :key="id">
+          <md-field>
+            <md-input v-model="questionModel.possibleAnswers.en[id]" type="text" required/>
+          </md-field>
         </md-list-item>
       </md-list>
     </div>
@@ -58,7 +60,7 @@
         isQuestionDetailsValid: true,
         isNewPossibleAnswerValid: true,
         newPossibleAnswerErrorMessage: "",
-        language: "pl",
+        language: "en",
         questionModel: {},
       };
     },
@@ -66,7 +68,22 @@
       let testID = this.$route.params.id;
       this.questionRef = db.ref('/tests/' + testID + '/questions/' + this.questionID);
       this.questionRef.on('value', (snapshot) => {
-        this.questionModel = snapshot.val();
+        let question = snapshot.val();
+        this.questionModel = {
+          pl: question.pl,
+          en: question.en,
+          type: question.type,
+          possibleAnswers: {
+            pl: [],
+            en: []
+          },
+        };
+
+        if(question.possibleAnswers.pl) {
+          this.questionModel.possibleAnswers.pl = question.possibleAnswers.pl;
+        } else if(question.possibleAnswers.en) {
+           this.questionModel.possibleAnswers.en = question.possibleAnswers.en;
+         }
       });
     },
     methods: {
@@ -74,7 +91,7 @@
         this.validateQuestionName();
         this.validateQuestionDetails();
         if (this.isQuestionNameValid && this.isQuestionDetailsValid) {
-          this.questionRef.set(this.questionModel);
+          this.questionRef.update(this.questionModel);
           this.$emit('languageSubmitted');
         }
       },
@@ -89,7 +106,11 @@
         if (this.questionModel.type === 'text' || this.questionModel.type === 'number') {
           this.isQuestionDetailsValid = true;
         } else if (this.questionModel.type === 'select') {
-          this.isQuestionDetailsValid = this.questionModel.possibleAnswers.length > 1;
+          if(this.language==='pl'){
+            this.isQuestionDetailsValid = this.questionModel.possibleAnswers.pl.length > 1;
+          } else if(this.language==='en'){
+             this.isQuestionDetailsValid = this.questionModel.possibleAnswers.en.length > 1;
+           }
           if (!this.isQuestionDetailsValid) {
             this.newPossibleAnswerErrorMessage = "Wymagane minimum 2 odpowiedzi";
           }

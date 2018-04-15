@@ -60,8 +60,16 @@
       </div>
 
       <div v-else-if="questionModel.type === 'select'">
-        <md-list>
-          <md-list-item v-for="answer in questionModel.possibleAnswers" :key="answer">
+        <md-list v-if="language==='pl'">
+          <md-list-item v-for="answer in questionModel.possibleAnswers.pl" :key="answer">
+            <span>{{answer}}</span>
+            <md-button class="md-icon-button md-list-action" v-on:click="deletePossibleAnswer(answer)">
+              <md-icon class="md-primary">delete</md-icon>
+            </md-button>
+          </md-list-item>
+        </md-list>
+        <md-list v-if="language==='en'">
+          <md-list-item v-for="answer in questionModel.possibleAnswers.en" :key="answer">
             <span>{{answer}}</span>
             <md-button class="md-icon-button md-list-action" v-on:click="deletePossibleAnswer(answer)">
               <md-icon class="md-primary">delete</md-icon>
@@ -133,7 +141,11 @@
       addPossibleAnswer() {
         this.validateNewPossibleAnswer();
         if (this.isNewPossibleAnswerValid) {
-          this.questionModel.possibleAnswers['.'+language].push(this.newPossibleAnswer);
+          if(this.language==='pl'){
+            this.questionModel.possibleAnswers.pl.push(this.newPossibleAnswer);
+          } else if(this.language==='en'){
+            this.questionModel.possibleAnswers.en.push(this.newPossibleAnswer);
+          }
           this.newPossibleAnswer = "";
           if (!this.isQuestionDetailsValid) {
             this.validateQuestionDetails();
@@ -141,7 +153,7 @@
         }
       },
       deletePossibleAnswer(answer) {
-        let index = this.questionModel.possibleAnswers.indexOf(answer);
+        let index = this.questionModel.possibleAnswers['.'+this.language].indexOf(answer);
         if (index > -1) {
           this.questionModel.possibleAnswers.splice(index, 1);
         }
@@ -162,7 +174,11 @@
             !isNaN(this.questionModel.scaleMax) &&
             parseInt(this.questionModel.scaleMin) < parseInt(this.questionModel.scaleMax);
         } else if (this.questionModel.type === 'select') {
-          this.isQuestionDetailsValid = this.questionModel.possibleAnswers.length > 1;
+          if(this.language==='pl') {
+            this.isQuestionDetailsValid = this.questionModel.possibleAnswers.pl.length > 1;
+          } else if(this.language==='en') {
+            this.isQuestionDetailsValid = this.questionModel.possibleAnswers.en.length > 1;
+          }
           if (!this.isQuestionDetailsValid) {
             this.newPossibleAnswerErrorMessage = "Wymagane minimum 2 odpowiedzi";
           }
