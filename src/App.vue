@@ -66,7 +66,7 @@
           this.contextMenuEnable = false;
         } else {
           db.ref('users/' + firebase.auth().currentUser.uid).on('value', snapshot => {
-            this.contextMenuEnable = snapshot != null && (!snapshot.val().isCandidate || !(snapshot.val().isModerator == null || snapshot.val().isModerator) || !(snapshot.val().isRedactor == null || !snapshot.val().isRedactor));
+            this.contextMenuEnable = snapshot != null && (!snapshot.val().isCandidate || !(snapshot.val().isModerator == null || !snapshot.val().isModerator) || !(snapshot.val().isRedactor == null || !snapshot.val().isRedactor));
           });
         }
       });
