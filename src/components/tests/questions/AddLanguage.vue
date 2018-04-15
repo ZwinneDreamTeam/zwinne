@@ -45,6 +45,7 @@
 <script>
   import firebase from 'firebase';
   let db = firebase.database();
+  var questionRef;
 
   export default {
     name: "add-language",
@@ -63,7 +64,8 @@
     },
     mounted() {
       let testID = this.$route.params.id;
-      firebase.database().ref('tests/' + testID + '/questions/' + this.questionID).on('value', (snapshot) => {
+      this.questionRef = db.ref('/tests/' + testID + '/questions/' + this.questionID);
+      this.questionRef.on('value', (snapshot) => {
         this.questionModel = snapshot.val();
       });
     },
@@ -72,7 +74,8 @@
         this.validateQuestionName();
         this.validateQuestionDetails();
         if (this.isQuestionNameValid && this.isQuestionDetailsValid) {
-          this.setQuestion(this.questionModel);
+          this.questionRef.set(this.questionModel);
+          this.$emit('languageSubmitted');
         }
       },
       validateQuestionName() {
@@ -100,10 +103,6 @@
       }
     },
     computed: {
-      setQuestion(model) {
-        let testID = this.$route.params.id;
-        return db.ref('tests/' + testID + '/questions/' + this.questionID).set(model);
-      },
       questionNameClass() {
         return {
           'md-invalid': !this.isQuestionNameValid
