@@ -26,7 +26,7 @@
       </md-app>
     </div>
 
-    <context-menu id="context-menu" ref="ctxMenu" v-if="contextMenuEnable">
+    <context-menu id="context-menu" ref="ctxMenu" v-if="contextMenuEnable" @ctx-open="saveSelectedText()">
       <md-list>
         <md-list-item @click="findInWiki()">
           <md-icon>find_in_page</md-icon>
@@ -77,6 +77,7 @@
         contextMenuEnable: false,
         label_wiki: "Znajdź w wikipedii",
         label_synonym: "Znajdź synonim",
+        selectedText: ""
       }
     },
     updated() {
@@ -93,9 +94,11 @@
           }
         )
       }, findInWiki() {
-        window.open("https://www.wikipedia.org/", '_blank');
+        window.open("https://pl.wikipedia.org/wiki/" + this.$data.selectedText, '_blank');
       }, findSynonym() {
-
+        window.open("https://www.synonimy.pl/synonim/" + this.$data.selectedText, '_blank');
+      }, saveSelectedText() {
+        this.$data.selectedText = window.getSelection().toString();
       }
     }
   };
