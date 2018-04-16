@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="page-container">
+    <div class="page-container" @contextmenu.prevent="$refs.ctxMenu.open">
       <md-app md-waterfall md-mode="fixed">
 
         <md-app-toolbar class="md-primary">
@@ -26,11 +26,25 @@
       </md-app>
     </div>
 
+    <context-menu id="context-menu" ref="ctxMenu" v-if="contextMenuEnable" @ctx-open="saveSelectedText()">
+      <md-list>
+        <md-list-item @click="findInWiki()">
+          <md-icon>find_in_page</md-icon>
+          <span class="md-list-item-text">{{label_wiki}}</span>
+        </md-list-item>
+        <md-list-item @click="findSynonym()">
+          <md-icon>search</md-icon>
+          <span class="md-list-item-text">{{label_synonym}}</span>
+        </md-list-item>
+      </md-list>
+    </context-menu>
+
   </div>
 </template>
 <script>
   import firebase from 'firebase'
   import AppDrawer from './components/AppDrawer'
+  import contextMenu from 'vue-context-menu'
 
   export let config = {
     apiKey: "AIzaSyAduGsOpgqCLn79cI4fzBvMsC0LFfnQhWA",
@@ -44,15 +58,30 @@
   export const db = firebase.initializeApp(config).database();
 
   export default {
-    components: {AppDrawer},
+    components: {AppDrawer, contextMenu},
     name: 'app',
+    created() {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (firebase.auth().currentUser == null) {
+          this.contextMenuEnable = false;
+        } else {
+          db.ref('users/' + firebase.auth().currentUser.uid).on('value', snapshot => {
+            this.contextMenuEnable = snapshot != null && (!snapshot.val().isCandidate || !(snapshot.val().isModerator == null || !snapshot.val().isModerator) || !(snapshot.val().isRedactor == null || !snapshot.val().isRedactor));
+          });
+        }
+      });
+    },
     data() {
       return {
         showDrawer: this.$route.fullPath !== '/login' && this.$route.fullPath !== '/register',
+        contextMenuEnable: false,
+        label_wiki: "Znajdź w wikipedii",
+        label_synonym: "Znajdź synonim",
+        selectedText: ""
       }
     },
     updated() {
-      this.$data.showDrawer = this.$route.fullPath !== '/login' && this.$route.fullPath !== '/register'
+      this.$data.showDrawer = this.$route.fullPath !== '/login' && this.$route.fullPath !== '/register';
     },
     methods: {
       isUserLoggedIn(event) {
@@ -64,6 +93,12 @@
             this.$router.replace({name: 'Login'});
           }
         )
+      }, findInWiki() {
+        window.open("https://pl.wikipedia.org/wiki/" + this.$data.selectedText, '_blank');
+      }, findSynonym() {
+        window.open("https://www.synonimy.pl/synonim/" + this.$data.selectedText, '_blank');
+      }, saveSelectedText() {
+        this.$data.selectedText = window.getSelection().toString();
       }
     }
   };
