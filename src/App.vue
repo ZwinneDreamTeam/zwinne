@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="page-container">
+    <div v-bind:class="getPageStyle()">
       <md-app md-waterfall md-mode="fixed">
 
         <md-app-toolbar class="md-primary">
@@ -46,9 +46,15 @@
   export default {
     components: {AppDrawer},
     name: 'app',
+    created() {
+      window.onblur = () => this.$data.pageNotFocused = true;
+
+      window.onfocus = () => this.$data.pageNotFocused = false;
+    },
     data() {
       return {
         showDrawer: this.$route.fullPath !== '/login' && this.$route.fullPath !== '/register',
+        pageNotFocused: false,
       }
     },
     updated() {
@@ -64,6 +70,8 @@
             this.$router.replace({name: 'Login'});
           }
         )
+      }, getPageStyle() {
+        return this.$data.pageNotFocused ? 'page-container overlay' : 'page-container'
       }
     }
   };
@@ -87,4 +95,13 @@
     min-height: 100% !important;
     min-width: 100% !important;
   }
+
+  .overlay {
+    -webkit-filter: blur(5px);
+    -moz-filter: blur(5px);
+    -ms-filter: blur(5px);
+    -o-filter: blur(5px);
+    filter: blur(5px);
+  }
+
 </style>
