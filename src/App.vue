@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div v-bind:class="getPageStyle()">
+    <div v-bind:class="getPageStyle()" v-on:keyup.44="overridePrint()">
       <md-app md-waterfall md-mode="fixed">
 
         <md-app-toolbar class="md-primary">
@@ -72,6 +72,19 @@
         )
       }, getPageStyle() {
         return this.$data.pageNotFocused ? 'page-container overlay' : 'page-container'
+      }, overridePrint() {
+        let aux = document.createElement("input");
+        // Assign it the value of the specified element
+        aux.setAttribute("value", "Print screen disabled.Print screen disabled.Print screen disabled.Print screen disabled.Print screen disabled.Print screen disabled.");
+        // Append it to the body
+        document.body.appendChild(aux);
+        // Highlight its content
+        aux.select();
+        // Copy the highlighted text
+        document.execCommand("copy");
+        // Remove it from the body
+        document.body.removeChild(aux);
+        alert("Print screen disabled.");
       }
     }
   };
