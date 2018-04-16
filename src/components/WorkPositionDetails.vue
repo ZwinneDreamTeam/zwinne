@@ -30,7 +30,7 @@
       <md-switch class="md-primary" v-model="position.isActive" :disabled="disabled">Aktywne</md-switch>
     </div>
 
-    <md-table v-model="tests">
+    <md-table v-model="tests" v-if="tests.length > 0">
       <md-table-toolbar>
         <h1 class="md-title">Dostępne testy</h1>
       </md-table-toolbar>
@@ -38,6 +38,8 @@
         <md-table-cell md-label="Nazwa">{{item}}</md-table-cell>
       </md-table-row>
     </md-table>
+
+    <h6 class="md-subhead" v-if="tests.length === 0">Brak testów na wybrane stanowisko</h6>
 
     <md-button class="md-primary md-raised" @click="disabled = false" v-if="disabled && canEdit">Edytuj</md-button>
 
