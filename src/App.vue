@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div v-bind:class="getPageStyle()" v-on:keyup.44="overridePrint()">
+    <div v-bind:class="getPageStyle()" v-on:keyup.44="overridePrint()" tabindex="0">
       <md-app md-waterfall md-mode="fixed">
 
         <md-app-toolbar class="md-primary">
