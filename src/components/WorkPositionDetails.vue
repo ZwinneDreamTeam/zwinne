@@ -34,7 +34,7 @@
       <md-table-toolbar>
         <h1 class="md-title">Dostępne testy</h1>
       </md-table-toolbar>
-      <md-table-row slot="md-table-row" slot-scope="{item}">
+      <md-table-row slot="md-table-row" slot-scope="{item}" @click.native="didSelectRow(item)">
         <md-table-cell md-label="Nazwa">{{item}}</md-table-cell>
       </md-table-row>
     </md-table>
@@ -111,6 +111,11 @@
       validateDescriptionIfIncorrect: function () {
         if (this.$data.validDescription) return;
         this.validateDescription();
+      },
+      didSelectRow(item) {
+        if (this.isCandidate) {
+          alert(item)
+        }
       }
     },
     computed: {
