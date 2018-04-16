@@ -44,7 +44,8 @@
     </md-card>
 
     <test-detail-questions v-bind:questions="testModel.questions" v-bind:mode="questionsMode"
-                           v-bind:testId="testModel.key" v-on:questionAdded="onQuestionAdded"/>
+
+                           v-bind:testId="testModel.key" v-on:questionAdded="onQuestionAdded" v-on:languageAdded="onLanguageAdded"/>
 
     <md-button @click="submit_click" v-if="editMode" class="md-raised md-primary confirmButton">
       Zatwierdź zmiany
@@ -122,6 +123,9 @@
       },
       onQuestionAdded(question) {
         this.testModel.questions.push(question);
+      },
+      onLanguageAdded(model, id) {
+        this.testModel.questions[id] = model;
       },
       validateTestName() {
         this.isTestNameValid = Boolean(this.testModel.name) && Boolean(this.testModel.name.trim());
