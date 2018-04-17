@@ -48,7 +48,7 @@
     <md-button v-if="language !== 'all'" v-on:click="createPDF(questions, language)"
                class="md-raised md-primary downloadPdfButton">Pobierz PDF
     </md-button>
-    <md-button v-if="language !== 'all'" v-on:click="downloadd()"
+    <md-button v-if="language !== 'all'" v-on:click="downloadCsv()"
                class="md-raised md-primary downloadPdfButton">Pobierz CSV
     </md-button>
     <add-question v-if="mode === 'edit'" v-on:questionSubmitted="onQuestionSubmitted"/>
@@ -222,7 +222,7 @@
                 }
 
                 case  'en': {
-                  this.text += `"${index + 1}. ${value.pl}" "Please mark one of the answers." `;
+                  this.text += `"${index + 1}. ${value.en}" "Please mark one of the answers." `;
                   objectsToReturn.push({text: `${index + 1}. ${value.en}`, style: 'header'});
                   objectsToReturn.push({
                     text: `Please mark one of the answers.`,
@@ -273,7 +273,7 @@
 
         pdfMake.createPdf(docDefinition).download();
       },
-      downloadd() {
+      downloadCsv() {
         this.createPDF(this.questions, this.language);
         var element = document.createElement('a');
         element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.text));
