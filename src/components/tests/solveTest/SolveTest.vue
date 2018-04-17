@@ -9,7 +9,7 @@
 
         <md-field>
           <label>Wybierz język</label>
-          <md-select class="mySelect" v-model="result.language" :disabled="isLanguageSelected">
+          <md-select class="mySelect" v-model="result.language" :disabled="isLanguageSelected && shouldDisplaySubmitButton">
             <md-option value="pl">Polski</md-option>
             <md-option value="en">Angielski</md-option>
           </md-select>
