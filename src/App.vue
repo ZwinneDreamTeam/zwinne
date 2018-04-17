@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <div v-bind:class="getPageStyle()" @contextmenu.prevent="$refs.ctxMenu.open" v-on:keyup.44="overridePrint()" tabindex="0">
+    <div v-bind:class="getPageStyle()" @contextmenu.prevent="$refs.ctxMenu.open" v-on:keyup.44="overridePrint()"
+         tabindex="0" @keyup="keyUp" @keydown="keyDown">
       <md-app md-waterfall md-mode="fixed">
 
         <md-app-toolbar class="md-primary">
@@ -64,7 +65,7 @@
       window.onblur = () => this.$data.pageNotFocused = true;
 
       window.onfocus = () => this.$data.pageNotFocused = false;
-      
+
       firebase.auth().onAuthStateChanged((user) => {
         if (firebase.auth().currentUser == null) {
           this.contextMenuEnable = false;
@@ -82,7 +83,9 @@
         contextMenuEnable: false,
         label_wiki: "Znajdź w wikipedii",
         label_synonym: "Znajdź synonim",
-        selectedText: ""
+        selectedText: "",
+        shiftPressed: false,
+        commandPressed: false,
       }
     },
     updated() {
@@ -99,7 +102,7 @@
           }
         )
       }, getPageStyle() {
-        return this.$data.pageNotFocused ? 'page-container overlay' : 'page-container'
+        return (this.$data.pageNotFocused || (this.$data.shiftPressed && this.$data.commandPressed)) ? 'page-container overlay' : 'page-container'
       }, overridePrint() {
         let aux = document.createElement("input");
         // Assign it the value of the specified element
@@ -119,6 +122,21 @@
         window.open("https://www.synonimy.pl/synonim/" + this.$data.selectedText, '_blank');
       }, saveSelectedText() {
         this.$data.selectedText = window.getSelection().toString();
+      }, keyDown: function (event) {
+        console.log("KeyDown = "+event.keyCode);
+        if (event.keyCode === 16) {
+          this.shiftPressed = true;
+        } else if(event.keyCode === 91){
+          this.commandPressed = true
+        }
+      },
+      keyUp: function (event) {
+        console.log("KeyUp = "+event.keyCode);
+        if (event.keyCode === 16) {
+          this.shiftPressed = false
+        } else if(event.keyCode === 91){
+          this.commandPressed = false
+        }
       }
     }
   };
