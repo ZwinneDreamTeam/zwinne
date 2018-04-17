@@ -41,15 +41,7 @@
     props: ['questions', 'mode'],
     emits: ['questionAdded'],
     data() {
-      return {
-        margins: {
-          top: 30,
-          bottom: 30,
-          left: 30,
-          width: 550
-        },
-
-      };
+      return {};
     },
     methods: {
       onQuestionSubmitted(question) {
@@ -79,14 +71,18 @@
                 style: 'small',
                 margin: [18, 2, 0, 150]
               });
+
               break;
             }
 
             case 'scale': {
               objectsToReturn.push({
-                text: `${index + 1}. ${value.name} Odpowiedz w skali od ${value.scaleMin} do ${value.scaleMax}.`,
-                style: 'header',
-                margin: [0, 0, 0, 40]
+                text: `${index + 1}. ${value.name}`, style: 'header'
+              });
+              objectsToReturn.push({
+                text: `Odpowiedz w skali od ${value.scaleMin} do ${value.scaleMax}.`,
+                style: 'small',
+                margin: [18, 2, 0, 40]
               });
               break;
             }
@@ -107,7 +103,7 @@
 
               let possibleAnswers = {ul: [], margin: [15, 8, 0, 20]};
               for (let i = 0; i < value.possibleAnswers.length; i++) {
-                possibleAnswers.ul.push(value.possibleAnswers[i]);
+                possibleAnswers.ul.push({text: value.possibleAnswers[i], listType: 'square'});
               }
               objectsToReturn.push(possibleAnswers);
               break;
@@ -120,6 +116,7 @@
 
         let docDefinition = {
           content: [processedQuestions],
+          pageMargins: [50, 50],
           styles: {
             header: {
               bold: true,
