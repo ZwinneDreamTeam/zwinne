@@ -25,6 +25,10 @@
         <md-icon>library_books</md-icon>
         <span class="md-list-item-text"> {{label_tests_to_mark}} </span>
       </md-list-item>
+      <md-list-item to="/createdTests">
+        <md-icon>assignment</md-icon>
+        <span class="md-list-item-text">Stworzone testy</span>
+      </md-list-item>
     </div>
 
     <div v-if="isModerator">
@@ -32,6 +36,10 @@
       <md-list-item to="/moderator/users">
         <md-icon>people</md-icon>
         <span class="md-list-item-text">{{label_users}}</span>
+      </md-list-item>
+      <md-list-item to="/tests">
+        <md-icon>assignment</md-icon>
+        <span class="md-list-item-text">Wszystkie testy</span>
       </md-list-item>
     </div>
 
@@ -63,7 +71,6 @@
       }
     },
     mounted() {
-      console.log("mounted");
       this.uid = firebase.auth().currentUser.uid;
       firebase.database().ref('/users/' + this.uid).on('value', (snapshot) => {
         let user = snapshot.val();
@@ -76,7 +83,6 @@
 </script>
 
 <style scoped>
-
 
 
 </style>

@@ -30,7 +30,7 @@
   export default {
     name: "user_tests",
     firebase: {
-      tests: db.ref('tests')
+      tests: db.ref('results')
     },
     data() {
       return {
