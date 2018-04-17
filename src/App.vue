@@ -106,7 +106,7 @@
       }, overridePrint() {
         let aux = document.createElement("input");
         // Assign it the value of the specified element
-        aux.setAttribute("value", "Print screen disabled.Print screen disabled.Print screen disabled.Print screen disabled.Print screen disabled.Print screen disabled.");
+        aux.setAttribute("value", "Print screen disabled.");
         // Append it to the body
         document.body.appendChild(aux);
         // Highlight its content
