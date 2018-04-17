@@ -48,6 +48,9 @@
     <md-button v-if="language !== 'all'" v-on:click="createPDF(questions, language)"
                class="md-raised md-primary downloadPdfButton">Pobierz PDF
     </md-button>
+    <md-button v-if="language !== 'all'" v-on:click="downloadd()"
+               class="md-raised md-primary downloadPdfButton">Pobierz CSV
+    </md-button>
     <add-question v-if="mode === 'edit'" v-on:questionSubmitted="onQuestionSubmitted"/>
   </div>
 </template>
@@ -69,7 +72,9 @@
     data() {
       return {
         language: "all",
-        addLanguageToTest: -1
+        addLanguageToTest: -1,
+        text: "",
+        filename: ""
       };
     },
     methods: {
@@ -97,6 +102,9 @@
       },
       createPDF(questions, language) {
         let objectsToReturn = [];
+        this.text = "";
+        this.filename = `${this.testName}.csv`;
+
         objectsToReturn.push({text: this.testName, style: 'fileName',});
         objectsToReturn.push({
           text: this.redactorName,
@@ -111,6 +119,7 @@
 
               switch (language) {
                 case 'pl': {
+                  this.text += `"${index + 1}. ${value.pl}" "Proszę udzielić odpowiedzi pisemnej." \n`;
                   objectsToReturn.push({text: `${index + 1}. ${value.pl}`, style: 'header'});
                   objectsToReturn.push({
                     text: `Proszę udzielić odpowiedzi pisemnej.`,
@@ -121,6 +130,7 @@
                 }
 
                 case 'en': {
+                  this.text += `"${index + 1}. ${value.en}" "Please provide a written answer." \n`;
                   objectsToReturn.push({text: `${index + 1}. ${value.en}`, style: 'header'});
                   objectsToReturn.push({
                     text: `Please provide a written answer.`,
@@ -137,6 +147,7 @@
 
               switch (language) {
                 case 'pl': {
+                  this.text += `"${index + 1}. ${value.pl}" "Odpowiedz w skali od ${value.scaleMin} do ${value.scaleMax}." \n`;
                   objectsToReturn.push({text: `${index + 1}. ${value.pl}`, style: 'header'});
                   objectsToReturn.push({
                     text: `Odpowiedz w skali od ${value.scaleMin} do ${value.scaleMax}.`,
@@ -147,6 +158,7 @@
                 }
 
                 case 'en': {
+                  this.text += `"${index + 1}. ${value.en}" "Please answer on a scale of ${value.scaleMin} to ${value.scaleMax}." \n`;
                   objectsToReturn.push({text: `${index + 1}. ${value.en}`, style: 'header'});
                   objectsToReturn.push({
                     text: `Please answer on a scale of ${value.scaleMin} to ${value.scaleMax}.`,
@@ -163,6 +175,7 @@
 
               switch (language) {
                 case 'pl': {
+                  this.text += `"${index + 1}. ${value.pl}" "Odpowiedzią powinna być liczba." \n`;
                   objectsToReturn.push({text: `${index + 1}. ${value.pl}`, style: 'header'});
                   objectsToReturn.push({
                     text: `Odpowiedzią powinna być liczba.`,
@@ -173,6 +186,7 @@
                 }
 
                 case 'en': {
+                  this.text += `"${index + 1}. ${value.en}" "The answer should be a number." \n`;
                   objectsToReturn.push({text: `${index + 1}. ${value.en}`, style: 'header'});
                   objectsToReturn.push({
                     text: `The answer should be a number.`,
@@ -189,6 +203,7 @@
 
               switch (language) {
                 case 'pl': {
+                  this.text += `"${index + 1}. ${value.pl}" "Proszę zaznaczyć jedną z odpowiedzi." `;
                   objectsToReturn.push({text: `${index + 1}. ${value.pl}`, style: 'header'});
                   objectsToReturn.push({
                     text: `Proszę zaznaczyć jedną z odpowiedzi.`,
@@ -199,12 +214,15 @@
                   let possibleAnswers = {ul: [], margin: [15, 8, 0, 20]};
                   for (let i = 0; i < value.possibleAnswers.pl.length; i++) {
                     possibleAnswers.ul.push({text: value.possibleAnswers.pl[i], listType: 'square'});
+                    this.text += `${value.possibleAnswers.pl[i]} `;
                   }
                   objectsToReturn.push(possibleAnswers);
+                  this.text += ` \n`;
                   break;
                 }
 
                 case  'en': {
+                  this.text += `"${index + 1}. ${value.pl}" "Please mark one of the answers." `;
                   objectsToReturn.push({text: `${index + 1}. ${value.en}`, style: 'header'});
                   objectsToReturn.push({
                     text: `Please mark one of the answers.`,
@@ -215,8 +233,10 @@
                   let possibleAnswers = {ul: [], margin: [15, 8, 0, 20]};
                   for (let i = 0; i < value.possibleAnswers.en.length; i++) {
                     possibleAnswers.ul.push({text: value.possibleAnswers.en[i], listType: 'square'});
+                    this.text += `${value.possibleAnswers.en[i]} `;
                   }
                   objectsToReturn.push(possibleAnswers);
+                  this.text += ` \n`;
                   break;
                 }
               }
@@ -252,6 +272,19 @@
         };
 
         pdfMake.createPdf(docDefinition).download();
+      },
+      downloadd() {
+        this.createPDF(this.questions, this.language);
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.text));
+        element.setAttribute('download', this.filename);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
       }
     },
   }
