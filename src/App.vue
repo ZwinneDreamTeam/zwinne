@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="page-container" @contextmenu.prevent="$refs.ctxMenu.open">
+    <div v-bind:class="getPageStyle()" @contextmenu.prevent="$refs.ctxMenu.open" v-on:keyup.44="overridePrint()" tabindex="0">
       <md-app md-waterfall md-mode="fixed">
 
         <md-app-toolbar class="md-primary">
@@ -61,6 +61,10 @@
     components: {AppDrawer, contextMenu},
     name: 'app',
     created() {
+      window.onblur = () => this.$data.pageNotFocused = true;
+
+      window.onfocus = () => this.$data.pageNotFocused = false;
+      
       firebase.auth().onAuthStateChanged((user) => {
         if (firebase.auth().currentUser == null) {
           this.contextMenuEnable = false;
@@ -74,6 +78,7 @@
     data() {
       return {
         showDrawer: this.$route.fullPath !== '/login' && this.$route.fullPath !== '/register',
+        pageNotFocused: false,
         contextMenuEnable: false,
         label_wiki: "Znajdź w wikipedii",
         label_synonym: "Znajdź synonim",
@@ -93,6 +98,21 @@
             this.$router.replace({name: 'Login'});
           }
         )
+      }, getPageStyle() {
+        return this.$data.pageNotFocused ? 'page-container overlay' : 'page-container'
+      }, overridePrint() {
+        let aux = document.createElement("input");
+        // Assign it the value of the specified element
+        aux.setAttribute("value", "Print screen disabled.Print screen disabled.Print screen disabled.Print screen disabled.Print screen disabled.Print screen disabled.");
+        // Append it to the body
+        document.body.appendChild(aux);
+        // Highlight its content
+        aux.select();
+        // Copy the highlighted text
+        document.execCommand("copy");
+        // Remove it from the body
+        document.body.removeChild(aux);
+        alert("Print screen disabled.");
       }, findInWiki() {
         window.open("https://pl.wikipedia.org/wiki/" + this.$data.selectedText, '_blank');
       }, findSynonym() {
@@ -122,4 +142,13 @@
     min-height: 100% !important;
     min-width: 100% !important;
   }
+
+  .overlay {
+    -webkit-filter: blur(5px);
+    -moz-filter: blur(5px);
+    -ms-filter: blur(5px);
+    -o-filter: blur(5px);
+    filter: blur(5px);
+  }
+
 </style>
