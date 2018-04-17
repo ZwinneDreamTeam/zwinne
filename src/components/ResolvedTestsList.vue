@@ -3,7 +3,7 @@
     <md-table v-model="tests" :md-sort.sync="currentSort" :md-sort-order.sync="currentSortOrder"
               :md-sort-fn="customSort" md-card>
       <md-table-toolbar>
-        <h1 class="md-title">Ukończone testy</h1>
+        <h1 class="md-title">Testy do sprawdzenia</h1>
       </md-table-toolbar>
 
       <md-table-row slot="md-table-row" slot-scope="{item}" md-selectable="single" @click.native="onSelect(item)">
@@ -39,15 +39,21 @@
         currentSort: 'name',
         currentSortOrder: 'asc',
         currentUserAuthUid: '',
+        results: "",
       }
     },
     mounted() {
       this.currentUserAuthUid = firebase.auth().currentUser.uid;
       db.ref('users/' + this.currentUserAuthUid).on('value', (snapshot) => {
-        this.isCandidate = (snapshot.val() && snapshot.val().isCandidate);
         this.isRedactor = (snapshot.val() && snapshot.val().isRedactor);
       });
-      //this.tests = db.ref('tests');
+
+     // let currentUserAuth = firebase.auth().currentUser;
+     // db.ref('resalts').child('testId')
+      db.ref('results').on('value', snapshot => {
+            this.results = snapshot.val();
+      });
+
     },
     methods: {
       compareBooleans(a, b, sortBy) {
@@ -78,9 +84,9 @@
           }
         })
       },
-      onSelect(item) {
+    /*  onSelect(item) {
         this.$router.push({name: 'positionDetails', params: {id: item['.key']}});
-      },
+      }, */
     },
   }
 </script>

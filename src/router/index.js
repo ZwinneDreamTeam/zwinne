@@ -16,7 +16,7 @@ import CreatedTestsList from '@/components/tests/CreatedTestsList'
 import AllTestsList from '@/components/tests/AllTestsList'
 import AddTest from '@/components/tests/AddTest'
 import TestDetails from '@/components/tests/TestDetails'
-
+import ResolvedTestsList from '@/components/ResolvedTestsList'
 import VueMaterial from 'vue-material'
 import firebase from 'firebase'
 import 'vue-material/dist/vue-material.min.css'
@@ -66,7 +66,7 @@ let router = new VueRouter({
       meta: {
         requiresAuth: true,
         requiresCandidate: true
-      },
+      }
     },
     //=============== USERS ==============
     {
@@ -78,7 +78,15 @@ let router = new VueRouter({
         requiresCandidate: true
       },
     },
-
+    {
+      path: '/redactor/resolved',
+      name: 'resolvedTests',
+      component: ResolvedTestsList,
+      meta: {
+        requiresAuth: true,
+        requiresRedactor: true
+      },
+    },
     {
       path: '/moderator',
       name: 'Moderator',

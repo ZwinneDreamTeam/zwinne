@@ -21,7 +21,7 @@
 
     <div v-if="isRedactor">
       <md-subheader>{{label_redactor}}</md-subheader>
-      <md-list-item to="/candidate/tests">
+      <md-list-item to="/redactor/resolved">
         <md-icon>library_books</md-icon>
         <span class="md-list-item-text"> {{label_tests_to_mark}} </span>
       </md-list-item>
