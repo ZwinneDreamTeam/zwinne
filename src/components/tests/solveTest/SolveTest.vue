@@ -17,7 +17,7 @@
       </md-card>
 
       <div v-if="isLanguageSelected" v-for="(question, index) in questions">
-        <md-card class="solveTestCard">
+        <md-card class="solveTestCard" v-if="shouldDisplayQuestion(question)">
 
           <div v-if="question.type === 'text'">
             <p>{{nameForQuestionLocalized(question)}}</p>
@@ -48,7 +48,10 @@
 
         </md-card>
       </div>
-      <md-button v-if="isLanguageSelected" v-on:click="submitResult" class="md-raised confirmButton">Wyślij</md-button>
+      <md-button v-if="isLanguageSelected && shouldDisplaySubmitButton" v-on:click="submitResult" class="md-raised confirmButton">Wyślij</md-button>
+      <md-card v-if="isLanguageSelected && !shouldDisplaySubmitButton" class="solveTestCard">
+        <h6 class="md-subhead">Brak pytań w wybranym języku</h6>
+      </md-card>
     </div>
 </template>
 
@@ -79,12 +82,12 @@
             this.result.answers.push("")
           }
         });
-        console.log(this.result.answers)
       });
+      let currenUserAuth = firebase.auth().currentUser;
       this.result = {
         testId: testKey,
         language: "",
-        candidateId: 0,
+        candidateId: currenUserAuth.uid,
         answers: []
       };
     },
@@ -101,6 +104,13 @@
           return question.possibleAnswers.pl;
         } else if (this.result.language === 'en') {
           return question.possibleAnswers.en;
+        }
+      },
+      shouldDisplayQuestion(question) {
+        if (this.result.language === 'pl') {
+          return question.pl != null;
+        } else if (this.result.language === 'en') {
+          return question.en != null;
         }
       },
       submitResult() {
@@ -121,7 +131,7 @@
         }
         return true
       },
-      isNumber: function(evt) {
+      isNumber: (evt) => {
         evt = (evt) ? evt : window.event;
         let charCode = (evt.which) ? evt.which : evt.keyCode;
         if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
@@ -134,6 +144,12 @@
     computed: {
       isLanguageSelected() {
         return !(this.result.language == null) && !(this.result.language.length === 0)
+      },
+      shouldDisplaySubmitButton() {
+        let filtered = this.questions.filter((question) => {
+          return this.shouldDisplayQuestion(question)
+        });
+        return filtered.length !== 0;
       }
     },
     components: {
