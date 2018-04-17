@@ -71,7 +71,7 @@
           this.contextMenuEnable = false;
         } else {
           db.ref('users/' + firebase.auth().currentUser.uid).on('value', snapshot => {
-            this.contextMenuEnable = snapshot != null && (!snapshot.val().isCandidate || !(snapshot.val().isModerator == null || !snapshot.val().isModerator) || !(snapshot.val().isRedactor == null || !snapshot.val().isRedactor));
+            this.contextMenuEnable = this.shouldEnableContextMenu(snapshot);
           });
         }
       });
@@ -123,20 +123,24 @@
       }, saveSelectedText() {
         this.$data.selectedText = window.getSelection().toString();
       }, keyDown: function (event) {
-        console.log("KeyDown = "+event.keyCode);
         if (event.keyCode === 16) {
           this.shiftPressed = true;
-        } else if(event.keyCode === 91){
+        } else if (event.keyCode === 91) {
           this.commandPressed = true
         }
       },
       keyUp: function (event) {
-        console.log("KeyUp = "+event.keyCode);
         if (event.keyCode === 16) {
           this.shiftPressed = false
-        } else if(event.keyCode === 91){
+        } else if (event.keyCode === 91) {
           this.commandPressed = false
         }
+      }, shouldEnableContextMenu(userData) {
+        if (userData == null) return false;
+        let userDataVal = userData.val();
+        if (userDataVal.isModerator !== null && userDataVal.isModerator === true) return true;
+        if (userDataVal.isRedactor !== null && userDataVal.isRedactor === true) return true;
+        return false;
       }
     }
   };
