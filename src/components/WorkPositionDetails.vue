@@ -34,8 +34,8 @@
       <md-table-toolbar>
         <h1 class="md-title">Dostępne testy</h1>
       </md-table-toolbar>
-      <md-table-row slot="md-table-row" slot-scope="{item}">
-        <md-table-cell md-label="Nazwa">{{item}}</md-table-cell>
+      <md-table-row slot="md-table-row" slot-scope="{item}" @click.native="didSelectRow(item)">
+        <md-table-cell md-label="Nazwa">{{item.name}}</md-table-cell>
       </md-table-row>
     </md-table>
 
@@ -72,7 +72,11 @@
         .orderByChild('positionId').equalTo(key)
         .on('child_added', (snapshot) => {
           let test = snapshot.val();
-          this.tests.push(test.name);
+          let testToSave = {
+            name: test.name,
+            key: snapshot.key
+          };
+          this.tests.push(testToSave);
         });
     },
     methods: {
@@ -111,6 +115,11 @@
       validateDescriptionIfIncorrect: function () {
         if (this.$data.validDescription) return;
         this.validateDescription();
+      },
+      didSelectRow(item) {
+        if (this.isCandidate) {
+          this.$router.push({name: 'solve-test', params :{id: item.key}})
+        }
       }
     },
     computed: {

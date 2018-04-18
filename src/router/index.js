@@ -17,6 +17,7 @@ import AllTestsList from '@/components/tests/AllTestsList'
 import AddTest from '@/components/tests/AddTest'
 import TestDetails from '@/components/tests/TestDetails'
 import ResolvedTestsList from '@/components/ResolvedTestsList'
+import SolveTest from '@/components/tests/solveTest/SolveTest'
 import VueMaterial from 'vue-material'
 import firebase from 'firebase'
 import 'vue-material/dist/vue-material.min.css'
@@ -180,6 +181,15 @@ let router = new VueRouter({
         requiresAuth: true,
       }
     },
+    {
+      path: '/tests/solve/:id',
+      name: 'solve-test',
+      component: SolveTest,
+      meta: {
+        requiresAuth: true,
+        requiresCandidate: true
+      }
+    }
   ]
 });
 
