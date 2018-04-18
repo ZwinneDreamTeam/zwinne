@@ -104,7 +104,7 @@
         let objectsToReturn = [];
         this.text = "";
         this.filename = `${this.testName}.csv`;
-
+        
         objectsToReturn.push({text: this.testName, style: 'fileName',});
         objectsToReturn.push({
           text: this.redactorName,
@@ -119,6 +119,9 @@
 
               switch (language) {
                 case 'pl': {
+                  if (value.pl.length === 0) {
+                    break;
+                  }
                   this.text += `"${index + 1}. ${value.pl}" "Proszę udzielić odpowiedzi pisemnej." \n`;
                   objectsToReturn.push({text: `${index + 1}. ${value.pl}`, style: 'header'});
                   objectsToReturn.push({
@@ -130,6 +133,9 @@
                 }
 
                 case 'en': {
+                  if (value.en.length === 0) {
+                    break;
+                  }
                   this.text += `"${index + 1}. ${value.en}" "Please provide a written answer." \n`;
                   objectsToReturn.push({text: `${index + 1}. ${value.en}`, style: 'header'});
                   objectsToReturn.push({
@@ -147,6 +153,9 @@
 
               switch (language) {
                 case 'pl': {
+                  if (value.pl.length === 0 || value.scaleMin == null || value.scaleMin.length === 0 || value.scaleMax == null || value.scaleMax.length === 0) {
+                    break;
+                  }
                   this.text += `"${index + 1}. ${value.pl}" "Odpowiedz w skali od ${value.scaleMin} do ${value.scaleMax}." \n`;
                   objectsToReturn.push({text: `${index + 1}. ${value.pl}`, style: 'header'});
                   objectsToReturn.push({
@@ -158,6 +167,9 @@
                 }
 
                 case 'en': {
+                  if (value.en.length === 0 || value.scaleMin == null || value.scaleMin.length === 0 || value.scaleMax == null || value.scaleMax.length === 0) {
+                    break;
+                  }
                   this.text += `"${index + 1}. ${value.en}" "Please answer on a scale of ${value.scaleMin} to ${value.scaleMax}." \n`;
                   objectsToReturn.push({text: `${index + 1}. ${value.en}`, style: 'header'});
                   objectsToReturn.push({
@@ -175,6 +187,9 @@
 
               switch (language) {
                 case 'pl': {
+                  if (value.pl.length === 0) {
+                    break;
+                  }
                   this.text += `"${index + 1}. ${value.pl}" "Odpowiedzią powinna być liczba." \n`;
                   objectsToReturn.push({text: `${index + 1}. ${value.pl}`, style: 'header'});
                   objectsToReturn.push({
@@ -186,6 +201,9 @@
                 }
 
                 case 'en': {
+                  if (value.en.length === 0) {
+                    break;
+                  }
                   this.text += `"${index + 1}. ${value.en}" "The answer should be a number." \n`;
                   objectsToReturn.push({text: `${index + 1}. ${value.en}`, style: 'header'});
                   objectsToReturn.push({
@@ -203,6 +221,9 @@
 
               switch (language) {
                 case 'pl': {
+                  if (value.pl.length === 0 || null == value.possibleAnswers.pl || null == value.possibleAnswers.pl.length === 0) {
+                    break;
+                  }
                   this.text += `"${index + 1}. ${value.pl}" "Proszę zaznaczyć jedną z odpowiedzi." `;
                   objectsToReturn.push({text: `${index + 1}. ${value.pl}`, style: 'header'});
                   objectsToReturn.push({
@@ -222,6 +243,9 @@
                 }
 
                 case  'en': {
+                  if (value.en.length === 0 || null == value.possibleAnswers.en || null == value.possibleAnswers.en.length === 0) {
+                    break;
+                  }
                   this.text += `"${index + 1}. ${value.en}" "Please mark one of the answers." `;
                   objectsToReturn.push({text: `${index + 1}. ${value.en}`, style: 'header'});
                   objectsToReturn.push({
