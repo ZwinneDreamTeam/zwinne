@@ -214,7 +214,7 @@
                   let possibleAnswers = {ul: [], margin: [15, 8, 0, 20]};
                   for (let i = 0; i < value.possibleAnswers.pl.length; i++) {
                     possibleAnswers.ul.push({text: value.possibleAnswers.pl[i], listType: 'square'});
-                    this.text += `${value.possibleAnswers.pl[i]} `;
+                    this.text += `"${value.possibleAnswers.pl[i]}" `;
                   }
                   objectsToReturn.push(possibleAnswers);
                   this.text += ` \n`;
@@ -233,7 +233,7 @@
                   let possibleAnswers = {ul: [], margin: [15, 8, 0, 20]};
                   for (let i = 0; i < value.possibleAnswers.en.length; i++) {
                     possibleAnswers.ul.push({text: value.possibleAnswers.en[i], listType: 'square'});
-                    this.text += `${value.possibleAnswers.en[i]} `;
+                    this.text += `"${value.possibleAnswers.en[i]}" `;
                   }
                   objectsToReturn.push(possibleAnswers);
                   this.text += ` \n`;
