@@ -38,7 +38,11 @@
         </md-list-item>
         <md-list-item v-if="translationEnable" @click="translate('pl','en')">
           <md-icon>language</md-icon>
-          <span class="md-list-item-text">{{label_translate}}</span>
+          <span class="md-list-item-text">{{en_translate}}</span>
+        </md-list-item>
+        <md-list-item v-if="translationEnable" @click="translate('en','pl')">
+          <md-icon>language</md-icon>
+          <span class="md-list-item-text">{{pl_translate}}</span>
         </md-list-item>
       </md-list>
     </context-menu>
@@ -88,7 +92,8 @@
         translationEnable: false,
         label_wiki: "Znajdź w wikipedii",
         label_synonym: "Znajdź synonim",
-        label_translate: "Przetłumacz na angielski",
+        en_translate: "Przetłumacz na angielski",
+        pl_translate: "Przetłumacz na polski",
         selectedText: ""
       }
     },
