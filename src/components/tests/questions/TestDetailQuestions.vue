@@ -102,9 +102,7 @@
       },
       createPDF(questions, language) {
         let objectsToReturn = [];
-        this.text = "";
-        this.filename = `${this.testName}.csv`;
-        
+
         objectsToReturn.push({text: this.testName, style: 'fileName',});
         objectsToReturn.push({
           text: this.redactorName,
@@ -122,7 +120,6 @@
                   if (value.pl.length === 0) {
                     break;
                   }
-                  this.text += `"${index + 1}. ${value.pl}" "Proszę udzielić odpowiedzi pisemnej." \n`;
                   objectsToReturn.push({text: `${index + 1}. ${value.pl}`, style: 'header'});
                   objectsToReturn.push({
                     text: `Proszę udzielić odpowiedzi pisemnej.`,
@@ -136,7 +133,6 @@
                   if (value.en.length === 0) {
                     break;
                   }
-                  this.text += `"${index + 1}. ${value.en}" "Please provide a written answer." \n`;
                   objectsToReturn.push({text: `${index + 1}. ${value.en}`, style: 'header'});
                   objectsToReturn.push({
                     text: `Please provide a written answer.`,
@@ -156,7 +152,6 @@
                   if (value.pl.length === 0 || value.scaleMin == null || value.scaleMin.length === 0 || value.scaleMax == null || value.scaleMax.length === 0) {
                     break;
                   }
-                  this.text += `"${index + 1}. ${value.pl}" "Odpowiedz w skali od ${value.scaleMin} do ${value.scaleMax}." \n`;
                   objectsToReturn.push({text: `${index + 1}. ${value.pl}`, style: 'header'});
                   objectsToReturn.push({
                     text: `Odpowiedz w skali od ${value.scaleMin} do ${value.scaleMax}.`,
@@ -170,7 +165,6 @@
                   if (value.en.length === 0 || value.scaleMin == null || value.scaleMin.length === 0 || value.scaleMax == null || value.scaleMax.length === 0) {
                     break;
                   }
-                  this.text += `"${index + 1}. ${value.en}" "Please answer on a scale of ${value.scaleMin} to ${value.scaleMax}." \n`;
                   objectsToReturn.push({text: `${index + 1}. ${value.en}`, style: 'header'});
                   objectsToReturn.push({
                     text: `Please answer on a scale of ${value.scaleMin} to ${value.scaleMax}.`,
@@ -190,7 +184,6 @@
                   if (value.pl.length === 0) {
                     break;
                   }
-                  this.text += `"${index + 1}. ${value.pl}" "Odpowiedzią powinna być liczba." \n`;
                   objectsToReturn.push({text: `${index + 1}. ${value.pl}`, style: 'header'});
                   objectsToReturn.push({
                     text: `Odpowiedzią powinna być liczba.`,
@@ -204,7 +197,6 @@
                   if (value.en.length === 0) {
                     break;
                   }
-                  this.text += `"${index + 1}. ${value.en}" "The answer should be a number." \n`;
                   objectsToReturn.push({text: `${index + 1}. ${value.en}`, style: 'header'});
                   objectsToReturn.push({
                     text: `The answer should be a number.`,
@@ -224,7 +216,6 @@
                   if (value.pl.length === 0 || null == value.possibleAnswers.pl || null == value.possibleAnswers.pl.length === 0) {
                     break;
                   }
-                  this.text += `"${index + 1}. ${value.pl}" "Proszę zaznaczyć jedną z odpowiedzi." `;
                   objectsToReturn.push({text: `${index + 1}. ${value.pl}`, style: 'header'});
                   objectsToReturn.push({
                     text: `Proszę zaznaczyć jedną z odpowiedzi.`,
@@ -235,10 +226,8 @@
                   let possibleAnswers = {ul: [], margin: [15, 8, 0, 20]};
                   for (let i = 0; i < value.possibleAnswers.pl.length; i++) {
                     possibleAnswers.ul.push({text: value.possibleAnswers.pl[i], listType: 'square'});
-                    this.text += `"${value.possibleAnswers.pl[i]}" `;
                   }
                   objectsToReturn.push(possibleAnswers);
-                  this.text += ` \n`;
                   break;
                 }
 
@@ -246,7 +235,6 @@
                   if (value.en.length === 0 || null == value.possibleAnswers.en || null == value.possibleAnswers.en.length === 0) {
                     break;
                   }
-                  this.text += `"${index + 1}. ${value.en}" "Please mark one of the answers." `;
                   objectsToReturn.push({text: `${index + 1}. ${value.en}`, style: 'header'});
                   objectsToReturn.push({
                     text: `Please mark one of the answers.`,
@@ -257,10 +245,8 @@
                   let possibleAnswers = {ul: [], margin: [15, 8, 0, 20]};
                   for (let i = 0; i < value.possibleAnswers.en.length; i++) {
                     possibleAnswers.ul.push({text: value.possibleAnswers.en[i], listType: 'square'});
-                    this.text += `"${value.possibleAnswers.en[i]}" `;
                   }
                   objectsToReturn.push(possibleAnswers);
-                  this.text += ` \n`;
                   break;
                 }
               }
@@ -297,8 +283,112 @@
 
         pdfMake.createPdf(docDefinition).download();
       },
+      createCSV(questions, language) {
+        this.text = "";
+        this.filename = `${this.testName}.csv`;
+
+        _.map(questions, (value, index) => {
+          switch (value.type) {
+            case 'text': {
+
+              switch (language) {
+                case 'pl': {
+                  if (value.pl.length === 0) {
+                    break;
+                  }
+                  this.text += `"${index + 1}. ${value.pl}" "Proszę udzielić odpowiedzi pisemnej." \n`;
+                  break;
+                }
+
+                case 'en': {
+                  if (value.en.length === 0) {
+                    break;
+                  }
+                  this.text += `"${index + 1}. ${value.en}" "Please provide a written answer." \n`;
+                  break;
+                }
+              }
+              break;
+            }
+
+            case 'scale': {
+
+              switch (language) {
+                case 'pl': {
+                  if (value.pl.length === 0 || value.scaleMin == null || value.scaleMin.length === 0 || value.scaleMax == null || value.scaleMax.length === 0) {
+                    break;
+                  }
+                  this.text += `"${index + 1}. ${value.pl}" "Odpowiedz w skali od ${value.scaleMin} do ${value.scaleMax}." \n`;
+                  break;
+                }
+
+                case 'en': {
+                  if (value.en.length === 0 || value.scaleMin == null || value.scaleMin.length === 0 || value.scaleMax == null || value.scaleMax.length === 0) {
+                    break;
+                  }
+                  this.text += `"${index + 1}. ${value.en}" "Please answer on a scale of ${value.scaleMin} to ${value.scaleMax}." \n`;
+                  break;
+                }
+              }
+              break;
+            }
+
+            case 'number': {
+
+              switch (language) {
+                case 'pl': {
+                  if (value.pl.length === 0) {
+                    break;
+                  }
+                  this.text += `"${index + 1}. ${value.pl}" "Odpowiedzią powinna być liczba." \n`;
+                  break;
+                }
+
+                case 'en': {
+                  if (value.en.length === 0) {
+                    break;
+                  }
+                  this.text += `"${index + 1}. ${value.en}" "The answer should be a number." \n`;
+                  break;
+                }
+              }
+              break;
+            }
+
+            case 'select': {
+
+              switch (language) {
+                case 'pl': {
+                  if (value.pl.length === 0 || null == value.possibleAnswers.pl || null == value.possibleAnswers.pl.length === 0) {
+                    break;
+                  }
+                  this.text += `"${index + 1}. ${value.pl}" "Proszę zaznaczyć jedną z odpowiedzi." `;
+                  for (let i = 0; i < value.possibleAnswers.pl.length; i++) {
+                    this.text += `"${value.possibleAnswers.pl[i]}" `;
+                  }
+                  this.text += ` \n`;
+                  break;
+                }
+
+                case  'en': {
+                  if (value.en.length === 0 || null == value.possibleAnswers.en || null == value.possibleAnswers.en.length === 0) {
+                    break;
+                  }
+                  this.text += `"${index + 1}. ${value.en}" "Please mark one of the answers." `;
+                  for (let i = 0; i < value.possibleAnswers.en.length; i++) {
+                    this.text += `"${value.possibleAnswers.en[i]}" `;
+                  }
+                  this.text += ` \n`;
+                  break;
+                }
+              }
+              break;
+            }
+          }
+        });
+      },
       downloadCsv() {
-        this.createPDF(this.questions, this.language);
+        this.createCSV(this.questions, this.language);
         var element = document.createElement('a');
         element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.text));
         element.setAttribute('download', this.filename);
