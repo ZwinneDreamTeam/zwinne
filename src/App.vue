@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <div v-bind:class="getPageStyle()" @contextmenu.prevent="$refs.ctxMenu.open" v-on:keyup.44="overridePrint()" tabindex="0">
+    <div v-bind:class="getPageStyle()" @contextmenu.prevent="$refs.ctxMenu.open" v-on:keyup.44="overridePrint()"
+         tabindex="0" @keyup="keyUp" @keydown="keyDown">
       <md-app md-waterfall md-mode="fixed">
 
         <md-app-toolbar class="md-primary">
@@ -69,7 +70,11 @@
     components: {AppDrawer, contextMenu},
     name: 'app',
     created() {
-      window.onblur = () => this.$data.pageNotFocused = true;
+      window.onblur = () => {
+        this.$data.shiftPressed = false;
+        this.$data.commandPressed = false;
+        this.$data.pageNotFocused = true;
+      };
 
       window.onfocus = () => this.$data.pageNotFocused = false;
 
@@ -78,8 +83,8 @@
           this.contextMenuEnable = false;
         } else {
           db.ref('users/' + firebase.auth().currentUser.uid).on('value', snapshot => {
-            this.contextMenuEnable = snapshot != null && (!snapshot.val().isCandidate || !(snapshot.val().isModerator == null || !snapshot.val().isModerator) || !(snapshot.val().isRedactor == null || !snapshot.val().isRedactor));
             this.translationEnable = snapshot.val().isRedactor;
+            this.contextMenuEnable = this.shouldEnableContextMenu(snapshot);
           });
         }
       });
@@ -94,7 +99,9 @@
         label_synonym: "Znajdź synonim",
         en_translate: "Przetłumacz na angielski",
         pl_translate: "Przetłumacz na polski",
-        selectedText: ""
+        selectedText: "",
+        shiftPressed: false,
+        commandPressed: false,
       }
     },
     updated() {
@@ -111,11 +118,11 @@
           }
         )
       }, getPageStyle() {
-        return this.$data.pageNotFocused ? 'page-container overlay' : 'page-container'
+        return (this.$data.pageNotFocused || (this.$data.shiftPressed && this.$data.commandPressed)) ? 'page-container overlay' : 'page-container'
       }, overridePrint() {
         let aux = document.createElement("input");
         // Assign it the value of the specified element
-        aux.setAttribute("value", "Print screen disabled.Print screen disabled.Print screen disabled.Print screen disabled.Print screen disabled.Print screen disabled.");
+        aux.setAttribute("value", "Print screen disabled.");
         // Append it to the body
         document.body.appendChild(aux);
         // Highlight its content
@@ -133,6 +140,25 @@
         this.$data.selectedText = window.getSelection().toString();
       }, translate(from, to) {
         window.open("https://translate.google.com/#" + from + "/" + to + "/" + this.$data.selectedText);
+      }, keyDown: function (event) {
+        if (event.keyCode === 16) {
+          this.shiftPressed = true;
+        } else if (event.keyCode === 91) {
+          this.commandPressed = true
+        }
+      },
+      keyUp: function (event) {
+        if (event.keyCode === 16) {
+          this.shiftPressed = false
+        } else if (event.keyCode === 91) {
+          this.commandPressed = false
+        }
+      }, shouldEnableContextMenu(userData) {
+        if (userData == null) return false;
+        let userDataVal = userData.val();
+        if (userDataVal.isModerator !== null && userDataVal.isModerator === true) return true;
+        if (userDataVal.isRedactor !== null && userDataVal.isRedactor === true) return true;
+        return false;
       }
     }
   };
