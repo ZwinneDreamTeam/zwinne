@@ -36,6 +36,10 @@
           <md-icon>search</md-icon>
           <span class="md-list-item-text">{{label_synonym}}</span>
         </md-list-item>
+        <md-list-item v-if="translationEnable" @click="translate('pl','en')">
+          <md-icon>language</md-icon>
+          <span class="md-list-item-text">{{label_translate}}</span>
+        </md-list-item>
       </md-list>
     </context-menu>
 
@@ -64,13 +68,14 @@
       window.onblur = () => this.$data.pageNotFocused = true;
 
       window.onfocus = () => this.$data.pageNotFocused = false;
-      
+
       firebase.auth().onAuthStateChanged((user) => {
         if (firebase.auth().currentUser == null) {
           this.contextMenuEnable = false;
         } else {
           db.ref('users/' + firebase.auth().currentUser.uid).on('value', snapshot => {
             this.contextMenuEnable = snapshot != null && (!snapshot.val().isCandidate || !(snapshot.val().isModerator == null || !snapshot.val().isModerator) || !(snapshot.val().isRedactor == null || !snapshot.val().isRedactor));
+            this.translationEnable = snapshot.val().isRedactor;
           });
         }
       });
@@ -80,8 +85,10 @@
         showDrawer: this.$route.fullPath !== '/login' && this.$route.fullPath !== '/register',
         pageNotFocused: false,
         contextMenuEnable: false,
+        translationEnable: false,
         label_wiki: "Znajdź w wikipedii",
         label_synonym: "Znajdź synonim",
+        label_translate: "Przetłumacz na angielski",
         selectedText: ""
       }
     },
@@ -119,6 +126,8 @@
         window.open("https://www.synonimy.pl/synonim/" + this.$data.selectedText, '_blank');
       }, saveSelectedText() {
         this.$data.selectedText = window.getSelection().toString();
+      }, translate(from, to) {
+        window.open("https://translate.google.com/#" + from + "/" + to + "/" + this.$data.selectedText);
       }
     }
   };
