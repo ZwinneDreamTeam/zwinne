@@ -62,7 +62,11 @@
     components: {AppDrawer, contextMenu},
     name: 'app',
     created() {
-      window.onblur = () => this.$data.pageNotFocused = true;
+      window.onblur = () => {
+        this.$data.shiftPressed = false;
+        this.$data.commandPressed = false;
+        this.$data.pageNotFocused = true;
+      };
 
       window.onfocus = () => this.$data.pageNotFocused = false;
 
