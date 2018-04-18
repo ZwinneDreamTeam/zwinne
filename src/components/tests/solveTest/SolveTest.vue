@@ -93,25 +93,13 @@
     },
     methods: {
       nameForQuestionLocalized(question) {
-        if (this.result.language === 'pl') {
-          return question.pl;
-        } else if (this.result.language === 'en') {
-          return question.en;
-        }
+        return question[this.result.language];
       },
       possibleAnswersLocalized(question) {
-        if (this.result.language === 'pl') {
-          return question.possibleAnswers.pl;
-        } else if (this.result.language === 'en') {
-          return question.possibleAnswers.en;
-        }
+        return question.possibleAnswers[this.result.language]
       },
       shouldDisplayQuestion(question) {
-        if (this.result.language === 'pl') {
-          return question.pl != null;
-        } else if (this.result.language === 'en') {
-          return question.en != null;
-        }
+        return question[this.result.language] != null && question[this.result.language] !== '';
       },
       submitResult() {
         if (!this.isResultValid()) {
