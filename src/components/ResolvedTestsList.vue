@@ -1,21 +1,18 @@
 <template>
   <div>
-    <md-table v-model="tests" :md-sort.sync="currentSort" :md-sort-order.sync="currentSortOrder"
+    <md-table v-model="results" :md-sort.sync="currentSort" :md-sort-order.sync="currentSortOrder"
               :md-sort-fn="customSort" md-card>
       <md-table-toolbar>
-        <h1 class="md-title">Testy do sprawdzenia</h1>
+        <h1 class="md-title">Oceń rozwiązane testy</h1>
       </md-table-toolbar>
 
       <md-table-row slot="md-table-row" slot-scope="{item}" md-selectable="single" @click.native="onSelect(item)">
-        <md-table-cell md-label="Nazwa" md-sort-by="name">{{ item.name }}</md-table-cell>
-        <md-table-cell md-label="Wynik" md-sort-by="isActive">
-          <md-icon class="iconCheck" v-if="item.isActive">check</md-icon>
-          <md-icon class="iconClose" v-if="!item.isActive">close</md-icon>
-        </md-table-cell>
-        <div v-if="isRedactor">
-          <md-table-cell md-label="Oceń">
-            <md-button class="md-raised md-primary">Oceń test</md-button>
-          </md-table-cell>
+        <md-table-cell md-label="Nazwa" md-sort-by="name">{{ item.testName }}</md-table-cell>
+        <md-table-cell md-label="Stanowisko" md-sort-by="positionName">{{ item.positionName }}</md-table-cell>
+        <md-table-cell md-label="Właściciel" md-sort-by="ownerName">{{ item.ownerName }}</md-table-cell>
+        <md-table-cell md-label="Kandydat" md-sort-by="candidateUsername">{{ item.candidateUsername }}</md-table-cell>
+        <div v-if="currentUserAuthUid === item.ownerName" > //TODO: if not marked
+           <md-button class="md-raised md-primary"> Oceń </md-button>
         </div>
       </md-table-row>
     </md-table>
@@ -23,70 +20,62 @@
 </template>
 
 <script>
+  let customSort = require('../utils/CustomSort');
   import firebase from 'firebase';
 
   let db = firebase.database();
 
   export default {
-    name: "user_tests",
-    firebase: {
-      tests: db.ref('results')
-    },
+    name: "resolved-test-list",
     data() {
       return {
-        isCandidate: false,
-        isRedactor: false,
-        currentSort: 'name',
+        results: [],
+        currentSort: 'ownerName',
         currentSortOrder: 'asc',
         currentUserAuthUid: '',
-        results: "",
+        usernamePromise: '',
+        positionNamePromise: '',
       }
     },
     mounted() {
       this.currentUserAuthUid = firebase.auth().currentUser.uid;
-      db.ref('users/' + this.currentUserAuthUid).on('value', (snapshot) => {
-        this.isRedactor = (snapshot.val() && snapshot.val().isRedactor);
-      });
+      db.ref('results')
+        .orderByChild('ownerUid')
+        .on('child_added', (snapshot) => {
+          let result = snapshot.val();
+          result.key = snapshot.key;
+          let candidateUsernamePromise = db.ref('users/' + result.candidateId + "/username").once('value');
+          let testNamePromise = db.ref('tests/' + result.testId).once('value')
+          .then(function(snapshot) {
+            result.testName = snapshot.val().name;
+            console.log("Value: " + snapshot.val().ownerUid);
+            this.usernamePromise = db.ref('users/' + snapshot.val().ownerUid + "/username").once('value');
 
-     // let currentUserAuth = firebase.auth().currentUser;
-     // db.ref('resalts').child('testId')
-      db.ref('results').on('value', snapshot => {
-            this.results = snapshot.val();
-      });
+            this.positionNamePromise = db.ref('workPositions/' + snapshot.val().positionId + "/name").once('value');
+           });
+          //let testOwnerUidPromise = db.ref('tests/' + result.testId + '/ownerUid').val();
+          //let usernamePromise = db.ref('users/' + testOwnerUidPromise + "/username").once('value');
+          //let testPositionIdPromise = db.ref('tests/' + result.testId + '/positionId').val();
+          //let positionNamePromise = db.ref('workPositions/' + testPositionIdPromise + "/name").once('value');
 
+           Promise.all([this.usernamePromise, this.positionNamePromise, candidateUsernamePromise]).then((values) => {
+              result.ownerName = values[0].val();
+              result.positionName = values[1].val();
+              result.candidateUsername = values[2].val();
+              this.results.push(result);
+            });
+
+        });
     },
     methods: {
-      compareBooleans(a, b, sortBy) {
-        if (a[sortBy] === b[sortBy])
-          return 0;
-        else if (a[sortBy] && !b[sortBy]) {
-          return this.currentSortOrder === 'desc' ? 1 : -1;
-        } else {
-          return this.currentSortOrder === 'desc' ? -1 : 1;
-        }
-
-      },
-      compareStrings(a, b, sortBy) {
-        if (this.currentSortOrder === 'desc') {
-          return a[sortBy].localeCompare(b[sortBy])
-        } else {
-          return b[sortBy].localeCompare(a[sortBy])
-        }
-      },
       customSort(value) {
         return value.sort((a, b) => {
-          const sortBy = this.currentSort;
-
-          if (typeof(a[sortBy]) === "boolean") {
-            return this.compareBooleans(a, b, sortBy);
-          } else {
-            return this.compareStrings(a, b, sortBy);
-          }
+          return customSort.customSort(a, b, this.currentSort, this.currentSortOrder);
         })
       },
-    /*  onSelect(item) {
-        this.$router.push({name: 'positionDetails', params: {id: item['.key']}});
-      }, */
+      onSelect(item) {
+        this.$router.push({name: 'test-details', params: {id: item.key}});
+      },
     },
   }
 </script>
