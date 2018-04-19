@@ -36,11 +36,15 @@
 
           <div v-if="question.type === 'scale'">
             <p>{{nameForQuestionLocalized(question)}}</p>
-            <VueSlideBar v-model="result.answers[index]" :min="parseInt(question.scaleMin)" :max="parseInt(question.scaleMax)"/>
+            <VueSlideBar v-model="result.answers[index]"
+                         :min="parseInt(question.scaleMin)"
+                         :max="parseInt(question.scaleMax)"
+                         :range="rangeForQuestion(question)"/>
           </div>
 
           <div v-if="question.type === 'number'">
             <p>{{nameForQuestionLocalized(question)}}</p>
+            <h1 class="md-subhead">Proszę podać wartość liczbową</h1>
             <md-field>
               <md-input v-model="result.answers[index]" v-on:keypress="isNumber(event)"/>
             </md-field>
@@ -100,6 +104,16 @@
       },
       shouldDisplayQuestion(question) {
         return question[this.result.language] != null && question[this.result.language] !== '';
+      },
+      rangeForQuestion(question) {
+        return [
+          {
+            label: question.scaleMin
+          },
+          {
+            label: question.scaleMax
+          }
+        ]
       },
       submitResult() {
         if (!this.isResultValid()) {
