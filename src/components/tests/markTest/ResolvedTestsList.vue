@@ -20,7 +20,7 @@
 </template>
 
 <script>
-  let customSort = require('../utils/CustomSort');
+  let customSort = require('../../../utils/CustomSort');
   import firebase from 'firebase';
 
   let db = firebase.database();
@@ -57,7 +57,7 @@
                     db.ref('workPositions/' + snapshot.val().positionId + "/name").once('value')
                     .then(function(snapshot) {
                        result.positionName = snapshot.val();
-                       
+                       //TODO: sprawdzić pojedyncza ocene
                        r.push(result);
                     });
                  });
@@ -79,7 +79,7 @@
         })
       },
       onSelect(item) {
-        this.$router.push({name: 'test-details', params: {id: item.key}});
+        this.$router.push({name: 'mark-test', params: {id: item.key}});
       },
     },
   }
