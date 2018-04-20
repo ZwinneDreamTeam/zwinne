@@ -11,7 +11,7 @@
         <md-table-cell md-label="Stanowisko" md-sort-by="positionName">{{ item.positionName }}</md-table-cell>
         <md-table-cell md-label="Właściciel" md-sort-by="ownerName">{{ item.ownerName }}</md-table-cell>
         <md-table-cell md-label="Kandydat" md-sort-by="candidateUsername">{{ item.candidateUsername }}</md-table-cell>
-        <div v-if="currentUserAuthUid === item.ownerName" > //TODO: if not marked
+        <div v-if="currentUserAuthUid === item.ownerId" >
            <md-button class="md-raised md-primary"> Oceń </md-button>
         </div>
       </md-table-row>
@@ -33,39 +33,44 @@
         currentSort: 'ownerName',
         currentSortOrder: 'asc',
         currentUserAuthUid: '',
-        usernamePromise: '',
-        positionNamePromise: '',
       }
     },
     mounted() {
       this.currentUserAuthUid = firebase.auth().currentUser.uid;
+      var r = [];
+      //TODO dodać warunek, aby można było ocenić test tylko wtedy, gdy nie jest on sprawdzony
       db.ref('results')
         .orderByChild('ownerUid')
         .on('child_added', (snapshot) => {
           let result = snapshot.val();
           result.key = snapshot.key;
-          let candidateUsernamePromise = db.ref('users/' + result.candidateId + "/username").once('value');
-          let testNamePromise = db.ref('tests/' + result.testId).once('value')
-          .then(function(snapshot) {
-            result.testName = snapshot.val().name;
-            console.log("Value: " + snapshot.val().ownerUid);
-            this.usernamePromise = db.ref('users/' + snapshot.val().ownerUid + "/username").once('value');
-
-            this.positionNamePromise = db.ref('workPositions/' + snapshot.val().positionId + "/name").once('value');
+          let candidateUsernamePromise = db.ref('users/' + result.candidateId + "/username").once('value')
+           .then(function(snapshot) {
+               result.candidateUsername = snapshot.val();
+               let testNamePromise = db.ref('tests/' + result.testId).once('value')
+               .then(function(snapshot) {
+                 result.testName = snapshot.val().name;
+                 result.ownerId = snapshot.val().ownerUid;
+                 db.ref('users/' + snapshot.val().ownerUid + "/username").once('value')
+                 .then(function(snapshot) {
+                    result.ownerName = snapshot.val();
+                    db.ref('workPositions/' + snapshot.val().positionId + "/name").once('value')
+                    .then(function(snapshot) {
+                       result.positionName = snapshot.val();
+                       
+                       r.push(result);
+                    });
+                 });
+              });
            });
+           this.results = r;
+
           //let testOwnerUidPromise = db.ref('tests/' + result.testId + '/ownerUid').val();
           //let usernamePromise = db.ref('users/' + testOwnerUidPromise + "/username").once('value');
           //let testPositionIdPromise = db.ref('tests/' + result.testId + '/positionId').val();
           //let positionNamePromise = db.ref('workPositions/' + testPositionIdPromise + "/name").once('value');
-
-           Promise.all([this.usernamePromise, this.positionNamePromise, candidateUsernamePromise]).then((values) => {
-              result.ownerName = values[0].val();
-              result.positionName = values[1].val();
-              result.candidateUsername = values[2].val();
-              this.results.push(result);
-            });
-
         });
+
     },
     methods: {
       customSort(value) {
