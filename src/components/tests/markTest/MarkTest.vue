@@ -82,7 +82,8 @@
       },
       isResultValid() {
         for (let i in this.result.answers) {
-          if ((!this.result.answers[i].mark == "") && this.result.answers[i].mark == "") {
+        console.log("Mark: " + this.result.answers[i].mark);
+          if (!this.result.answers[i].mark) {
             return false
           }
         }
