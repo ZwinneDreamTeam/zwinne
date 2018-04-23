@@ -77,7 +77,7 @@
         }
         firebase.database().ref("results/" + this.$route.params.id).set(this.result).then(() => {
           alert("Test został oceniony");
-          this.$router.push({name: 'home'})
+          this.$router.push({name: 'resolvedTests'})
         })
       },
       isResultValid() {
