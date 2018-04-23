@@ -56,7 +56,6 @@
                     db.ref('workPositions/' + snapshot.val().positionId + "/name").once('value')
                     .then(function(snapshot) {
                        result.positionName = snapshot.val();
-                       console.log(result);
                        r.push(result);
                     });
                  });
