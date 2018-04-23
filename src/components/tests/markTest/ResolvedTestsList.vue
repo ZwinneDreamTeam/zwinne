@@ -6,13 +6,13 @@
         <h1 class="md-title">Oceń rozwiązane testy</h1>
       </md-table-toolbar>
 
-      <md-table-row slot="md-table-row" slot-scope="{item}" md-selectable="single" @click.native="onSelect(item)">
+      <md-table-row slot="md-table-row" slot-scope="{item}" md-selectable="single" >
         <md-table-cell md-label="Nazwa" md-sort-by="name">{{ item.testName }}</md-table-cell>
         <md-table-cell md-label="Stanowisko" md-sort-by="positionName">{{ item.positionName }}</md-table-cell>
         <md-table-cell md-label="Właściciel" md-sort-by="ownerName">{{ item.ownerName }}</md-table-cell>
         <md-table-cell md-label="Kandydat" md-sort-by="candidateUsername">{{ item.candidateUsername }}</md-table-cell>
         <div v-if="currentUserAuthUid === item.ownerId && !item.answers[0].mark">
-           <md-button class="md-raised md-primary"> Oceń </md-button>
+           <md-button @click.native="onSelect(item)" class="md-raised md-primary"> Oceń </md-button>
         </div>
       </md-table-row>
     </md-table>
