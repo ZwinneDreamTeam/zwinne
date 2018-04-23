@@ -11,7 +11,7 @@
         <md-table-cell md-label="Stanowisko" md-sort-by="positionName">{{ item.positionName }}</md-table-cell>
         <md-table-cell md-label="Właściciel" md-sort-by="ownerName">{{ item.ownerName }}</md-table-cell>
         <md-table-cell md-label="Kandydat" md-sort-by="candidateUsername">{{ item.candidateUsername }}</md-table-cell>
-        <div v-if="currentUserAuthUid === item.ownerId" >
+        <div v-if="currentUserAuthUid === item.ownerId && !item.answers[0].mark">
            <md-button class="md-raised md-primary"> Oceń </md-button>
         </div>
       </md-table-row>
@@ -38,7 +38,6 @@
     mounted() {
       this.currentUserAuthUid = firebase.auth().currentUser.uid;
       var r = [];
-      //TODO dodać warunek, aby można było ocenić test tylko wtedy, gdy nie jest on sprawdzony
       db.ref('results')
         .orderByChild('ownerUid')
         .on('child_added', (snapshot) => {
@@ -57,18 +56,13 @@
                     db.ref('workPositions/' + snapshot.val().positionId + "/name").once('value')
                     .then(function(snapshot) {
                        result.positionName = snapshot.val();
-                       //TODO: sprawdzić pojedyncza ocene
+                       console.log(result);
                        r.push(result);
                     });
                  });
               });
            });
            this.results = r;
-
-          //let testOwnerUidPromise = db.ref('tests/' + result.testId + '/ownerUid').val();
-          //let usernamePromise = db.ref('users/' + testOwnerUidPromise + "/username").once('value');
-          //let testPositionIdPromise = db.ref('tests/' + result.testId + '/positionId').val();
-          //let positionNamePromise = db.ref('workPositions/' + testPositionIdPromise + "/name").once('value');
         });
 
     },

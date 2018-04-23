@@ -11,7 +11,6 @@ import WorkPositions from '@/components/WorkPositions'
 import WorkPositionDetails from '@/components/WorkPositionDetails'
 import WorkPositionAdd from '@/components/WorkPositionAdd'
 import CreateUser from '@/components/CreateUser'
-import UserTests from '@/components/UserTests'
 import CreatedTestsList from '@/components/tests/CreatedTestsList'
 import AllTestsList from '@/components/tests/AllTestsList'
 import AddTest from '@/components/tests/AddTest'
@@ -71,15 +70,6 @@ let router = new VueRouter({
       }
     },
     //=============== USERS ==============
-    {
-      path: '/candidate/tests',
-      name: 'userTests',
-      component: UserTests,
-      meta: {
-        requiresAuth: true,
-        requiresCandidate: true
-      },
-    },
     {
       path: '/redactor/resolved',
       name: 'resolvedTests',

@@ -3,145 +3,91 @@
       <md-card class="solveTestCard">
         <md-card-header>
           <md-card-header-text>
-            <h3 class="md-title">Test: {{testName}}</h3>
+            <h3 class="md-title">Oceń test</h3>
           </md-card-header-text>
         </md-card-header>
-
-        <md-field>
-          <label>Wybierz język</label>
-          <md-select class="mySelect" v-model="result.language" :disabled="isLanguageSelected && shouldDisplaySubmitButton">
-            <md-option value="pl">Polski</md-option>
-            <md-option value="en">Angielski</md-option>
-          </md-select>
-        </md-field>
       </md-card>
 
-      <div v-if="isLanguageSelected" v-for="(question, index) in questions">
-        <md-card class="solveTestCard" v-if="shouldDisplayQuestion(question)">
-
-          <div v-if="question.type === 'text'">
+      <div v-for="(question, index) in questions">
+        <md-card class="markTestCard" v-if="shouldDisplayQuestion(question)">
             <p>{{nameForQuestionLocalized(question)}}</p>
             <md-field>
-              <md-input v-model="result.answers[index]"/>
+              <label>Odpowiedź:</label>
+              <md-input v-model="result.answers[index].answer" type="text" :disabled=true />
             </md-field>
-          </div>
-
-          <div v-if="question.type === 'select'">
-            <p>{{nameForQuestionLocalized(question)}}</p>
-            <div v-for="option in possibleAnswersLocalized(question)">
-              <input type="radio" id="selectRbtn" :value=option v-model="result.answers[index]"/>
-              <label for="selectRbtn">{{option}}</label>
-            </div>
-          </div>
-
-          <div v-if="question.type === 'scale'">
-            <p>{{nameForQuestionLocalized(question)}}</p>
-            <VueSlideBar v-model="result.answers[index]"
-                         :min="parseInt(question.scaleMin)"
-                         :max="parseInt(question.scaleMax)"
-                         :range="rangeForQuestion(question)"/>
-          </div>
-
-          <div v-if="question.type === 'number'">
-            <p>{{nameForQuestionLocalized(question)}}</p>
-            <h1 class="md-subhead">Proszę podać wartość liczbową</h1>
             <md-field>
-              <md-input v-model="result.answers[index]" v-on:keypress="isNumber(event)"/>
+                <div v-if="question.type === 'text' || question.type === 'scale' || question.type === 'number'">
+                  <md-select placeholder="Ocena" type="number"  v-model="result.answers[index].mark" required>
+                    <label>Ocena: </label>
+                    <md-option value=0 >0</md-option>
+                    <md-option value=0.25 >0.25</md-option>
+                    <md-option value=0.5 >0.5</md-option>
+                    <md-option value=0.75 >0.75</md-option>
+                    <md-option value=1 >1</md-option>
+                  </md-select>
+                </div>
+                <div v-if="question.type === 'select'">
+                   <md-select placeholder="Ocena" type="number" v-model="result.answers[index].mark" required>
+                    <md-option value=0 >0</md-option>
+                    <md-option value=1 >1</md-option>
+                  </md-select>
+                </div>
             </md-field>
-          </div>
-
         </md-card>
       </div>
-      <md-button v-if="isLanguageSelected && shouldDisplaySubmitButton" v-on:click="submitResult" class="md-raised confirmButton">Wyślij</md-button>
-      <md-card v-if="isLanguageSelected && !shouldDisplaySubmitButton" class="solveTestCard">
-        <h6 class="md-subhead">Brak pytań w wybranym języku</h6>
-      </md-card>
+      <md-button v-on:click="markTest" class="md-raised confirmButton">Zakończ ocenianie</md-button>
     </div>
 </template>
 
 <script>
   import firebase from 'firebase';
-  import VueSlideBar from 'vue-slide-bar'
 
   export default {
     name: "solve-test",
     data() {
       return {
-        languages: [],
         questions: [],
-        testName: "",
-        result: {},
+        result: [],
       };
     },
     mounted() {
-      let testKey = this.$route.params.id;
-      firebase.database().ref("tests/" + testKey).on('value', (snapshot) => {
-        let test = snapshot.val();
-        this.questions = test.questions;
-        this.testName = test.name;
-        this.questions.forEach((question) => {
-          if (question.type === 'scale') {
-            this.result.answers.push(0)
-          } else {
-            this.result.answers.push("")
-          }
+      let key = this.$route.params.id;
+      firebase.database().ref("results/" + key).on('value', (snapshot) => {
+        this.result = snapshot.val();
+        firebase.database().ref("tests/" + snapshot.val().testId).on('value', (snapshot) => {
+          let test = snapshot.val();
+           this.questions = test.questions;
         });
       });
-      let currenUserAuth = firebase.auth().currentUser;
-      this.result = {
-        testId: testKey,
-        language: "",
-        candidateId: currenUserAuth.uid,
-        answers: []
-      };
     },
     methods: {
       nameForQuestionLocalized(question) {
         return question[this.result.language];
       },
-      possibleAnswersLocalized(question) {
-        return question.possibleAnswers[this.result.language]
-      },
       shouldDisplayQuestion(question) {
         return question[this.result.language] != null && question[this.result.language] !== '';
       },
-      rangeForQuestion(question) {
-        return [
-          {
-            label: question.scaleMin
-          },
-          {
-            label: question.scaleMax
-          }
-        ]
-      },
-      submitResult() {
+      markTest() {
         if (!this.isResultValid()) {
-          alert("Wypełnij wszystkie pola testu");
+          alert("Oceń wszystkie pytania");
           return
         }
-        firebase.database().ref("results").push(this.result).then(() => {
-          alert("Test wypełniony pomyślnie");
+        for (let i in this.result.answers) {
+          this.result.answers[i].mark = Number(this.result.answers[i].mark);
+        }
+        firebase.database().ref("results/" + this.$route.params.id).set(this.result).then(() => {
+          alert("Test został oceniony");
           this.$router.push({name: 'home'})
         })
       },
       isResultValid() {
         for (let i in this.result.answers) {
-          if (this.result.answers[i] == null || this.result.answers[i].length === 0) {
+          if ((!this.result.answers[i].mark == "") && this.result.answers[i].mark == "") {
             return false
           }
         }
         return true
       },
-      isNumber: (evt) => {
-        evt = (evt) ? evt : window.event;
-        let charCode = (evt.which) ? evt.which : evt.keyCode;
-        if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
-          evt.preventDefault();
-        } else {
-          return true;
-        }
-      }
     },
     computed: {
       isLanguageSelected() {
@@ -154,9 +100,6 @@
         return filtered.length !== 0;
       }
     },
-    components: {
-      VueSlideBar
-    }
   }
 </script>
 
