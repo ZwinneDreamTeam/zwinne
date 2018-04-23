@@ -1,5 +1,11 @@
-language: node_js
-node_js:
-  - "9.7.1"
 exclude:
+- /.eslintrc.js
 - /build/.*
+- /config/.*
+component_depth: 1
+languages:
+- name: javascript
+  production:
+    include:
+      - .*\.vue
+- .*\.js
