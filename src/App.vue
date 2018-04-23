@@ -37,6 +37,14 @@
           <md-icon>search</md-icon>
           <span class="md-list-item-text">{{label_synonym}}</span>
         </md-list-item>
+        <md-list-item v-if="translationEnable" @click="translate('pl','en')">
+          <md-icon>language</md-icon>
+          <span class="md-list-item-text">{{en_translate}}</span>
+        </md-list-item>
+        <md-list-item v-if="translationEnable" @click="translate('en','pl')">
+          <md-icon>language</md-icon>
+          <span class="md-list-item-text">{{pl_translate}}</span>
+        </md-list-item>
       </md-list>
     </context-menu>
 
@@ -75,6 +83,7 @@
           this.contextMenuEnable = false;
         } else {
           db.ref('users/' + firebase.auth().currentUser.uid).on('value', snapshot => {
+            this.translationEnable = snapshot.val().isRedactor;
             this.contextMenuEnable = this.shouldEnableContextMenu(snapshot);
           });
         }
@@ -85,8 +94,11 @@
         showDrawer: this.$route.fullPath !== '/login' && this.$route.fullPath !== '/register',
         pageNotFocused: false,
         contextMenuEnable: false,
+        translationEnable: false,
         label_wiki: "Znajdź w wikipedii",
         label_synonym: "Znajdź synonim",
+        en_translate: "Przetłumacz na angielski",
+        pl_translate: "Przetłumacz na polski",
         selectedText: "",
         shiftPressed: false,
         commandPressed: false,
@@ -126,6 +138,8 @@
         window.open("https://www.synonimy.pl/synonim/" + this.$data.selectedText, '_blank');
       }, saveSelectedText() {
         this.$data.selectedText = window.getSelection().toString();
+      }, translate(from, to) {
+        window.open("https://translate.google.com/#" + from + "/" + to + "/" + this.$data.selectedText);
       }, keyDown: function (event) {
         if (event.keyCode === 16) {
           this.shiftPressed = true;
