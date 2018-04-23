@@ -1,6 +1,6 @@
 <template>
     <div>
-      <md-card class="solveTestCard">
+      <md-card class="markTestCard">
         <md-card-header>
           <md-card-header-text>
             <h3 class="md-title">Oceń test</h3>
@@ -90,9 +90,6 @@
       },
     },
     computed: {
-      isLanguageSelected() {
-        return !(this.result.language == null) && !(this.result.language.length === 0)
-      },
       shouldDisplaySubmitButton() {
         let filtered = this.questions.filter((question) => {
           return this.shouldDisplayQuestion(question)
@@ -116,6 +113,10 @@
     width: 20vh;
     height: 6vh;
     margin: 16px;
+  }
+  .markTestCard {
+    padding : 10px;
+    margin-top: 15px
   }
 </style>
 

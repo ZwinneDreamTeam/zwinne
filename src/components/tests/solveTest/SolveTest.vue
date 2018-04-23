@@ -133,7 +133,7 @@
       },
       isResultValid() {
         for (let i in this.result.answers) {
-          if (this.result.answers[i] == null || this.result.answers[i].length === 0) {
+          if (this.result.answers[i].answer == null || this.result.answers[i].answer.length === 0) {
             return false
           }
         }
