@@ -21,9 +21,9 @@
 
     <div v-if="isRedactor">
       <md-subheader>{{label_redactor}}</md-subheader>
-      <md-list-item>
-        <md-icon>error</md-icon>
-        <span class="md-list-item-text">Brak pozycji</span>
+      <md-list-item to="/createdTests">
+        <md-icon>assignment</md-icon>
+        <span class="md-list-item-text">Stworzone testy</span>
       </md-list-item>
 
     </div>
@@ -33,6 +33,10 @@
       <md-list-item to="/moderator/users">
         <md-icon>people</md-icon>
         <span class="md-list-item-text">{{label_users}}</span>
+      </md-list-item>
+      <md-list-item to="/tests">
+        <md-icon>assignment</md-icon>
+        <span class="md-list-item-text">Wszystkie testy</span>
       </md-list-item>
     </div>
 
@@ -63,7 +67,6 @@
       }
     },
     mounted() {
-      console.log("mounted");
       this.uid = firebase.auth().currentUser.uid;
       firebase.database().ref('/users/' + this.uid).on('value', (snapshot) => {
         let user = snapshot.val();
@@ -76,7 +79,6 @@
 </script>
 
 <style scoped>
-
 
 
 </style>

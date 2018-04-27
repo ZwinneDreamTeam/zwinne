@@ -30,7 +30,19 @@
       <md-switch class="md-primary" v-model="position.isActive" :disabled="disabled">Aktywne</md-switch>
     </div>
 
+    <md-table v-model="tests" v-if="tests.length > 0">
+      <md-table-toolbar>
+        <h1 class="md-title">Dostępne testy</h1>
+      </md-table-toolbar>
+      <md-table-row slot="md-table-row" slot-scope="{item}" @click.native="didSelectRow(item)">
+        <md-table-cell md-label="Nazwa">{{item.name}}</md-table-cell>
+      </md-table-row>
+    </md-table>
+
+    <h6 class="md-subhead" v-if="tests.length === 0">Brak testów na wybrane stanowisko</h6>
+
     <md-button class="md-primary md-raised" @click="disabled = false" v-if="disabled && canEdit">Edytuj</md-button>
+
     <md-button class="md-primary md-raised" v-on:click="applyChanges"
                v-if="!disabled && canEdit">
       Zapisz
@@ -54,7 +66,18 @@
       db.ref('users/' + firebase.auth().currentUser.uid).on('value', snapshot => {
         this.isModerator = snapshot.val().isModerator;
         this.isRedactor = snapshot.val().isRedactor;
+        this.isCandidate = snapshot.val().isCandidate;
       });
+      db.ref('tests')
+        .orderByChild('positionId').equalTo(key)
+        .on('child_added', (snapshot) => {
+          let test = snapshot.val();
+          let testToSave = {
+            name: test.name,
+            key: snapshot.key
+          };
+          this.tests.push(testToSave);
+        });
     },
     methods: {
       applyChanges() {
@@ -92,6 +115,11 @@
       validateDescriptionIfIncorrect: function () {
         if (this.$data.validDescription) return;
         this.validateDescription();
+      },
+      didSelectRow(item) {
+        if (this.isCandidate) {
+          this.$router.push({name: 'solve-test', params :{id: item.key}})
+        }
       }
     },
     computed: {
@@ -120,9 +148,11 @@
       disabled: true,
       isModerator: false,
       isRedactor: false,
+      isCandidate: false,
       validName: true,
       validCompany: true,
-      validDescription: true
+      validDescription: true,
+      tests: []
     }),
   }
 </script>
