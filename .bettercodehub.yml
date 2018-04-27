@@ -8,4 +8,4 @@ languages:
   production:
     include:
       - .*\.vue
-      - .*\.js
+- .*\.js

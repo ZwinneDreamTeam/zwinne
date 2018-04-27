@@ -11,11 +11,13 @@ import WorkPositions from '@/components/WorkPositions'
 import WorkPositionDetails from '@/components/WorkPositionDetails'
 import WorkPositionAdd from '@/components/WorkPositionAdd'
 import CreateUser from '@/components/CreateUser'
-import UserTests from '@/components/UserTests'
+import UserTests from '@/components/tests/UserTests'
 import CreatedTestsList from '@/components/tests/CreatedTestsList'
 import AllTestsList from '@/components/tests/AllTestsList'
 import AddTest from '@/components/tests/AddTest'
 import TestDetails from '@/components/tests/TestDetails'
+import ResolvedTestsList from '@/components/tests/markTest/ResolvedTestsList'
+import MarkTest from '@/components/tests/markTest/MarkTest'
 import SolveTest from '@/components/tests/solveTest/SolveTest'
 import VueMaterial from 'vue-material'
 import firebase from 'firebase'
@@ -66,19 +68,36 @@ let router = new VueRouter({
       meta: {
         requiresAuth: true,
         requiresCandidate: true
-      },
+      }
     },
     //=============== USERS ==============
     {
-      path: '/candidate/tests',
-      name: 'userTests',
-      component: UserTests,
+      path: '/redactor/resolved',
+      name: 'resolvedTests',
+      component: ResolvedTestsList,
       meta: {
         requiresAuth: true,
-        requiresCandidate: true
+        requiresRedactor: true
       },
     },
-
+        {
+          path: '/candidate/resolved',
+          name: 'userTests',
+          component: UserTests,
+          meta: {
+            requiresAuth: true,
+            requiresCandidate: true
+          },
+        },
+     {
+        path: '/redactor/resolved/test/:id',
+        name: 'mark-test',
+        component: MarkTest,
+        meta: {
+          requiresAuth: true,
+          requiresRedactor: true
+        },
+     },
     {
       path: '/moderator',
       name: 'Moderator',
