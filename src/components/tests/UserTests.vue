@@ -1,79 +1,86 @@
 <template>
   <div>
-    <md-table v-model="tests" :md-sort.sync="currentSort" :md-sort-order.sync="currentSortOrder"
+    <md-table v-model="results" :md-sort.sync="currentSort" :md-sort-order.sync="currentSortOrder"
               :md-sort-fn="customSort" md-card>
       <md-table-toolbar>
-        <h1 class="md-title">Ukończone testy</h1>
+        <h1 class="md-title">Wyniki rozwiązanych testów</h1>
       </md-table-toolbar>
-
-      <md-table-row slot="md-table-row" slot-scope="{item}" md-selectable="single" @click.native="onSelect(item)">
-        <md-table-cell md-label="Nazwa" md-sort-by="name">{{ item.name }}</md-table-cell>
-        <md-table-cell md-label="Wynik" md-sort-by="isActive">
-          <md-icon class="iconCheck" v-if="item.isActive">check</md-icon>
-          <md-icon class="iconClose" v-if="!item.isActive">close</md-icon>
-        </md-table-cell>
+      <md-table-row slot="md-table-row" slot-scope="{item}" md-selectable="single" >
+        <md-table-cell md-label="Stanowisko" md-sort-by="positionName">{{ item.positionName }}</md-table-cell>
+        <md-table-cell md-label="Właściciel" md-sort-by="ownerName">{{ item.ownerName }}</md-table-cell>
+        <md-table-cell md-label="Język" md-sort-by="language">{{ item.language }}</md-table-cell>
+        <md-table-cell md-label="Wynik" md-sort-by="mark">{{ item.mark }}</md-table-cell>
       </md-table-row>
     </md-table>
   </div>
 </template>
 
 <script>
+  let customSort = require('../../utils/CustomSort');
   import firebase from 'firebase';
 
   let db = firebase.database();
 
   export default {
-    name: "user_tests",
-    firebase: {
-      tests:  db.ref('tests')
-    },
+    name: "resolved-test-list",
     data() {
       return {
-        //isCandidate: false,
-        currentSort: 'name',
+        results: [],
+        currentSort: 'ownerName',
         currentSortOrder: 'asc',
         currentUserAuthUid: '',
       }
     },
     mounted() {
       this.currentUserAuthUid = firebase.auth().currentUser.uid;
- //     db.ref('users/' + currentUserAuth).on('value', (snapshot) => {
- //       this.isCandidate = (snapshot.val() && snapshot.val().isCandidate);
- //     });
+      var r = [];
+      db.ref('results')
+        .orderByChild('candidateId')
+        .on('child_added', (snapshot) => {
+          let result = snapshot.val();
+          if(result.answers[0].mark === "") result.marked = false;
+          else result.marked = true;
+          result.key = snapshot.key;
+          if(result.candidateId === this.currentUserAuthUid)
+          {
+             let testNamePromise = db.ref('tests/' + result.testId).once('value')
+             .then(function(snapshot) {
+               let test = snapshot.val();
+               result.testName = snapshot.val().name;
+               result.ownerId = snapshot.val().ownerUid;
+               db.ref('users/' + snapshot.val().ownerUid + "/username").once('value')
+               .then(function(snapshot) {
+                  result.ownerName = snapshot.val();
+                  db.ref('workPositions/' + test.positionId + "/name").once('value')
+                  .then(function(snapshot) {
+                     result.positionName = snapshot.val();
+                     var total = 0;
+                     var candidateMark = 0;
+                     for (let i in result.answers)
+                     {
+                       candidateMark += result.answers[i].mark;
+                       total++;
+                     }
+                     result.mark = (candidateMark/total)*100 + " %";
+                     r.push(result);
+                  });
+               });
+            });
+          }
+          this.results = r;
+        });
+
     },
     methods: {
-      compareBooleans(a, b, sortBy) {
-        if (a[sortBy] === b[sortBy])
-          return 0;
-        else if (a[sortBy] && !b[sortBy]) {
-          return this.currentSortOrder === 'desc' ? 1 : -1;
-        } else {
-          return this.currentSortOrder === 'desc' ? -1 : 1;
-        }
-
-      },
-      compareStrings(a, b, sortBy) {
-        if (this.currentSortOrder === 'desc') {
-          return a[sortBy].localeCompare(b[sortBy])
-        } else {
-          return b[sortBy].localeCompare(a[sortBy])
-        }
-      },
       customSort(value) {
         return value.sort((a, b) => {
-          const sortBy = this.currentSort;
-
-          if (typeof(a[sortBy]) === "boolean") {
-            return this.compareBooleans(a, b, sortBy);
-          } else {
-            return this.compareStrings(a, b, sortBy);
-          }
+          return customSort.customSort(a, b, this.currentSort, this.currentSortOrder);
         })
       },
       onSelect(item) {
-        this.$router.push({name: 'positionDetails', params: {id: item['.key']}});
+        this.$router.push({name: 'mark-test', params: {id: item.key}});
       },
-    },
+    }
   }
 </script>
 
