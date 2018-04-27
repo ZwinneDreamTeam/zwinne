@@ -22,21 +22,21 @@
           <div v-if="question.type === 'text'">
             <p>{{nameForQuestionLocalized(question)}}</p>
             <md-field>
-              <md-input v-model="result.answers[index]"/>
+              <md-input v-model="result.answers[index].answer"/>
             </md-field>
           </div>
 
           <div v-if="question.type === 'select'">
             <p>{{nameForQuestionLocalized(question)}}</p>
             <div v-for="option in possibleAnswersLocalized(question)">
-              <input type="radio" id="selectRbtn" :value=option v-model="result.answers[index]"/>
+              <input type="radio" id="selectRbtn" :value=option v-model="result.answers[index].answer"/>
               <label for="selectRbtn">{{option}}</label>
             </div>
           </div>
 
           <div v-if="question.type === 'scale'">
             <p>{{nameForQuestionLocalized(question)}}</p>
-            <VueSlideBar v-model="result.answers[index]"
+            <VueSlideBar v-model="result.answers[index].answer"
                          :min="parseInt(question.scaleMin)"
                          :max="parseInt(question.scaleMax)"
                          :range="rangeForQuestion(question)"/>
@@ -46,7 +46,7 @@
             <p>{{nameForQuestionLocalized(question)}}</p>
             <h1 class="md-subhead">Proszę podać wartość liczbową</h1>
             <md-field>
-              <md-input v-model="result.answers[index]" v-on:keypress="isNumber(event)"/>
+              <md-input v-model="result.answers[index].answer" v-on:keypress="isNumber(event)"/>
             </md-field>
           </div>
 
@@ -74,26 +74,32 @@
       };
     },
     mounted() {
-      let testKey = this.$route.params.id;
-      firebase.database().ref("tests/" + testKey).on('value', (snapshot) => {
-        let test = snapshot.val();
-        this.questions = test.questions;
-        this.testName = test.name;
-        this.questions.forEach((question) => {
-          if (question.type === 'scale') {
-            this.result.answers.push(0)
-          } else {
-            this.result.answers.push("")
-          }
-        });
-      });
       let currenUserAuth = firebase.auth().currentUser;
+      let testKey = this.$route.params.id;
       this.result = {
         testId: testKey,
         language: "",
         candidateId: currenUserAuth.uid,
         answers: []
       };
+      firebase.database().ref("tests/" + testKey).on('value', (snapshot) => {
+        let test = snapshot.val();
+        this.questions = test.questions;
+        this.testName = test.name;
+        this.questions.forEach((question) => {
+          if (question.type === 'scale') {
+            this.result.answers.push({
+              answer: 0,
+              mark: ""
+            })
+          } else {
+            this.result.answers.push({
+              answer: "",
+              mark: ""
+            })
+          }
+        });
+      });
     },
     methods: {
       nameForQuestionLocalized(question) {
@@ -127,7 +133,7 @@
       },
       isResultValid() {
         for (let i in this.result.answers) {
-          if (this.result.answers[i] == null || this.result.answers[i].length === 0) {
+          if (this.result.answers[i].answer == null || this.result.answers[i].answer.length === 0) {
             return false
           }
         }
@@ -175,4 +181,3 @@
     margin: 16px;
   }
 </style>
-

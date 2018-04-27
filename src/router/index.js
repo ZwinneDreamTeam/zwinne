@@ -15,6 +15,8 @@ import CreatedTestsList from '@/components/tests/CreatedTestsList'
 import AllTestsList from '@/components/tests/AllTestsList'
 import AddTest from '@/components/tests/AddTest'
 import TestDetails from '@/components/tests/TestDetails'
+import ResolvedTestsList from '@/components/tests/markTest/ResolvedTestsList'
+import MarkTest from '@/components/tests/markTest/MarkTest'
 import SolveTest from '@/components/tests/solveTest/SolveTest'
 import VueMaterial from 'vue-material'
 import firebase from 'firebase'
@@ -68,6 +70,24 @@ let router = new VueRouter({
       }
     },
     //=============== USERS ==============
+    {
+      path: '/redactor/resolved',
+      name: 'resolvedTests',
+      component: ResolvedTestsList,
+      meta: {
+        requiresAuth: true,
+        requiresRedactor: true
+      },
+    },
+     {
+        path: '/redactor/resolved/test/:id',
+        name: 'mark-test',
+        component: MarkTest,
+        meta: {
+          requiresAuth: true,
+          requiresRedactor: true
+        },
+     },
     {
       path: '/moderator',
       name: 'Moderator',
