@@ -54,14 +54,16 @@
                   db.ref('workPositions/' + test.positionId + "/name").once('value')
                   .then(function(snapshot) {
                      result.positionName = snapshot.val();
-                     var total = 0;
-                     var candidateMark = 0;
-                     for (let i in result.answers)
-                     {
-                       candidateMark += result.answers[i].mark;
-                       total++;
-                     }
-                     result.mark = (candidateMark/total)*100 + " %";
+                     if(result.marked) {
+                       var total = 0;
+                       var candidateMark = 0;
+                       for (let i in result.answers)
+                       {
+                         candidateMark += result.answers[i].mark;
+                         total++;
+                       }
+                       result.mark = ((candidateMark/total)*100).toFixed(2) + " %";
+                     } else result.mark = "Nieoceniony";
                      r.push(result);
                   });
                });
@@ -76,9 +78,6 @@
         return value.sort((a, b) => {
           return customSort.customSort(a, b, this.currentSort, this.currentSortOrder);
         })
-      },
-      onSelect(item) {
-        this.$router.push({name: 'mark-test', params: {id: item.key}});
       },
     }
   }
