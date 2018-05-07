@@ -13,7 +13,7 @@
 
     <div v-if="isCandidate">
       <md-subheader>{{label_candidate}}</md-subheader>
-      <md-list-item to="/candidate/tests">
+      <md-list-item to="/candidate/resolved">
         <md-icon>library_books</md-icon>
         <span class="md-list-item-text"> {{label_user_tests}} </span>
       </md-list-item>

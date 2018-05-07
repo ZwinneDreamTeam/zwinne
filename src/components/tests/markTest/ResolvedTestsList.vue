@@ -50,12 +50,13 @@
                result.candidateUsername = snapshot.val();
                let testNamePromise = db.ref('tests/' + result.testId).once('value')
                .then(function(snapshot) {
+                 let test = snapshot.val();
                  result.testName = snapshot.val().name;
                  result.ownerId = snapshot.val().ownerUid;
                  db.ref('users/' + snapshot.val().ownerUid + "/username").once('value')
                  .then(function(snapshot) {
                     result.ownerName = snapshot.val();
-                    db.ref('workPositions/' + snapshot.val().positionId + "/name").once('value')
+                    db.ref('workPositions/' + test.positionId + "/name").once('value')
                     .then(function(snapshot) {
                        result.positionName = snapshot.val();
                        r.push(result);
