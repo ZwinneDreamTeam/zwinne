@@ -296,7 +296,7 @@
                   if (value.pl.length === 0) {
                     break;
                   }
-                  this.text += `"${index + 1}. ${value.pl}" "Proszę udzielić odpowiedzi pisemnej." \n`;
+                  this.text += `${index + 1}. ${value.pl};Proszę udzielić odpowiedzi pisemnej.;\n`;
                   break;
                 }
 
@@ -304,7 +304,7 @@
                   if (value.en.length === 0) {
                     break;
                   }
-                  this.text += `"${index + 1}. ${value.en}" "Please provide a written answer." \n`;
+                  this.text += `${index + 1}. ${value.en};Please provide a written answer.;\n`;
                   break;
                 }
               }
@@ -318,7 +318,7 @@
                   if (value.pl.length === 0 || value.scaleMin == null || value.scaleMin.length === 0 || value.scaleMax == null || value.scaleMax.length === 0) {
                     break;
                   }
-                  this.text += `"${index + 1}. ${value.pl}" "Odpowiedz w skali od ${value.scaleMin} do ${value.scaleMax}." \n`;
+                  this.text += `${index + 1}. ${value.pl};Odpowiedz w skali od ${value.scaleMin} do ${value.scaleMax}.;\n`;
                   break;
                 }
 
@@ -326,7 +326,7 @@
                   if (value.en.length === 0 || value.scaleMin == null || value.scaleMin.length === 0 || value.scaleMax == null || value.scaleMax.length === 0) {
                     break;
                   }
-                  this.text += `"${index + 1}. ${value.en}" "Please answer on a scale of ${value.scaleMin} to ${value.scaleMax}." \n`;
+                  this.text += `${index + 1}. ${value.en};Please answer on a scale of ${value.scaleMin} to ${value.scaleMax}.;\n`;
                   break;
                 }
               }
@@ -340,7 +340,7 @@
                   if (value.pl.length === 0) {
                     break;
                   }
-                  this.text += `"${index + 1}. ${value.pl}" "Odpowiedzią powinna być liczba." \n`;
+                  this.text += `${index + 1}. ${value.pl};Odpowiedzią powinna być liczba.;\n`;
                   break;
                 }
 
@@ -348,7 +348,7 @@
                   if (value.en.length === 0) {
                     break;
                   }
-                  this.text += `"${index + 1}. ${value.en}" "The answer should be a number." \n`;
+                  this.text += `${index + 1}. ${value.en};The answer should be a number.;\n`;
                   break;
                 }
               }
@@ -362,11 +362,11 @@
                   if (value.pl.length === 0 || null == value.possibleAnswers.pl || null == value.possibleAnswers.pl.length === 0) {
                     break;
                   }
-                  this.text += `"${index + 1}. ${value.pl}" "Proszę zaznaczyć jedną z odpowiedzi." `;
+                  this.text += `${index + 1}. ${value.pl};Proszę zaznaczyć jedną z odpowiedzi.`;
                   for (let i = 0; i < value.possibleAnswers.pl.length; i++) {
-                    this.text += `"${value.possibleAnswers.pl[i]}" `;
+                    this.text += `;${value.possibleAnswers.pl[i]}`;
                   }
-                  this.text += ` \n`;
+                  this.text += `\n`;
                   break;
                 }
 
@@ -374,11 +374,11 @@
                   if (value.en.length === 0 || null == value.possibleAnswers.en || null == value.possibleAnswers.en.length === 0) {
                     break;
                   }
-                  this.text += `"${index + 1}. ${value.en}" "Please mark one of the answers." `;
+                  this.text += `${index + 1}. ${value.en};Please mark one of the answers.`;
                   for (let i = 0; i < value.possibleAnswers.en.length; i++) {
-                    this.text += `"${value.possibleAnswers.en[i]}" `;
+                    this.text += `;${value.possibleAnswers.en[i]}`;
                   }
-                  this.text += ` \n`;
+                  this.text += `\n`;
                   break;
                 }
               }
