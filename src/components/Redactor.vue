@@ -1,17 +1,13 @@
 <template>
-  <div>
-    <div>Home <3 </div>
-  </div>
+  <div>{{msg}}</div>
 </template>
 
 <script>
-  import { db } from "../App"
-  import firebase from 'firebase'
   export default {
-    name: 'Home',
-    data: function () {
+    name: 'Redactor',
+    data() {
       return {
-
+        msg: 'Redactor'
       }
     }
   }
