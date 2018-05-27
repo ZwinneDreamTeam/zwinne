@@ -1,10 +1,10 @@
 <template>
-  <md-card class="questionCard">
+  <md-card class="languageCard">
     <h3>Inna wersja językowa</h3>
     <md-field>
       <md-icon>list</md-icon>
       <label>Język pytania</label>
-      <md-select class="mySelect" v-model="language">
+      <md-select class="languageSelect" v-model="language">
         <md-option value="pl">Polski</md-option>
         <md-option value="en">Angielski</md-option>
       </md-select>
@@ -121,16 +121,19 @@
     computed: {
       questionNameClass() {
         return {
+          'better-code-hub-field': 'not-important',
           'md-invalid': !this.isQuestionNameValid
         }
       },
       questionDetailsClass() {
         return {
+          'better-code-hub-field': 'not-important',
           'md-invalid': !this.isQuestionDetailsValid
         }
       },
       newPossibleAnswerClass() {
         return {
+          'better-code-hub-field': 'not-important',
           'md-invalid': !(this.isNewPossibleAnswerValid && this.isQuestionDetailsValid)
         }
       },
@@ -139,11 +142,11 @@
 </script>
 
 <style scoped>
-  .questionCard {
+  .languageCard {
     margin: 16px;
   }
 
-  .mySelect {
+  .languageSelect {
     margin-left: 16px;
   }
 
