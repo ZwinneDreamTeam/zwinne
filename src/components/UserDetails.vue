@@ -1,40 +1,41 @@
 <template>
   <md-card >
       <md-card-header>
-        <h1 class="md-title">{{title}}</h1>
+        <h1 class="md-title">Dane użytkownika</h1>
       </md-card-header>
 
      <md-field >
         <md-icon>person</md-icon>
-        <label>{{usernameLabel}}</label>
+        <label>Nazwa użytkownika</label>
         <md-input v-model="user.username" :disabled="disabled"/>
      </md-field>
      <md-field>
          <md-icon>email</md-icon>
-         <label>{{emailLabel}}</label>
+         <label>Email</label>
          <md-input v-model="user.email" :disabled="disabled"/>
      </md-field>
 
     <div v-if="!(!isCurrentUserModerator && !disabled)" >
-    <label>{{permissionsLabel}}</label>
+    <label>Uprawnienia</label>
     </div>
     <div v-if="isCurrentUserModerator">
-      <md-switch class="md-primary" v-model="user.isModerator" :disabled="disabled"> {{moderatorLabel}} </md-switch>
+      <md-switch class="md-primary" v-model="user.isModerator" :disabled="disabled">Moderator</md-switch>
     </div>
     <div v-if="(isCurrentUserCandidate && disabled) || isCurrentUserModerator">
-      <md-switch class="md-primary" v-model="user.isCandidate" :disabled="disabled"> {{candidateLabel}} </md-switch>
+      <md-switch class="md-primary" v-model="user.isCandidate" :disabled="disabled">Kandydat</md-switch>
     </div>
     <div v-if="(isCurrentUserRedactor && disabled) || isCurrentUserModerator">
-      <md-switch class="md-primary" v-model="user.isRedactor" :disabled="disabled"> {{redactorLabel}} </md-switch>
+      <md-switch class="md-primary" v-model="user.isRedactor" :disabled="disabled">Redaktor</md-switch>
     </div>
-    <md-button @click="disabled = false" class="md-primary md-raised" v-show="disabled"> {{edit}} </md-button>
-    <md-button @click="disabled = true" v-on:click="applyChanges" class="md-primary md-raised" v-show="!disabled"> {{apply}}</md-button>
+    <md-button @click="disabled = false" class="md-primary md-raised" v-show="disabled">Edytuj</md-button>
+    <md-button @click="disabled = true" v-on:click="applyChanges" class="md-primary md-raised" v-show="!disabled">Zapisz</md-button>
   </md-card>
 </template>
 <script>
-import { db } from "../App"
-import firebase from 'firebase'
-export default {
+  import {db} from "../App"
+  import firebase from 'firebase'
+
+  export default {
     name: "user-details",
     methods: {
       applyChanges: function() {
@@ -54,15 +55,6 @@ export default {
     },
     data: () => ({
         user: {},
-        title: "Dane użytkownika",
-        emailLabel: "Email",
-        usernameLabel: "Nazwa użytkownika",
-        moderatorLabel: "Moderator",
-        candidateLabel: "Kandydat",
-        redactorLabel: "Redaktor",
-        permissionsLabel: "Uprawnienia",
-        edit: "Edit",
-        apply: "Apply",
         disabled: true,
         isCurrentUserModerator: false,
         isCurrentUserRedactor: false,

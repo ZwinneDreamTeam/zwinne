@@ -9,26 +9,25 @@
         </router-link>
       </md-table-toolbar>
 
-      <md-table-row slot="md-table-row" slot-scope="{item}" md-selectable="single" @click.native="onSelect(item)">
-        <md-table-cell md-label="Nazwa" md-sort-by="name">{{ item.name }}</md-table-cell>
-        <md-table-cell md-label="Stanowisko" md-sort-by="positionName">{{ item.positionName }}</md-table-cell>
-        <md-table-cell md-label="Właściciel" md-sort-by="ownerName">{{ item.ownerName }}</md-table-cell>
-        <md-table-cell md-label="Aktywne" md-sort-by="isActive">
-          <md-icon class="iconCheck" v-if="item.isActive">check</md-icon>
-          <md-icon class="iconClose" v-if="!item.isActive">close</md-icon>
-        </md-table-cell>
-      </md-table-row>
+      <basic-test-row v-bind:test="item" slot="md-table-row" slot-scope="{item}" md-selectable="single"
+                      @click.native="onSelect(item)"/>
+
     </md-table>
   </div>
 </template>
 
 <script>
-  let customSort = require('../../utils/CustomSort');
+  import CheckIcon from "../reusable/CheckIcon";
   import firebase from 'firebase';
+  import BasicTestRow from "../reusable/BasicTestRow";
 
-  let db = firebase.database();
+  let customSortInCreatedTests = require('../../utils/CustomSort');
 
   export default {
+    components: {
+      BasicTestRow,
+      CheckIcon
+    },
     name: "created-tests",
     data() {
       return {
@@ -39,14 +38,14 @@
     },
     mounted() {
       let currentUserAuth = firebase.auth().currentUser;
-      db.ref('tests')
+      firebase.database().ref('tests')
         .orderByChild('ownerUid').equalTo(currentUserAuth.uid)
         .on('child_added', (snapshot) => {
           let test = snapshot.val();
           test.key = snapshot.key;
 
-          let usernamePromise = db.ref('users/' + test.ownerUid + "/username").once('value');
-          let positionNamePromise = db.ref('workPositions/' + test.positionId + "/name").once('value');
+          let usernamePromise = firebase.database().ref('users/' + test.ownerUid + "/username").once('value');
+          let positionNamePromise = firebase.database().ref('workPositions/' + test.positionId + "/name").once('value');
 
           Promise.all([usernamePromise, positionNamePromise]).then((values) => {
             test.ownerName = values[0].val();
@@ -58,7 +57,7 @@
     methods: {
       customSort(value) {
         return value.sort((a, b) => {
-          return customSort.customSort(a, b, this.currentSort, this.currentSortOrder);
+          return customSortInCreatedTests.customSort(a, b, this.currentSort, this.currentSortOrder);
         })
       },
       onSelect(item) {
@@ -69,11 +68,5 @@
 </script>
 
 <style scoped>
-  .iconCheck {
-    color: green !important;
-  }
 
-  .iconClose {
-    color: darkred !important;
-  }
 </style>
