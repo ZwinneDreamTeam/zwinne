@@ -12,8 +12,7 @@
       <md-table-row slot="md-table-row" slot-scope="{item}" md-selectable="single" @click.native="onSelect(item)">
         <md-table-cell md-label="Nazwa" md-sort-by="name">{{ item.name }}</md-table-cell>
         <md-table-cell md-label="Aktywne" md-sort-by="isActive">
-          <md-icon class="iconCheck" v-if="item.isActive">check</md-icon>
-          <md-icon class="iconClose" v-if="!item.isActive">close</md-icon>
+          <check-icon v-bind:value="item.isActive"/>
         </md-table-cell>
       </md-table-row>
     </md-table>
@@ -22,10 +21,12 @@
 
 <script>
   import firebase from 'firebase';
+  import CheckIcon from "./reusable/CheckIcon";
 
   let db = firebase.database();
 
   export default {
+    components: {CheckIcon},
     name: "work-positions",
     firebase: {
       positions: db.ref('workPositions')
@@ -80,11 +81,5 @@
 </script>
 
 <style scoped>
-  .iconCheck {
-    color: green !important;
-  }
 
-  .iconClose {
-    color: darkred !important;
-  }
 </style>

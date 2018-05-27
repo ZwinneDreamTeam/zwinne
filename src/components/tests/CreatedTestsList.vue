@@ -14,8 +14,7 @@
         <md-table-cell md-label="Stanowisko" md-sort-by="positionName">{{ item.positionName }}</md-table-cell>
         <md-table-cell md-label="Właściciel" md-sort-by="ownerName">{{ item.ownerName }}</md-table-cell>
         <md-table-cell md-label="Aktywne" md-sort-by="isActive">
-          <md-icon class="iconCheck" v-if="item.isActive">check</md-icon>
-          <md-icon class="iconClose" v-if="!item.isActive">close</md-icon>
+          <check-icon v-bind:value="item.isActive"/>
         </md-table-cell>
       </md-table-row>
     </md-table>
@@ -24,11 +23,13 @@
 
 <script>
   let customSort = require('../../utils/CustomSort');
+  import CheckIcon from '../reusable/CheckIcon';
   import firebase from 'firebase';
 
   let db = firebase.database();
 
   export default {
+    components: {CheckIcon},
     name: "created-tests",
     data() {
       return {
@@ -74,11 +75,5 @@
 </script>
 
 <style scoped>
-  .iconCheck {
-    color: green !important;
-  }
 
-  .iconClose {
-    color: darkred !important;
-  }
 </style>
