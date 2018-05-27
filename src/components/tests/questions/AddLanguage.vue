@@ -21,22 +21,22 @@
 
     <div class="questionDetails">
 
-    <div v-if="questionModel.type === 'select'">
-      <md-list v-if="language==='pl'">
-        <md-list-item v-for="(answer, id) in questionModel.possibleAnswers.en" :key="id">
-          <md-field>
-            <md-input v-model="possibleAnswers.pl[id]" type="text" required/>
-          </md-field>
-        </md-list-item>
-      </md-list>
-      <md-list v-else-if="language==='en'">
-        <md-list-item v-for="(answer, id) in questionModel.possibleAnswers.pl" :key="id">
-          <md-field>
-            <md-input v-model="possibleAnswers.en[id]" type="text" required/>
-          </md-field>
-        </md-list-item>
-      </md-list>
-    </div>
+      <div v-if="questionModel.type === 'select'">
+        <md-list v-if="language==='pl'">
+          <md-list-item v-for="(answer, id) in questionModel.possibleAnswers.en" :key="id">
+            <md-field>
+              <md-input v-model="possibleAnswers.pl[id]" type="text" required/>
+            </md-field>
+          </md-list-item>
+        </md-list>
+        <md-list v-else-if="language==='en'">
+          <md-list-item v-for="(answer, id) in questionModel.possibleAnswers.pl" :key="id">
+            <md-field>
+              <md-input v-model="possibleAnswers.en[id]" type="text" required/>
+            </md-field>
+          </md-list-item>
+        </md-list>
+      </div>
 
     </div>
 
@@ -46,6 +46,7 @@
 
 <script>
   import firebase from 'firebase';
+
   let db = firebase.database();
   var questionRef;
 
@@ -69,16 +70,16 @@
       };
     },
     mounted() {
-        let question = this.questions[this.questionID];
-        this.questionModel = question;
+      let question = this.questions[this.questionID];
+      this.questionModel = question;
 
-        if(question.type==='select'){
-          if(question.possibleAnswers.pl) {
-            this.possibleAnswers.pl = question.possibleAnswers.pl;
-          } else if(question.possibleAnswers.en) {
-             this.possibleAnswers.en = question.possibleAnswers.en;
-           }
+      if (question.type === 'select') {
+        if (question.possibleAnswers.pl) {
+          this.possibleAnswers.pl = question.possibleAnswers.pl;
+        } else if (question.possibleAnswers.en) {
+          this.possibleAnswers.en = question.possibleAnswers.en;
         }
+      }
     },
     methods: {
       addLanguage() {
@@ -90,9 +91,9 @@
         }
       },
       validateQuestionName() {
-        if(this.language === "pl") {
+        if (this.language === "pl") {
           this.isQuestionNameValid = Boolean(this.questionModel.pl) && Boolean(this.questionModel.pl.trim());
-        } else if(this.language === "en") {
+        } else if (this.language === "en") {
           this.isQuestionNameValid = Boolean(this.questionModel.en) && Boolean(this.questionModel.en.trim());
         }
       },
@@ -100,11 +101,11 @@
         if (this.questionModel.type === 'text' || this.questionModel.type === 'number') {
           this.isQuestionDetailsValid = true;
         } else if (this.questionModel.type === 'select') {
-          if(this.language==='pl'){
+          if (this.language === 'pl') {
             this.isQuestionDetailsValid = this.possibleAnswers.pl.length > 1;
-          } else if(this.language==='en'){
-             this.isQuestionDetailsValid = this.possibleAnswers.en.length > 1;
-           }
+          } else if (this.language === 'en') {
+            this.isQuestionDetailsValid = this.possibleAnswers.en.length > 1;
+          }
           if (!this.isQuestionDetailsValid) {
             this.newPossibleAnswerErrorMessage = "Wymagane minimum 2 odpowiedzi";
           }
@@ -130,7 +131,7 @@
       },
       newPossibleAnswerClass() {
         return {
-          'md-invalid': !this.isNewPossibleAnswerValid || !this.isQuestionDetailsValid
+          'md-invalid': !(this.isNewPossibleAnswerValid && this.isQuestionDetailsValid)
         }
       },
     }
@@ -146,17 +147,8 @@
     margin-left: 16px;
   }
 
-  .splitWidth {
-    float: left;
-    width: 100px;
-  }
-
   .questionDetails {
     overflow: auto;
-  }
-
-  .maxInput {
-    margin-left: 16px;
   }
 
 </style>
