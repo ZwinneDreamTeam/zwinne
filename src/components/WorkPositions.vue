@@ -23,6 +23,8 @@
   import firebase from 'firebase';
   import CheckIcon from "./reusable/CheckIcon";
 
+  let customSort = require('../utils/CustomSort');
+
   let db = firebase.database();
 
   export default {
@@ -45,33 +47,10 @@
       });
     },
     methods: {
-      compareBooleans(a, b, sortBy) {
-        if (a[sortBy] === b[sortBy])
-          return 0;
-        else if (a[sortBy] && !b[sortBy]) {
-          return this.currentSortOrder === 'desc' ? 1 : -1;
-        } else {
-          return this.currentSortOrder === 'desc' ? -1 : 1;
-        }
-
-      },
-      compareStrings(a, b, sortBy) {
-        if (this.currentSortOrder === 'desc') {
-          return a[sortBy].localeCompare(b[sortBy])
-        } else {
-          return b[sortBy].localeCompare(a[sortBy])
-        }
-      },
       customSort(value) {
         return value.sort((a, b) => {
-          const sortBy = this.currentSort;
-
-          if (typeof(a[sortBy]) === "boolean") {
-            return this.compareBooleans(a, b, sortBy);
-          } else {
-            return this.compareStrings(a, b, sortBy);
-          }
-        })
+          return customSort.customSort(a, b, this.currentSort, this.currentSortOrder);
+        });
       },
       onSelect(item) {
         this.$router.push({name: 'positionDetails', params: {id: item['.key']}});
