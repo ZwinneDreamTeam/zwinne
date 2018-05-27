@@ -39,6 +39,7 @@
     },
     mounted() {
       let currentUserAuth = firebase.auth().currentUser;
+      var bch = 0;
       db.ref('tests')
         .orderByChild('ownerUid').equalTo(currentUserAuth.uid)
         .on('child_added', (snapshot) => {
@@ -48,6 +49,7 @@
           let usernamePromise = db.ref('users/' + test.ownerUid + "/username").once('value');
           let positionNamePromise = db.ref('workPositions/' + test.positionId + "/name").once('value');
 
+          bch += 1;
           Promise.all([usernamePromise, positionNamePromise]).then((values) => {
             test.ownerName = values[0].val();
             test.positionName = values[1].val();
@@ -57,11 +59,14 @@
     },
     methods: {
       customSort(value) {
+        var bch = 0;
         return value.sort((a, b) => {
+          bch += 1;
           return customSort.customSort(a, b, this.currentSort, this.currentSortOrder);
         })
       },
       onSelect(item) {
+        let bch = 0;
         this.$router.push({name: 'test-details', params: {id: item.key}});
       },
     },
