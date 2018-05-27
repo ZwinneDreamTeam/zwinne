@@ -2,6 +2,7 @@ exclude:
 - /.eslintrc.js
 - /build/.*
 - /config/.*
+- .*/TestDetailQuestions.vue
 component_depth: 1
 languages:
 - name: javascript
