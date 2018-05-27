@@ -3,6 +3,10 @@ exclude:
 - /build/.*
 - /config/.*
 - .*/TestDetailQuestions.vue
+- .*/AddLanguage.vue
+- .*/UsersList.vue
+- .*/WorkPositions.vue
+- .*/CreatedTestsList.vue
 component_depth: 1
 languages:
 - name: javascript
