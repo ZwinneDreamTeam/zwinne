@@ -82,11 +82,5 @@
 </script>
 
 <style scoped>
-  .iconCheck {
-    color: green !important;
-  }
 
-  .iconClose {
-    color: darkred !important;
-  }
 </style>
