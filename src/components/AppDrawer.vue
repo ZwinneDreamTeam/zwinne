@@ -1,18 +1,18 @@
 <template>
   <md-list>
-    <md-subheader>{{label_general}}</md-subheader>
+    <md-subheader class="generalHeaderTitle">{{label_general}}</md-subheader>
     <md-list-item to="/positions">
       <md-icon>work</md-icon>
-      <span class="md-list-item-text">{{label_positions}}</span>
+      <span class="md-list-item-text positionsTitle">{{label_positions}}</span>
     </md-list-item>
 
     <md-list-item :to="{ name: 'currentUserDetails', params: {id: uid }}">
       <md-icon>account_circle</md-icon>
-      <span class="md-list-item-text"> {{label_user_profile}} </span>
+      <span class="md-list-item-text userProfileTitle"> {{label_user_profile}} </span>
     </md-list-item>
 
     <div v-if="isCandidate">
-      <md-subheader>{{label_candidate}}</md-subheader>
+      <md-subheader class="candidateHeaderTitle">{{label_candidate}}</md-subheader>
       <md-list-item to="/candidate/resolved">
         <md-icon>library_books</md-icon>
         <span class="md-list-item-text"> {{label_user_tests}} </span>

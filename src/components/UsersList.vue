@@ -3,7 +3,7 @@
     <md-table v-model="users" :md-sort.sync="currentSort" :md-sort-order.sync="currentSortOrder"
               :md-sort-fn="customSort" md-card>
       <md-table-toolbar>
-        <h1 class="md-title">Użytkownicy</h1>
+        <h1 class="md-title toolbarTitle">Użytkownicy</h1>
         <router-link :to="{name: 'createAccount'}">
           <md-button class="md-raised md-primary">{{addAccount}}</md-button>
         </router-link>
@@ -27,12 +27,12 @@
 </template>
 
 <script>
+  import { db } from "../App"
   import firebase from 'firebase';
   import CheckIcon from './reusable/CheckIcon'
 
   let customSort = require('../utils/CustomSort');
 
-  let db = firebase.database();
 
   export default {
     components: {CheckIcon},
