@@ -48,6 +48,7 @@
       return {
         questions: [],
         result: [],
+        candidateEmail: ""
       };
     },
     mounted() {
@@ -56,8 +57,13 @@
         this.result = snapshot.val();
         firebase.database().ref("tests/" + snapshot.val().testId).on('value', (snapshot) => {
           let test = snapshot.val();
-           this.questions = test.questions;
+          this.questions = test.questions;
         });
+        let candidateId = snapshot.val().candidateId;
+        firebase.database().ref("users/" + candidateId).on('value', (snapshot) => {
+          let candidate = snapshot.val();
+          this.candidateEmail = candidate.email;
+        })
       });
     },
     methods: {
@@ -72,11 +78,20 @@
           alert("Oceń wszystkie pytania");
           return
         }
+
+        var sum = 0;
         for (let i in this.result.answers) {
-          this.result.answers[i].mark = Number(this.result.answers[i].mark);
+          let mark = Number(this.result.answers[i].mark);
+          this.result.answers[i].mark = mark;
+          sum += mark;
         }
         firebase.database().ref("results/" + this.$route.params.id).set(this.result).then(() => {
-          alert("Test został oceniony");
+          alert("Test został oceniony.");
+          emailjs.send("default_service","template_G7cwqTEX",{
+            sum: sum.toString(),
+            max: this.result.answers.length.toString(),
+            to_address: this.candidateEmail
+          });
           this.$router.push({name: 'resolvedTests'})
         })
       },
