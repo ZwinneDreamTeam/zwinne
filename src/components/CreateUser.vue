@@ -2,7 +2,7 @@
   <div>
     <md-card style="padding : 10px;">
       <md-card-header>
-        <h1 class="md-title">Create new account</h1>
+        <h1 class="md-title headerTitle">Create new account</h1>
       </md-card-header>
 
       <md-field :class="usernameClass">
@@ -53,9 +53,10 @@
 </template>
 
 <script>
+  import {db} from "../App"
   import firebase from 'firebase'
   import {config} from "../App"
-  import {db} from "../App"
+
 
 
   const createAccountFirebase = firebase.initializeApp(config, "create_account_instance").auth();

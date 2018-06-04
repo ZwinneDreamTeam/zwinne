@@ -1,17 +1,17 @@
 <template>
   <md-card >
       <md-card-header>
-        <h1 class="md-title">{{title}}</h1>
+        <h1 class="md-title toolbarTitle">{{title}}</h1>
       </md-card-header>
 
      <md-field >
         <md-icon>person</md-icon>
-        <label>{{usernameLabel}}</label>
+        <label class="editUserLabel">{{usernameLabel}}</label>
         <md-input v-model="user.username" :disabled="disabled"/>
      </md-field>
      <md-field>
          <md-icon>email</md-icon>
-         <label>{{emailLabel}}</label>
+         <label class="editEmailLabel">{{emailLabel}}</label>
          <md-input v-model="user.email" :disabled="disabled"/>
      </md-field>
 
@@ -19,7 +19,7 @@
     <label>{{permissionsLabel}}</label>
     </div>
     <div v-if="isCurrentUserModerator">
-      <md-switch class="md-primary" v-model="user.isModerator" :disabled="disabled"> {{moderatorLabel}} </md-switch>
+      <md-switch class="md-primary switchModerator" v-model="user.isModerator" :disabled="disabled"> {{moderatorLabel}} </md-switch>
     </div>
     <div v-if="(isCurrentUserCandidate && disabled) || isCurrentUserModerator">
       <md-switch class="md-primary" v-model="user.isCandidate" :disabled="disabled"> {{candidateLabel}} </md-switch>
@@ -27,7 +27,7 @@
     <div v-if="(isCurrentUserRedactor && disabled) || isCurrentUserModerator">
       <md-switch class="md-primary" v-model="user.isRedactor" :disabled="disabled"> {{redactorLabel}} </md-switch>
     </div>
-    <md-button @click="disabled = false" class="md-primary md-raised" v-show="disabled"> {{edit}} </md-button>
+    <md-button @click="disabled = false" class="md-primary md-raised editButton" v-show="disabled"> {{edit}} </md-button>
     <md-button @click="disabled = true" v-on:click="applyChanges" class="md-primary md-raised" v-show="!disabled"> {{apply}}</md-button>
   </md-card>
 </template>

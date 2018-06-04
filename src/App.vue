@@ -8,7 +8,7 @@
           <md-button class="md-icon-button" to="/">
             <md-icon>home</md-icon>
           </md-button>
-          <h3 class="md-title">Zwinne XD</h3>
+          <h3 class="md-title toolbarTitle">Zwinne XD</h3>
 
           <div class="md-toolbar-section-end">
             <md-button @click="logout" class="md-icon-button" v-show="isUserLoggedIn()">
@@ -31,7 +31,7 @@
       <md-list>
         <md-list-item @click="findInWiki()">
           <md-icon>find_in_page</md-icon>
-          <span class="md-list-item-text">{{label_wiki}}</span>
+          <span class="md-list-item-text menuItemWiki">{{label_wiki}}</span>
         </md-list-item>
         <md-list-item @click="findSynonym()">
           <md-icon>search</md-icon>
