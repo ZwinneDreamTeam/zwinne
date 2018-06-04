@@ -14,8 +14,7 @@
         <md-table-cell md-label="Stanowisko" md-sort-by="positionName">{{ item.positionName }}</md-table-cell>
         <md-table-cell md-label="Właściciel" md-sort-by="ownerName">{{ item.ownerName }}</md-table-cell>
         <md-table-cell md-label="Aktywne" md-sort-by="isActive">
-          <md-icon class="iconCheck" v-if="item.isActive">check</md-icon>
-          <md-icon class="iconClose" v-if="!item.isActive">close</md-icon>
+          <check-icon v-bind:value="item.isActive"/>
         </md-table-cell>
       </md-table-row>
     </md-table>
@@ -24,11 +23,13 @@
 
 <script>
   let customSort = require('../../utils/CustomSort');
+  import CheckIcon from '../reusable/CheckIcon';
   import firebase from 'firebase';
 
   let db = firebase.database();
 
   export default {
+    components: {CheckIcon},
     name: "created-tests",
     data() {
       return {
@@ -39,6 +40,7 @@
     },
     mounted() {
       let currentUserAuth = firebase.auth().currentUser;
+      var bch = 0;
       db.ref('tests')
         .orderByChild('ownerUid').equalTo(currentUserAuth.uid)
         .on('child_added', (snapshot) => {
@@ -48,6 +50,7 @@
           let usernamePromise = db.ref('users/' + test.ownerUid + "/username").once('value');
           let positionNamePromise = db.ref('workPositions/' + test.positionId + "/name").once('value');
 
+          bch += 1;
           Promise.all([usernamePromise, positionNamePromise]).then((values) => {
             test.ownerName = values[0].val();
             test.positionName = values[1].val();
@@ -57,11 +60,14 @@
     },
     methods: {
       customSort(value) {
+        var bch = 0;
         return value.sort((a, b) => {
+          bch += 1;
           return customSort.customSort(a, b, this.currentSort, this.currentSortOrder);
         })
       },
       onSelect(item) {
+        let bch = 0;
         this.$router.push({name: 'test-details', params: {id: item.key}});
       },
     },
@@ -69,11 +75,5 @@
 </script>
 
 <style scoped>
-  .iconCheck {
-    color: green !important;
-  }
 
-  .iconClose {
-    color: darkred !important;
-  }
 </style>
