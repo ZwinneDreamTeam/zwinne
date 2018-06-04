@@ -1,10 +1,17 @@
 <template>
-  <router-view/>
+  <div>
+    <div class="title">{{msg}}</div>
+  </div>
 </template>
 
 <script>
   export default {
-    name: 'Moderator'
+    name: 'Moderator',
+    data() {
+      return {
+        msg: 'Moderator'
+      }
+    }
   }
 </script>
 

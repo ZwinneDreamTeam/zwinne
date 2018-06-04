@@ -5,7 +5,7 @@
       <md-table-toolbar>
         <h1 class="md-title">Stanowiska</h1>
         <router-link v-if="isModerator" :to="{name: 'addPosition'}">
-        <md-button class="md-raised md-primary">Dodaj stanowisko</md-button>
+          <md-button class="md-raised md-primary">Dodaj stanowisko</md-button>
         </router-link>
       </md-table-toolbar>
 
@@ -24,6 +24,7 @@
   import CheckIcon from "./reusable/CheckIcon";
 
   let customSort = require('../utils/CustomSort');
+
 
   let db = firebase.database();
 

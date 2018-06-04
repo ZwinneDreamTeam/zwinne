@@ -1,34 +1,36 @@
 <template>
-  <div class="logInView" >
+  <div class="logInView">
     <md-dialog :md-active.sync="shouldShowDialog" layout-padding class="forgot-password-dialog">
-      <md-dialog-title>{{forgotPasswordDialogTitle}}</md-dialog-title>
+      <md-dialog-title class="resetDialogTitle">{{forgotPasswordDialogTitle}}</md-dialog-title>
       <md-field>
-        <label>{{forgotPasswordPlaceholderText}}</label>
+        <label class="resetDialogPlaceholder">{{forgotPasswordPlaceholderText}}</label>
         <md-input v-model="resetPasswordEmail"/>
       </md-field>
-      <md-button v-on:click="handleForgotPassword" class="md-raised registerButton">{{forgotPasswordSend}}</md-button>
+      <md-button v-on:click="handleForgotPassword" class="md-raised forgotButton">{{forgotPasswordSend}}</md-button>
     </md-dialog>
-    <md-card class="loginPanelView" >
-       <md-card-header>
-         <h1 class="md-title">{{loginLabel}}</h1>
-       </md-card-header>
-       <md-field >
-         <md-icon>person</md-icon>
-         <label>{{emailLabel}}</label>
-         <md-input v-model="email" type="text" required/>
-       </md-field>
-       <md-field >
-         <md-icon>lock</md-icon>
-         <label>{{passwordLabel}}</label>
-         <md-input v-model="password" type="password" required/>
-       </md-field>
-       <div>
-       <md-button v-on:click="confirmLogIn()" class="md-raised registerButton">{{confirm}}</md-button>
-       </div>
-       <h2 class="md-title">{{orLabel}}</h2>
+    <md-card class="loginPanelView">
+      <md-card-header>
+        <h1 class="md-title loginHeader">{{loginLabel}}</h1>
+      </md-card-header>
+      <md-field>
+        <md-icon>person</md-icon>
+        <label>{{emailLabel}}</label>
+        <md-input v-model="email" type="text" required/>
+      </md-field>
+      <md-field>
+        <md-icon>lock</md-icon>
+        <label>{{passwordLabel}}</label>
+        <md-input v-model="password" type="password" required/>
+      </md-field>
+      <div>
+        <md-button v-on:click="confirmLogIn()" class="md-raised confirmButton">{{confirm}}</md-button>
+      </div>
+      <h2 class="md-title orTitle">{{orLabel}}</h2>
       <md-button v-on:click="doLogin" class="md-raised logInButton">{{zalogujMsg}}</md-button>
-      <md-button  :to="{ name: 'Register'}" class="md-raised logInButton registerButton">{{register}}</md-button>
-      <md-button v-on:click="showForgotPasswordDialog" class="md-raised logInButton forgotPasswordButton">{{forgotPasswordLabel}}</md-button>
+      <md-button :to="{ name: 'Register'}" class="md-raised logInButton registerButton">{{register}}</md-button>
+      <md-button v-on:click="showForgotPasswordDialog" class="md-raised logInButton forgotPasswordButton">
+        {{forgotPasswordLabel}}
+      </md-button>
 
     </md-card>
   </div>
@@ -43,6 +45,7 @@
   });
 
   export default {
+    props: ['msg'],
     name: "login",
     data: () => ({
       "zalogujMsg": "Kontynuuj z Google",
@@ -65,25 +68,25 @@
       doLogin(event) {
         firebase.auth().signInWithPopup(provider).then((result) => {
           this.$router.push('/');
-        }).catch(function(error) {
+        }).catch(function (error) {
           alert(error.message);
         });
       },
-      confirmLogIn: function(event) {
-      firebase.auth().signInWithEmailAndPassword(this.$data.email, this.$data.password).then((result) => {
-         this.$router.push('/');
-         this.error = false;
+      confirmLogIn: function (event) {
+        firebase.auth().signInWithEmailAndPassword(this.$data.email, this.$data.password).then((result) => {
+          this.$router.push('/');
+          this.error = false;
         }).catch(function (error) {
-         var errorCode = error.code;
-         if (errorCode === 'auth/wrong-password') {
-           alert('Nieprawidłowe hasło');
-         } else if (errorCode === 'auth/user-not-found') {
-           alert('Nie istnieje użytkownik o podanym adresie email');
-         } else if (errorCode === 'auth/user-disabled') {
-           alert('Użytkownik zablokowany');
-         } else if (errorCode === 'auth/invalid-email') {
-           alert('Niepoprawna struktura adresu email');
-         }
+          var errorCode = error.code;
+          if (errorCode === 'auth/wrong-password') {
+            alert('Nieprawidłowe hasło');
+          } else if (errorCode === 'auth/user-not-found') {
+            alert('Nie istnieje użytkownik o podanym adresie email');
+          } else if (errorCode === 'auth/user-disabled') {
+            alert('Użytkownik zablokowany');
+          } else if (errorCode === 'auth/invalid-email') {
+            alert('Niepoprawna struktura adresu email');
+          }
         });
       },
       showForgotPasswordDialog() {
@@ -102,7 +105,7 @@
   }
 </script>
 
-<style >
+<style>
 
   .logInButton {
     background-color: #f44336 !important;
@@ -117,6 +120,16 @@
     color: #ffffff !important;
   }
 
+  .confirmButton {
+    background-color: #3366FF !important;
+    color: #ffffff !important;
+  }
+
+  .forgotButton {
+    background-color: #3366FF !important;
+    color: #ffffff !important;
+  }
+
   .forgotPasswordButton {
     background-color: #bbbbbb !important;
   }
@@ -126,10 +139,12 @@
     margin-left: 40vh;
     margin-right: 40vh;
   }
+
   .loginPanelView {
-   text-align: center;
-   padding : 10px;
+    text-align: center;
+    padding: 10px;
   }
+
   .forgot-password-dialog {
     padding: 10px !important;
     min-width: 550px !important;
