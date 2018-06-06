@@ -16,7 +16,7 @@
         </md-field>
       </md-card>
 
-      <div v-if="isLanguageSelected" v-for="(question, index) in questions">
+      <div v-if="isLanguageSelected" v-for="(question, index) in filteredQuestions">
         <md-card class="solveTestCard" v-if="shouldDisplayQuestion(question)">
 
           <div v-if="question.type === 'text'">
@@ -69,6 +69,7 @@
       return {
         languages: [],
         questions: [],
+        filteredQuestions: [],
         testName: "",
         result: {},
       };
@@ -86,19 +87,6 @@
         let test = snapshot.val();
         this.questions = test.questions;
         this.testName = test.name;
-        this.questions.forEach((question) => {
-          if (question.type === 'scale') {
-            this.result.answers.push({
-              answer: 0,
-              mark: ""
-            })
-          } else {
-            this.result.answers.push({
-              answer: "",
-              mark: ""
-            })
-          }
-        });
       });
     },
     methods: {
@@ -162,6 +150,29 @@
     },
     components: {
       VueSlideBar
+    },
+    watch: {
+      "result.language": function(event) {
+        if (this.result.language) {
+          this.filteredQuestions = this.questions.filter(question => question[this.result.language].length !== 0);
+          this.filteredQuestions.forEach((question) => {
+            if (question[this.result.language]) {
+              if (question.type === 'scale') {
+                this.result.answers.push({
+                  answer: 0,
+                  mark: ""
+                })
+              } else {
+                this.result.answers.push({
+                  answer: "",
+                  mark: ""
+                })
+              }
+            }
+          });
+          console.log(this.result.answers.length);
+        }
+      }
     }
   }
 </script>
