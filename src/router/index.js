@@ -80,24 +80,24 @@ let router = new VueRouter({
         requiresRedactor: true
       },
     },
-        {
-          path: '/candidate/resolved',
-          name: 'userTests',
-          component: UserTests,
-          meta: {
-            requiresAuth: true,
-            requiresCandidate: true
-          },
-        },
-     {
-        path: '/redactor/resolved/test/:id',
-        name: 'mark-test',
-        component: MarkTest,
-        meta: {
-          requiresAuth: true,
-          requiresRedactor: true
-        },
-     },
+    {
+      path: '/candidate/resolved',
+      name: 'userTests',
+      component: UserTests,
+      meta: {
+        requiresAuth: true,
+        requiresCandidate: true
+      },
+    },
+    {
+      path: '/redactor/resolved/test/:id',
+      name: 'mark-test',
+      component: MarkTest,
+      meta: {
+        requiresAuth: true,
+        requiresRedactor: true
+      },
+    },
     {
       path: '/moderator',
       name: 'Moderator',
@@ -106,23 +106,33 @@ let router = new VueRouter({
         requiresAuth: true,
         requiresModerator: true
       },
-      children: [
-        {
-          path: 'users',
-          name: 'users',
-          component: UsersList
-        },
-        {
-          path: 'users/:id',
-          name: 'userDetails',
-          component: UserDetails
-        },
-        {
-          path: 'users/account/create',
-          name: 'createAccount',
-          component: CreateUser
-        }
-      ]
+    },
+    {
+      path: '/moderator/users',
+      name: 'users',
+      component: UsersList,
+      meta: {
+        requiresAuth: true,
+        requiresModerator: true
+      },
+    },
+    {
+      path: '/moderator/users/:id',
+      name: 'userDetails',
+      component: UserDetails,
+      meta: {
+        requiresAuth: true,
+        requiresModerator: true
+      },
+    },
+    {
+      path: '/moderator/users/account/create',
+      name: 'createAccount',
+      component: CreateUser,
+      meta: {
+        requiresAuth: true,
+        requiresModerator: true
+      },
     },
     {
       path: '/user/:id',
